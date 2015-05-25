@@ -15,3 +15,12 @@ dependencies
 + [jsonwebtoken](https://www.npmjs.org/package/jsonwebtoken)   
   
 
+Set Environment variables
+---
++ NODE_EV
++ MONGO_DB
+
+Run
+---
+npm install
+npm start
