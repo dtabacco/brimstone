@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="AnalyticsOverflow">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+ 
+    <title>Profile</title>
+
+    <!-- Load the Angular Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+
+     <!-- Load your custom Javascript with the module defined -->
+    <script src="js/gamify.js"></script>
+    <script src="js/app.config.js"></script> 
+    <script src="js/controllers.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  
+    <!-- Custom styles for this template -->
+    
+    <link href="css/analytics_styles.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="css/medium.css">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/responsive.css" rel="stylesheet">  
+
+  </head>
+
+
+    <body>
+      <div class="container-fluid"> 
+        <div ng-controller="questionManager" ng-init="checkLoginStatus()">
+          <div ng-include="'header.html'"></div>
+
+        </div>    <!-- End Controller -->    
+      
+        <div ng-controller="UserManager" ng-init="getUserProfile()">
+        
+          <div class="row centerpanelR">
+            <div class="col-md-2 leftbarR">&nbsp;</div>
+            <div class="col-md-1">&nbsp;</div>
+
+            <div class="col-md-6">
+               
+              <div>
+                <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
+                <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+              </div>
+
+              <h1 id="ask-question-title">User Profile</h1>      
+
+              <div class="row">
+                <div class="col-md-3">
+
+                <br> 
+                   <center><img id="downshift"  ng-src='{{user.userdata_badgeImage}}'><br>
+                 {{user.userdata_badgeLabel}} </center>
+                <br>          
+                </div> 
+
+                <div class="col-md-1">&nbsp;</div>  
+                <div class="col-md-8">     
+              
+                <div class="sepbar indenter">Basic Information</div>  
+                <span class="profile-attribute indenter">Username: 
+                  <span class="profile-value"> {{user.username}} 
+                  </span>
+                 </span>
+                 <br> 
+
+                 <span class="profile-attribute indenter">First Name: 
+                  <span class="profile-value"> {{user.firstName}}
+                  </span>
+                 </span>
+                <br> 
+
+                <span class="profile-attribute indenter">Last Name: 
+                  <span class="profile-value"> {{user.lastName}}
+                  </span>
+                 </span>
+                <br> 
+
+                <span class="profile-attribute indenter">Email:
+                  <span class="profile-value">{{user.email}} <a href="mailto:{{user.email}}?Subject=Hello%20" target="_top"> <button class="btn btn-default btn-sm ">Contact</button></a> <br>
+                  </span>
+                </span>
+
+                 
+                <span class="profile-attribute indenter">Account Created: 
+                  <span class="profile-value"> {{user.created_at}}
+                  </span>
+                 </span>
+                <br> 
+
+                
+                  
+               <br>
+                <div class="sepbar indenter">Activity</div>   
+                
+                <span class="profile-attribute indenter">Last Login: 
+                  <span class="profile-value"> {{user.lastLogin}} 
+                  </span>
+                 </span>
+                <br> 
+              
+                <span class="profile-attribute indenter">Accepted Answers: 
+                  <span class="profile-value"> {{user.acceptedAnswers}}  
+                  </span>
+                 </span>
+                <br> 
+                  
+                
+                <span class="profile-attribute indenter">Total Answers: 
+                  <span class="profile-value"> {{user.answerCount}} 
+                  </span>
+                 </span>
+                <br> 
+                 
+                 <span class="profile-attribute indenter">Total Points: 
+                  <span class="profile-value"> {{user.userdata_all_points}} 
+                  </span>
+                 </span>
+                <br>  
+                
+                </div>   
+              </div>
+
+              <br>
+              <div ng-if="user.userdata_levelup === 0">Maxed Out
+              </div>
+                <div ng-if="user.userdata_levelup !== 0"><div class="LevelUpLabel">Points to Next Level: {{user.userdata_levelup}}  </div>
+              </div>
+              
+               <div class="row">
+                <div class="col-md-4"><h4>{{user.userdata_levelbase}}</h4></div>
+                <div class="col-md-4">&nbsp;</div>
+                 <div class="col-md-4 pullright"><h4>{{user.userdata_all_points + user.userdata_levelup}}</h4></div>
+               </div>
+
+               <div class="progress">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="{{user.userdata_levelbase}}" aria-valuemax="{{user.userdata_all_points + user.userdata_levelup}}" style="width: {{ 100 * ( (user.userdata_all_points - user.userdata_levelbase) / ( user.userdata_all_points + user.userdata_levelup - user.userdata_levelbase )  )  }}%">
+                </div>
+              </div>
+
+              <br>
+
+                
+              <!--
+              calc Numerator:  {{ (user.userdata_all_points - user.userdata_levelbase)   }}  / <br>
+              Calc Demo:  {{( user.userdata_all_points + user.userdata_levelup - user.userdata_levelbase )}}
+              <br>
+
+              {{user.userdata_levelup}} to go<br><br>
+
+              Level Base:  {{user.userdata_levelbase}}
+              Current:  {{user.userdata_all_points}}
+              Needed:  {{user.userdata_levelup}}
+              Total:  {{user.userdata_all_points + user.userdata_levelup}}
+              Progress Bar Percentage:  {{user.userdata_all_points }}
+              -->
+              <p>
+          
+              <div ng-controller="questionManager">
+                <h3 class="title_heading">You Recently Asked:</h3>
+                <div ng-init="getMyQuestions()">
+                    <div ng-repeat="question in questions| limitTo:50">
+                      <a class="question_links" ng-href="viewquestionR.html?id={{question.id}}">{{question.questionTitle}}</a>
+                      <span class="question_linkss_sub">{{question.answerCount}} Answers</span>
+                    </div>
+                </div>
+                </br>
+
+                <h3 class="title_heading">You Recently Answered:</h3>
+                <div ng-init="getMyAnswers()">
+                    <div ng-repeat="answer in answers| limitTo:50">
+                      <a class="question_links" ng-href="viewquestionR.html?id={{answer.id}}">{{answer.questionTitle}}</a>
+                    </div>
+                </div>
+                </br>
+             </div>
+
+            
+            </div>   
+
+            <div class="col-md-1">&nbsp;</div>
+            <div class="col-md-2 rightbarR">&nbsp;</div>
+          </div>
+
+        </div>  <!-- End of User Manager Controller -->
+            
+        <a id="feedback_link" data-toggle="modal" data-target="#emailModal" class="feedback_link left"></a>    
+        <div ng-include="'footer.html'"></div> 
+
+        <div ng-controller="emailManager">
+          <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body welcome_modal">
+                        <form>
+                            <center>
+                                Please Provide Feedback<br><br>
+                                <textarea class="form-control slim" rows="7" ng-model="email.body" id="emailComment"></textarea><br>
+                            </center>
+                        </form>
+                    </div>
+                    <div class="modal-footer"><!-- footer area with buttons for a continued dialog -->
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" ng-click="sendEmail()" class="btn btn-success" data-dismiss="modal">Submit</button> 
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <script>
+          function email() {
+              $('#emailModal').modal()
+          }
+      </script>    
+
+        
+          
+        
+        
+      </div> <!-- End of Container -->
+      
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+
+</html>
+
+

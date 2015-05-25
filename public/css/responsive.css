@@ -1,0 +1,155 @@
+.leftbarR {
+	background: #37424A;
+}
+.rightbarR {
+	background: #37424A;
+}
+
+.rightbar2 {
+	background: #FAFAFA;
+	border-top: solid;
+	border-bottom: solid;
+    border-color: #F2F2F2;
+}
+
+.headerR {
+	background-color: #FFFFFF;	
+}
+
+
+.headerR2 {
+	background-color: #FFFFFF;
+}
+
+.centerpanelR {
+	background: #FAFAFA;
+}
+.centerpanelR2 {
+	background-image: url('http://barnum.merck.com/analyticsoverflow/assets/images/back.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;
+
+}
+
+#navboxR {
+	/*background-color: #FFFFFF;*/
+	border-bottom: solid;
+	border-color: #EFEFEF;
+	
+	color: #000000;
+	text-align: center;
+	font-size: 30px;
+}
+#navboxR1 {
+	/*background-color: #FFFFFF;*/
+	border-bottom: solid;
+	border-bottom-width: 3px;
+	border-left: solid;
+	border-left-width: 3px;
+	border-right: solid;
+	border-right-width: 3px;
+	border-top: solid;
+	border-top-width: 3px;
+	border-color: #FFFFFF;
+	background-color: #F2F2F2;
+	opacity:0.7;
+	text-align: center;
+	font-size: 30px;
+}
+
+#navboxR2 {
+	/*background-color: #FFFFFF;*/
+	border-bottom: solid;
+	border-bottom-width: 3px;
+	border-left: solid;
+	border-left-width: 3px;
+	border-right: solid;
+	border-right-width: 3px;
+	border-top: solid;
+	border-top-width: 3px;
+	border-color: #FFFFFF;
+	background-color: #BDBDBD;
+	opacity:0.7;
+	text-align: center;
+	font-size: 30px;
+}
+
+
+.footerR {
+	background-color: #662046;
+	color: #FFFFFF;
+	font-size: 16px;
+	/*text-align: center;*/
+	padding-top: 20px;
+}
+
+.viewcenterpanelR {
+	background: #FFFFFF;
+	padding-left: 12px;
+	padding-right: 15px;
+	border-top: solid;
+	border-bottom: solid;
+	border-right: solid;;
+	border-left: solid;
+    border-color: #F2F2F2;
+}
+
+#navbox3R {
+	background-color: #FFFFFF;
+	border-top: solid;
+	border-color: #EFEFEF;
+	padding-left: 10px;
+
+}
+.pullright {
+	text-align: right;
+}
+
+#downshift {
+	margin-top: 10px;
+} 
+
+.rank {
+	font-size: 56px;
+	color: #662046;
+	text-align: left;
+}
+
+.userlabel {
+	font-size: 28px;
+	color: #000000;
+	text-align: center;
+	padding-top: 20px;
+}
+
+.acceptedAnswers {
+	font-size: 22px;
+	padding-left: 30px;
+	padding-top: 15px;
+	color: #879637;
+}
+
+.totalAnswers {
+	font-size: 14px;
+	padding-left: 30px;
+	color: #D47B22;
+}
+
+.filler {
+	line-height: 700px;
+}
+
+body {
+    background: #FAFAFA;
+    overflow-x: hidden;
+}
+
+.row{
+    overflow: hidden; 
+}
+
+[class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+

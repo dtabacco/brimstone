@@ -1,0 +1,83 @@
+body {
+	background-image: url('http://barnum.merck.com/analyticsoverflow/assets/images/blur1.jpg');
+	/*background-repeat: no-repeat;*/
+	background-size: 100%;
+
+	/*background-image: url("https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png");*/
+
+
+
+    overflow-x: hidden;
+}
+
+.row{
+    overflow: hidden; 
+}
+
+[class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+
+
+div {
+background-color: transparent;
+}
+
+.logo {
+	color: #FFFFFF;
+	padding-top: 15px;
+	text-align: center;
+	font-size: 30px;
+}
+
+.container-fluid {
+background-color: transparent;
+}
+
+.leftNavBar {
+	background-color: #141E21;
+	/*border-top-left-radius: 10px;*/
+}
+
+.midNavBar {
+	background-color: #141E21;
+}
+
+.rightNavBar {
+	background-color: #141E21;
+	/*border-top-right-radius: 10px;*/
+}
+
+.mainCenterPanel {
+	background-color: #FAFAFA;
+	/*background: #5B6875;*/
+}
+
+.footerColor {
+	background: #662046;
+}
+
+
+.navbox1 {
+	background-color: #63CECA;
+	text-align: center;
+	font-size: 30px;
+}
+
+
+.navbox2 {
+	background-color: #662046;
+	color: #FFFFFF;
+	text-align: center;
+	font-size: 30px;
+}
+
+.navbox3 {
+	background-color: #EFEFEF;
+	color: #FFFFFF;
+	text-align: center;
+	font-size: 30px;
+	border-bottom: solid;
+	border-color: #EFEFEF;
+}

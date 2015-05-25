@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="AnalyticsOverflow">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Question and Answers for Analytics">
+    <meta name="author" content="H3">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+ 
+    <title>Welcome to Barnum</title>
+
+    <!-- Load the Angular Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+
+     <!-- Load your custom Javascript with the module defined -->
+    <script src="js/app.config.js"></script>
+    <script src="js/controllers.js"></script>
+
+    <!-- Custom ToolTip -->
+    <script src="js/opentip-native.min.js"></script>
+
+    <!-- Browser Detection Library -->
+    <script src="js/bowser.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- OpenTip CSS -->
+    <link href="css/opentip.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/analytics_styles.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="css/medium.css">
+    <link href="css/style.css" rel="stylesheet"> 
+    <!--<link href="css/responsive.css" rel="stylesheet">  -->
+
+    <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png"/>
+    
+  </head>
+
+  <script>
+  function init() {
+    if (bowser.msie) {
+      //console.log(bowser.msie + bowser.version + " detected")
+      document.location="unsupportedbrowser.html";
+    }
+
+    if (!localStorage.barnum_first_time) {
+        $('#myModal').modal()
+        localStorage.barnum_first_time = "Yes"; 
+      }
+    
+  }
+  </script>
+
+  <body onload="init()">
+
+    <!-- Welcome Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          
+          <div class="modal-body welcome_modal">
+            <center>
+            Welcome to<br>
+           <img src="assets/images/barnumlogo.png"><br><br>
+           <img src="assets/images/Elephant-xlg.png"><br><br>
+           
+           <button type="button" class="btn btn-info btn-lg" data-dismiss="modal">Get Started</button> 
+         </center>
+          </div>
+      
+        </div>
+      </div>
+    </div>
+
+    <div ng-controller="questionManager" ng-init="checkLoginStatus()">
+
+      <div ng-include="'header.html'"></div> 
+
+
+
+      <div id="centerpanel">
+        <div class="row" style="background-color: #FAFAFA">
+          <div id="leftbar" class="col-md-2"></div>
+          <div class="col-md-8">
+            <br>
+            
+            <div id="topsearchrow" class="row" style="background-color: #FAFAFA"> 
+
+              <!-- Center Panel of Index Page -->
+              <div class="col-md-12">
+                <div ng-init="populateTypeahead()">
+        
+                <h1 id="index_search-title" data-ot="Search For a Question" data-ot-stem="true" data-ot-style="dark" data-ot-delay="0">Search</h1> 
+
+                <form action="search.html">   
+                  <div class="input-group input-group-lg">
+                    <!--<input type="text" class="form-control" name="query" placeholder="Enter search terms" autofocus="autofocus">-->
+                    <input type="text" id="mySearch" name="query" class="form-control" placeholder="Enter search terms" data-provide="typeahead">
+                     <span class="input-group-btn">
+                      <button type="submit" class="btn btn-default" type="button">Go!</button>
+                    </span>
+                  </div>
+                  <br>
+                  <br>
+                </form>
+              </div>   
+                 </div> 
+            </div>  <!-- End Top Row -->  
+
+            <div class="row">
+              <div id="navbox1" class="col-md-6"><a href="ask.html" class="fill-div"><font color="#FFFFFF"><br>Ask a Question<br><span class="glyphicon glyphicon-bullhorn icon_styling2"></span></a></div>
+              <!--<div id="navbox2" class="col-md-6">
+                <a href="openquestions.html" class="fill-div"><br><br><br><font color="white">Open Questions</a>
+              </div>
+              !-->
+               <div class="col-md-6 nopadding">
+                <a id="navbox5" href="unansweredquestions.html" class="fill-div"><br><font color="white">Unanswered Questions<br><span class="glyphicon glyphicon-bell icon_styling"></span></a>
+                <a id="navbox6" href="openquestions.html" class="fill-div"><br><font color="white">Open Questions<br><span class="glyphicon glyphicon-unchecked icon_styling"></span></a>
+              </div>
+
+
+            </div>
+            
+             <div class="row">
+              <div id="navbox3" class="col-md-12"><a href="leaderboard.html" class="fill-div"><br>Leaderboard</a></div>
+            </div>
+             <div class="row">
+              <div id="navbox4" class="col-md-12"><a href="statistics.html" class="fill-div"><br>Statistics</a></div>
+            </div>
+          
+
+
+          </div> <!-- End Center Panel of Index Page -->  
+
+          <div id="rightbar" class="col-md-2">
+            <div ng-controller="questionManager" data-ng-init="getRecentQuestions()">
+              <h3 class="panel_sidetitle">Recent Questions</h3>
+              <div ng-repeat="question in questions| limitTo:10">
+                <a ng-href="viewquestionR.html?id={{question.id}}"><h4 class="panel_sidevalue">{{question.questionTitle}}<h4/></a>
+              </div>
+            </div>
+            
+            
+            <div ng-controller="searchManager" data-ng-init="searchQuestionsElasticHotQuestions()">
+              <h3 class="panel_sidetitle">Hot Questions</h3>
+              <div ng-repeat="question in questions| limitTo:10">
+                <a ng-href="viewquestionR.html?id={{question.id}}"><h4 class="panel_sidevalue">{{question.questionTitle}}<h4/></a>
+              </div>
+
+            </div>
+
+          
+          </div>
+          
+      </div>  <!-- End Controller--> 
+
+      <a id="feedback_link" data-toggle="modal" data-target="#emailModal" class="feedback_link left"></a>  
+      <div ng-include="'footer.html'"></div> 
+
+      <div ng-controller="emailManager">
+        <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body welcome_modal">
+                        <form>
+                            <center>
+                                Please Provide Feedback<br><br>
+                                <textarea class="form-control slim" rows="7" ng-model="email.body" id="emailComment"></textarea><br>
+                            </center>
+                        </form>
+                    </div>
+                    <div class="modal-footer"><!-- footer area with buttons for a continued dialog -->
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" ng-click="sendEmail()" class="btn btn-success" data-dismiss="modal">Submit</button> 
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <script>
+          function email() {
+              $('#emailModal').modal()
+          }
+
+      </script>       
+
+      <script>
+    
+      document.getElementById('navbox1').onmouseover = function() {
+      document.getElementById("navbox1").style.background = "#E98D32";
+    
+      }
+      document.getElementById('navbox1').onmouseout = function() {
+      document.getElementById("navbox1").style.background = "#E48629";
+      }
+     
+      document.getElementById('navbox5').onmouseover = function() {
+      document.getElementById("navbox5").style.background = "#72244F";
+    
+      }
+      document.getElementById('navbox5').onmouseout = function() {
+      document.getElementById("navbox5").style.background = "#662046";
+      }
+
+      document.getElementById('navbox6').onmouseover = function() {
+      document.getElementById("navbox6").style.background = "#008791";
+    
+      }
+      document.getElementById('navbox6').onmouseout = function() {
+      document.getElementById("navbox6").style.background = "#007D86";
+      }
+     
+
+      document.getElementById('navbox3').onmouseover = function() {
+      document.getElementById("navbox3").style.background = "#FAFAFA";
+    
+      }
+      document.getElementById('navbox3').onmouseout = function() {
+      document.getElementById("navbox3").style.background = "#FFFFFF";
+      }
+
+      document.getElementById('navbox4').onmouseover = function() {
+      document.getElementById("navbox4").style.background = "#FAFAFA";
+    
+      }
+      document.getElementById('navbox4').onmouseout = function() {
+      document.getElementById("navbox4").style.background = "#FFFFFF";
+      }
+
+    </script>
+   
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+      <script src="js/bootstrap3-typeahead.js"></script>
+    </body>
+</html>
+
+
