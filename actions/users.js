@@ -1,3 +1,29 @@
+exports.userAdd = {
+  name: "userAdd",
+  description: "I register a new user",
+  inputs: {
+    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_ind', 'company_name'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+    console.log("Adding User")
+      api.mongo.userAdd(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.users = users;
+      next(connection, true);
+    });
+  }
+};
+
+
+//LAST Official Code Segment
+
 exports.usersList = {
   name: "usersList",
   description: "I list all the users",
@@ -19,6 +45,7 @@ exports.usersList = {
     });
   }
 };
+
 
 exports.usersDelete = {
   name: "usersDelete",

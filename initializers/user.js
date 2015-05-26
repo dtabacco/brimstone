@@ -10,6 +10,7 @@ var user = function (api, next) {
     console.log("User API started");
   };
 
+
   api.user.verifyHeaderToken = function(api, header_token, next) {
 
       console.log("Token was received: " + header_token)

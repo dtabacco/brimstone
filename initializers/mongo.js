@@ -24,6 +24,29 @@ var mongo = function (api, next) {
 
 
 /***************** Add a Question ****************************/
+api.mongo.userAdd = function(api, connection, next) {
+
+      //Capture the Date/Time of the Registration
+      var now = new Date(); 
+      var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+
+      //Create JSON Entry to Add to MongoDB
+      var entry = { username:connection.params.username, password:connection.params.password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
+                  email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at};
+
+       //Insert JSON Entry to Add to MongoDB
+        api.mongo.db.users.insert(entry, {safe : true}, function doneCreatingUserEntry(err, results) {
+          if (err) { 
+             next(err, false); 
+          }
+          //connection.response.content = results; 
+          next(err, results);  
+
+        });
+  };
+
+
+/***************** Add a Question ****************************/
 api.mongo.questionAdd = function(api, connection, next) {
 
       //Add the person who asked the question to the notifier list
@@ -905,32 +928,6 @@ api.mongo.questionAdd = function(api, connection, next) {
     });
   };
 
-  /***************** Add a User ****************************/
-  api.mongo.userAdd = function(api, connection, user, next) {
-
-    console.log("Adding " + connection.params.userName + " To MongoDB")
-
-    //var ldap_email = user.mail;
-    //var firstName = user.givenName;
-    //var lastName = user.sn;
-    var ldap_email = user.user.email
-    var firstName = user.user.first_name;
-    var lastName = user.user.last_name;
-    var created_at = user.user.created_at;
-    var lastLogin = user.user.lastLogin;
-
-    console.log(user)
-    var entry = { username:connection.params.userName, email:ldap_email, firstName:firstName, lastName:lastName, answerCount:0, acceptedAnswers:0, distinction:"", created_at:created_at, lastLogin:lastLogin};
-    console.log(entry)
-
-    api.mongo.db.users.insert(entry, {safe : true}, function doneCreatingUserEntry(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
 
     /***************** Add a Simulation User ****************************/
   api.mongo.userAddSim = function(api, connection, user, next) {
