@@ -86,8 +86,8 @@ exports.userProfileList = {
   }
 };
 
-exports.userAuthenticateReal = {
-  name: "userAuthenticateReal",
+exports.userAuthenticate = {
+  name: "userAuthenticate",
   description: "I Authenticate Users",
   inputs: {
     required: ['userName', 'password'],
@@ -98,7 +98,7 @@ exports.userAuthenticateReal = {
   version: 1.0,
   run: function(api, connection, next){
 
-      api.user.authenticateReal(api, connection, function(err, token) {
+      api.user.authenticate(api, connection, function(err, token) {
         if (err) {
           connection.response.errors = err;
           next(connection, false);
@@ -120,41 +120,6 @@ exports.userAuthenticateReal = {
   }
 };
 
-exports.userAuthenticate = {
-  name: "userAuthenticate",
-  description: "I Authenticate Users",
-  inputs: {
-    required: ['userName', 'password'],
-    optional: ['token'],
-  },
-  authenticated: false,
-  outputExample: {},
-  version: 1.0,
-  run: function(api, connection, next){
-
-      console.log("Auth: received " + connection.params.userName + ":" + connection.params.password + ":" + connection.params.token);
-      //console.log(connection);
-
-      api.user.authenticate(api, connection, function(err, token) {
-        if (err) {
-          console.log('error received:' + err)
-          connection.response.errors = err;
-          next(connection, false);
-        }
-        if (token.length > 0) {
-         //console.log("token found") 
-         connection.response.token = token; 
-        }
-        else {
-         console.log("Auth Failed")  
-         connection.response.error = "Authentication Failed";
-        }
-      
-       next(connection, true);
-      });
-
-  }
-};
 
 exports.userVerifyToken = {
   name: "userVerifyToken",

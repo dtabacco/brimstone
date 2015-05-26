@@ -5,6 +5,6 @@ angular.module('app.config',[])
 		//DEV
 		//'servername': "54.40.18.118",
 		'servername': "localhost",
-		'port': "9010",
+		'port': "80",
 
     });

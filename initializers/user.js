@@ -7,23 +7,7 @@ var secret = "mysecret";
 var user = function (api, next) {
   api.user = {};
   api.user._start  = function(api, next){
-      api.user.auth_url = api.config.user.auth_url;
-      api.user.profile_url = api.config.user.profile_url;
-      api.user.api_key = api.config.user.api_key;
-      var authbody = '{ "api_key":"' + api.user.api_key + '", "isid":"tabacco"}'
-      console.log(authbody)
-      request.get({
-        headers: {'content-type' : 'application/json'},
-        url:     api.user.profile_url + '/tabacco',
-        body:    authbody
-      }, function(err, response, auth){
-        if (auth) {
-          console.log("User API started");
-        }
-        else {
-          console.log("User API Failed to start properly");
-        }
-      });
+    console.log("User API started");
   };
 
   api.user.verifyHeaderToken = function(api, header_token, next) {
@@ -70,7 +54,7 @@ var user = function (api, next) {
   };
 
   /***************** Search for questions ****************************/
-  api.user.authenticateReal = function(api, connection, next) {
+  api.user.authenticate = function(api, connection, next) {
 
     var token = null;
     console.log("username:" + connection.params.userName)
@@ -162,51 +146,6 @@ var user = function (api, next) {
       }
     }); 
   };
-
-/***************** Search for questions ****************************/
-  api.user.authenticate = function(api, connection, next) {
-
-        console.log("Inside Authenticate")
-
-         api.mongo.userFind(api, connection, function(err, result) {
-          if (err) {
-            connection.response.errors = err;
-            next(connection, false);
-          }
-        
-          console.log(result)
-          if (result.length === 0) {
-          
-            user = {mail:"david_tabacco@merck.com", firstName:"David", lastName:'Tabacco'};
-
-            api.mongo.userAddSim(api, connection, user, function(err, user) {
-        
-              if (err) {
-                connection.response.errors = err;
-                next(connection, false);
-              }
-              console.log("User was added: " + user)
-            });
-          } 
-          else {
-            console.log("user already exists in Mongo")
-          }
-          
-        }); 
-
-         var profile = {
-            username: connection.params.userName,
-            email: 'david_tabacco@merck.com'
-          }
-
-        // We are sending the profile inside the token
-        
-        var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
-
-        console.log("issued token: " + token);
-        next (false, token);
-  };
-
 
   api.user._stop =  function(api, next){
     next();

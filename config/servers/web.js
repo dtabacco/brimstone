@@ -6,7 +6,7 @@ exports.default = {
       return {
         enabled: true,
         // HTTP or HTTPS?
-        secure: true,
+        secure: false,
         // Passed to https.createServer if secure=true. Should contain SSL certificates
         serverOptions: {
           //key: fs.readFileSync('certs/server.key'),
@@ -14,7 +14,7 @@ exports.default = {
         },
         // Port or Socket Path
         //port: 9010,
-        port: 9010,
+        port: 80,
         // Which IP to listen on (use '0.0.0.0' for all; '::' for all on ipv4 and ipv6)
         // Set to `null` when listening to socket
         bindIP: '0.0.0.0',
