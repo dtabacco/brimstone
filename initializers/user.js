@@ -79,7 +79,7 @@ var user = function (api, next) {
         
         //Create Info to put in the Token
         var profile = {
-          username: connection.params.userName
+          username: connection.params.username
         }
 
         //Create the Token
@@ -88,7 +88,7 @@ var user = function (api, next) {
         //Return the Token to the user
         next (false, token);
       }
-      
+
       //Bad password
       else {
         

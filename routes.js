@@ -8,7 +8,7 @@ exports.routes = {
   post: [
     { path: "/users", action: "userAdd" },
     { path: "/users/authenticate", action: "userAuthenticate" },
-    //{ path: "/users/verifyToken", action: "userVerifyToken" },
+    { path: "/users/verifyToken", action: "userVerifyToken" },
   ],
 
   put: [

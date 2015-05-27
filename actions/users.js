@@ -170,8 +170,6 @@ exports.userAuthenticate = {
   }
 };
 
-//LAST Official Code Segment
-
 exports.userVerifyToken = {
   name: "userVerifyToken",
   description: "I Verify Tokens and Return username",
@@ -199,28 +197,5 @@ exports.userVerifyToken = {
         next(connection, true);
       });
 
-  }
-};
-
-
-exports.sendFeedback = {
-  name: "sendFeedback",
-  description: "I send feedback to the admin",
-  inputs: {
-    required: ['message'],
-    optional: [],
-  },
-  authenticated: false,
-  outputExample: {},
-  version: 1.0,
-  run: function(api, connection, next){
-      api.notify.sendFeedback(api, connection, function(err, users) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      connection.response.status = users;
-      next(connection, true);
-    });
   }
 };
