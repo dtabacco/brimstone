@@ -1,6 +1,7 @@
 var request = require('request');
 var querystring = require('querystring');
 var jwt = require('jsonwebtoken');
+var crypto = require('crypto');
 
 var secret = "mysecret";
 
@@ -58,95 +59,45 @@ var user = function (api, next) {
   api.user.authenticate = function(api, connection, next) {
 
     var token = null;
-    console.log("username:" + connection.params.userName)
+    console.log("username:" + connection.params.username)
 
-    var authbody = '{ "api_key":"' + api.user.api_key +'", "username":"' + connection.params.userName + '", "password":"' + connection.params.password + '"}'
+    password_attempt_hash = crypto.createHash('sha256').update(connection.params.password).digest('hex');
 
-    request.post({
-      headers: {'content-type' : 'application/json'},
-      url:     api.user.auth_url,
-      body:    authbody
-    }, function(err, response, auth){
-
-      console.log(auth)
-
+    //Find the User Attempting to Login
+    api.mongo.userFind(api, connection, function(err, result) {
       if (err) {
-        console.log('ERROR: '+JSON.stringify(err));
-        next("Server Error", true)
-      }
+        connection.response.errors = err;
+        next(connection, false);
+      }  
 
-      authObj = JSON.parse(auth)
-      if (authObj.error) {
-        console.log('an error was returned')
-        //next (true, token);
-        next (false, token);
-      }
+      var password_store_hash = result[0].password
+      console.log("password Stored:" + password_store_hash)
+      console.log("password Attempted:" + password_attempt_hash)
 
-      else if (auth) {
+      //Good Password
+      if (password_attempt_hash === password_store_hash) {  
+        
+        //Create Info to put in the Token
         var profile = {
           username: connection.params.userName
         }
+
+        //Create the Token
         token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
-   
+
         //Return the Token to the user
         next (false, token);
-
-        var userObject = JSON.parse(auth)
-        console.log(userObject)
-        //console.log(userObject.user.email)
-        //console.log(userObject.user.first_name)
-        //console.log(userObject.user.last_name)
-
-        //Add Create Date and Last Login
-        var now = new Date(); 
-        userObject.user.created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
-        userObject.user.lastLogin = now.toLocaleDateString() + " " + now.toLocaleTimeString();
-        console.log(userObject)
-        
-        //console.log(JSON.stringify(user));
-        console.log("Copy over to Mongo if necessary")
-
-        api.mongo.userFind(api, connection, function(err, result) {
-          console.log("6 - Callback returned for Mongo  userFind")
-          if (err) {
-            connection.response.errors = err;
-            next(connection, false);
-          }  
-          console.log(result)
-          if (result.length === 0) {
-            console.log("7A - Adding to Mongo")
-            api.mongo.userAdd(api, connection, userObject, function(err, user) {
-              console.log("8 - CallBack from Adding to Mongo")
-        
-              if (err) {
-                connection.response.errors = err;
-                next(connection, false);
-              }
-              console.log("User was added: " + user)
-            });
-          } 
-          else {
-            console.log("user already exists in Mongo")
-            console.log(user)
-            console.log("Doing Last Login Time Update")
-
-            api.mongo.userUpdateLastLoginTime(api, connection, function(err, user) {
-              console.log("9 - CallBack from Updating LastLoginTime in Mongo")
-              if (err) {
-                connection.response.errors = err;
-                next(connection, false);
-              }
-            });
-          }
-        });
       }
       
+      //Bad password
       else {
-        console.log('unknown error!');
-        next (true, token);
+        
+        next (false, token);
       }
-    }); 
-  };
+        
+    });
+  };  
+
 
   api.user._stop =  function(api, next){
     next();

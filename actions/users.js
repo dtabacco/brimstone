@@ -9,7 +9,7 @@ exports.userAdd = {
   outputExample: {},
   version: 1.0,
   run: function(api, connection, next){
-    console.log("Adding User")
+
       api.mongo.userAdd(api, connection, function(err, users) {
       if (err) {
         connection.response.errors = err;
@@ -20,9 +20,6 @@ exports.userAdd = {
     });
   }
 };
-
-
-//LAST Official Code Segment
 
 exports.usersList = {
   name: "usersList",
@@ -91,6 +88,30 @@ exports.usersDeleteID = {
   }
 };
 
+
+exports.userEdit = {
+  name: "userEdit",
+  description: "I edit a user profile",
+  inputs: {
+    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_ind', 'company_name'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.userEdit(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response = "Success";
+      connection.rawConnection.responseHttpCode = 200;
+      next(connection, true);
+    });
+  }
+};
+
 exports.userProfileList = {
   name: "userProfileList",
   description: "I list all the full profile of a user",
@@ -113,11 +134,13 @@ exports.userProfileList = {
   }
 };
 
+
+
 exports.userAuthenticate = {
   name: "userAuthenticate",
   description: "I Authenticate Users",
   inputs: {
-    required: ['userName', 'password'],
+    required: ['username', 'password'],
     optional: [],
   },
   authenticated: false,
@@ -147,6 +170,7 @@ exports.userAuthenticate = {
   }
 };
 
+//LAST Official Code Segment
 
 exports.userVerifyToken = {
   name: "userVerifyToken",

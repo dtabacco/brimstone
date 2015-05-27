@@ -1,5 +1,6 @@
 var mongojs = require('mongojs');
 var mongodb = require('mongodb');
+var crypto = require('crypto');
 
 var mongo = function (api, next) {
   api.mongo = {};
@@ -23,29 +24,133 @@ var mongo = function (api, next) {
   };
 
 
-/***************** Add a Question ****************************/
-api.mongo.userAdd = function(api, connection, next) {
+  /***************** Add a User ****************************/
+  api.mongo.userAdd = function(api, connection, next) {
 
-      //Capture the Date/Time of the Registration
-      var now = new Date(); 
-      var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+    //Capture the Date/Time of the Registration
+    var now = new Date(); 
+    var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
-      //Create JSON Entry to Add to MongoDB
-      var entry = { username:connection.params.username, password:connection.params.password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
-                  email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at};
+    //Hash Password before storing
+    hashed_password = crypto.createHash('sha256').update(connection.params.password).digest('hex');
 
-       //Insert JSON Entry to Add to MongoDB
-        api.mongo.db.users.insert(entry, {safe : true}, function doneCreatingUserEntry(err, results) {
-          if (err) { 
-             next(err, false); 
-          }
-          //connection.response.content = results; 
-          next(err, results);  
+    //Create JSON Entry to Add to MongoDB
+    var entry = { username:connection.params.username, password:hashed_password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
+                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at};
 
-        });
+   //Insert JSON Entry to Add to MongoDB
+    api.mongo.db.users.insert(entry, {safe : true}, function doneCreatingUserEntry(err, results) {
+      if (err) { 
+         next(err, false); 
+      }
+      next(err, results);  
+
+    });
+  };
+
+  /***************** Get All Users ****************************/
+  api.mongo.usersList = function(api, connection, next) {
+
+    var query = {}
+
+    api.mongo.db.users.find(query, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      next(err, results);   
+    });
+  };  
+
+  /***************** Delete All Users ****************************/
+  api.mongo.usersDelete = function(api, connection, next) {
+
+    var query = {}
+
+    api.mongo.db.users.remove(query, function doneDeleting(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      connection.response.content = results; 
+      next(err, true);   
+    });
   };
 
 
+  /***************** Delete All Users ****************************/
+  api.mongo.usersDeleteID = function(api, connection, next) {
+
+    var BSON = mongodb.BSONPure;
+    var o_id = new BSON.ObjectID(connection.params.id);
+    var query = { "_id":o_id};
+
+    api.mongo.db.users.remove(query, function doneDeleting(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      next(err, true);   
+    });
+  };
+
+
+  /***************** Search for User ****************************/
+  api.mongo.userFind = function(api, connection, next) {
+
+    var query = {username:connection.params.username}
+
+    api.mongo.db.users.find(query, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      //connection.response.content = results; 
+      console.log(results)
+      next(err, results);   
+    });
+  };
+
+
+  /***************** Edit User Profile ****************************/
+  api.mongo.userEdit = function(api, connection, next) {
+
+      var query = {username:connection.params.username}
+
+      //Find User who's answer was accepted
+      api.mongo.db.users.find(query, function doneSearching(err, results) {
+        if (err) { 
+            next(err, false); 
+        } 
+
+        console.log("Account getting updated " + results[0].username)
+
+        //Copy all users attributes so they are not lost in update and increment accepted answer count
+        for (var i = 0; i < results.length; i++) {
+          o_id = results[i]._id;
+          username = connection.params.username;
+          firstName = connection.params.firstName;
+          lastName = connection.params.lastName;
+          email = connection.params.email;
+          zipcode = connection.params.zipcode;
+          company_ind = connection.params.company_ind;
+          company_name = connection.params.company_name;
+          created_at = results[i].created_at;
+          lastLogin =  results[i].lastLogin;
+        }
+
+        //Create JSON Entry to update in MongoDB
+        entry = {username:connection.params.username, password:connection.params.password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
+                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at}; 
+  
+        //Update MongoDB
+        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
+            if (err) { 
+              next(err, false); 
+            } 
+            next(err, results); 
+          });
+        next(err, results);   
+      });
+  } 
+
+  
 /***************** Add a Question ****************************/
 api.mongo.questionAdd = function(api, connection, next) {
 
@@ -84,93 +189,6 @@ api.mongo.questionAdd = function(api, connection, next) {
 
         });
   };
-
-  
-   /***************** Remove an answer count from the user's profile ****************************/
-  api.mongo.lowerUserAnswerCount = function(api, user, next) {
-
-    var query = {username:user}
-
-    //Find User who provided Answer
-    api.mongo.db.users.find(query, function doneSearching(err, results) {
-        if (err) { 
-          next(err, false); 
-        }
-
-        console.log("Account that gets the Answer Count Update: " + results[0].username)
-
-        //Copy all users attributes so they are not lost in update and increment answer count
-        for (var i = 0; i < results.length; i++) {
-          o_id = results[i]._id;
-          username = results[i].username;
-          firstName = results[i].firstName;
-          lastName = results[i].lastName;
-          email = results[i].email;
-          answerCount = results[i].answerCount - 1;
-          acceptedAnswers = results[i].acceptedAnswers;
-          distinction = results[i].distinction;
-          created_at = results[i].created_at;
-          lastLogin =  results[i].lastLogin;
-        }
-
-        //Create JSON Entry to update in MongoDB
-        entry = {username:username, email:email, acceptedAnswers:acceptedAnswers, answerCount:answerCount, distinction:distinction, created_at:created_at, lastLogin:lastLogin, firstName:firstName, lastName:lastName}
-        
-        //Update MongoDB
-        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          console.log(results) 
-          next(err, results); 
-        });
-        
-        next (err, "Updated"); 
-      });
-  }
-
-  /***************** Add an answer to a question ****************************/
-  api.mongo.updateUserAnswerCount = function(api, notify_info, next) {
-
-    var query = {username:notify_info[3].answer_username}
-
-    //Find User who provided Answer
-    api.mongo.db.users.find(query, function doneSearching(err, results) {
-        if (err) { 
-          next(err, false); 
-        }
-
-        console.log("Account that gets the Answer Count Update: " + results[0].username)
-
-        //Copy all users attributes so they are not lost in update and increment answer count
-        for (var i = 0; i < results.length; i++) {
-          o_id = results[i]._id;
-          username = results[i].username;
-          firstName = results[i].firstName;
-          lastName = results[i].lastName;
-          email = results[i].email;
-          answerCount = results[i].answerCount + 1;
-          acceptedAnswers = results[i].acceptedAnswers;
-          distinction = results[i].distinction;
-          created_at = results[i].created_at;
-          lastLogin =  results[i].lastLogin;
-        }
-
-        //Create JSON Entry to update in MongoDB
-        entry = {username:username, email:email, acceptedAnswers:acceptedAnswers, answerCount:answerCount, distinction:distinction, created_at:created_at, lastLogin:lastLogin, firstName:firstName, lastName:lastName}
-        
-        //Update MongoDB
-        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          console.log(results) 
-          next(err, results); 
-        });
-        
-        next (err, "Updated"); 
-      });
-  }
 
  /***************** Add an answer to a question ****************************/
   api.mongo.updateUserScore = function(api, connection, user, next) {
@@ -999,20 +1017,7 @@ api.mongo.questionAdd = function(api, connection, next) {
       });
   };
 
-  /***************** Search for User ****************************/
-  api.mongo.userFind = function(api, connection, next) {
 
-        var query = {username:connection.params.userName}
-
-        api.mongo.db.users.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-
-          //connection.response.content = results; 
-          next(err, results);   
-        });
-  };
 
   /***************** Search for User ****************************/
   api.mongo.userGetEmail = function(api, search_username, next) {
@@ -1031,53 +1036,7 @@ api.mongo.questionAdd = function(api, connection, next) {
   };
 
 
-  /***************** Get All Users ****************************/
-  api.mongo.usersList = function(api, connection, next) {
-
-        var query = {}
-
-        api.mongo.db.users.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-
-          //connection.response.content = results; 
-          next(err, results);   
-        });
-  };
-
-  /***************** Delete All Users ****************************/
-  api.mongo.usersDelete = function(api, connection, next) {
-
-        var query = {}
-
-        api.mongo.db.users.remove(query, function doneDeleting(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-
-          connection.response.content = results; 
-          next(err, true);   
-        });
-  };
-
-
-/***************** Delete All Users ****************************/
-  api.mongo.usersDeleteID = function(api, connection, next) {
-
-        var BSON = mongodb.BSONPure;
-        var o_id = new BSON.ObjectID(connection.params.id);
-        var query = { "_id":o_id};
-
-        api.mongo.db.users.remove(query, function doneDeleting(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-
-          connection.response.content = results; 
-          next(err, true);   
-        });
-  };
+  
   
 
 /***************** Get Leaderboard for top 10 ****************************/
