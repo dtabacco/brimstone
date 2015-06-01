@@ -84,7 +84,13 @@ var user = function (api, next) {
 
         //Create the Token
         token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
-
+        
+        api.mongo.userUpdateLastLoginTime(api, connection, function(err, user) {
+              if (err) {
+                connection.response.errors = err;
+              }
+        });
+        
         //Return the Token to the user
         next (false, token);
       }

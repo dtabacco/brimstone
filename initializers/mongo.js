@@ -254,254 +254,10 @@ api.mongo.questionAdd = function(api, connection, next) {
         });
   };
 
- /***************** Add an answer to a question ****************************/
-  api.mongo.updateUserScore = function(api, connection, user, next) {
-
-      var query = {username:user}
-
-      //Find User who's answer was accepted
-      api.mongo.db.users.find(query, function doneSearching(err, results) {
-        if (err) { 
-            next(err, false); 
-        } 
-
-        console.log("Account that gets points: " + results[0].username)
-
-        //Copy all users attributes so they are not lost in update and increment accepted answer count
-        for (var i = 0; i < results.length; i++) {
-          o_id = results[i]._id;
-          username = results[i].username;
-          firstName = results[i].firstName;
-          lastName = results[i].lastName;
-          email = results[i].email;
-          answerCount = results[i].answerCount;
-          acceptedAnswers = results[i].acceptedAnswers + 1;
-          distinction = results[i].distinction;
-          created_at = results[i].created_at;
-          lastLogin =  results[i].lastLogin;
-        }
-
-        //Create JSON Entry to update in MongoDB
-        entry = {username:username, email:email, acceptedAnswers:acceptedAnswers, answerCount:answerCount, distinction:distinction, created_at:created_at, lastLogin:lastLogin, firstName:firstName, lastName:lastName}
-        //console.log("Object that will be sent to update: " + JSON.stringify(entry))
-        //console.log(o_id)
-
-        //Update MongoDB
-        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
-            if (err) { 
-              next(err, false); 
-            } 
-            console.log(results) 
-            next(err, results); 
-          });
-        next(err, results);   
-      });
-  } 
-
-/***************** Add an answer to a question ****************************/
-  api.mongo.answerAdd = function(api, connection, next) {
-
-    //First get the existing record
-    var BSON = mongodb.BSONPure;
-    var o_id = new BSON.ObjectID(connection.params.question_id);
-    var query = { "_id":o_id};
-
-    var answer_record = [];
-    var notify_users = [];
-    var answer_id = 0;
-    var upvote = 0;
-    var downvote = 0;
-    var voters = [];
-
-    var now = new Date(); 
-    var answer_created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
-
-    //Find User who's answer was accepted
-    api.mongo.db.questions.find(query, function doneSearching(err, result) {
-     
-      if (err) { 
-        next(err, false); 
-      } 
-
-      //console.log("Located Question")
-      //console.log("Length: " + result.length)
-
-      //Load existing data so it is not lost in update
-      for (var i = 0; i < result.length; i++) {
-        answer_record = result[i].answers;
-        questionTitle = result[i].questionTitle;
-        questionBody = result[i].questionBody;
-        username = result[i].username;
-        tags = result[i].tags;
-        question_id = result[i]._id;
-        notify_users = result[i].notify;
-        created_at = result[i].created_at;
-        status = result[i].status;
-        views = result[i].views;
-        numAnswers = result[i].numAnswers + 1;
-      }
-
-      answer_id_collection =  [];
-      if (answer_record) {
-        console.log("Answers were found")
-
-        //Create a collection of all the in-use IDs
-        for (i = 0; i < answer_record.length; i++) {
-          answer_id_collection.push(answer_record[i].id)
-        }
-        console.log("Existing IDs " + answer_id_collection )
-
-        var found = false;
-        //Set answer_ID initially to the next value - will work if there are no deletes
-        answer_id = answer_record.length;
-        while (found == false) {
-
-          console.log("Checking to see if " + answer_id + " " + "can be used")
-          if (answer_id_collection.indexOf(answer_id) === -1) {
-            console.log(answer_id + " is available")
-            found = true;
-          }
-          else {
-            console.log(answer_id + " is not available, incrementing + 1")
-            answer_id = answer_id + 1;
-
-          }
-        }
-        
-      }
-
-      //This will happen during the initial question, since there will be no answer array
-      if (!answer_record) {
-        answer_record = [];
-         answer_id = answer_record.length;   //will be 0
-      }
-
-      //Set the ID to the length of answers to ensure it will be the next available number
-      //answer_id = answer_record.length;
 
 
-
-      /***** Update Existing Answers Array with new answer ****/
-      answer_record.push({username: connection.params.userName, answerBody:connection.params.answer, created_at:answer_created_at, id:answer_id, upvote:upvote, downvote:downvote, voters:voters, accepted:"no"}) 
-
-      /***** Update Notification List with new answer username ****/
-      //Enhance this to check to see if user is in list already
-      if (notify_users.indexOf(connection.params.userName) == -1) {
-        notify_users.push(connection.params.userName)
-      }
-      else {
-        console.log("User was already in the notify list")
-      }
-
-      //Create Array to Store Users that will be notified
-      notify_info = [];
-      notify_info.push({notify:notify_users})
-      notify_info.push({question_id:question_id})
-      notify_info.push({asker:username})
-
-      //adding this for UpdatingAnswerCount only
-      notify_info.push({answer_username: connection.params.userName})
-      notify_info.push({questionTitle:questionTitle})
-
-      //Create JSON Entry to update in MongoDB
-      entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify_users, created_at:created_at, status:status, views:views, answers:answer_record, numAnswers:numAnswers}
-
-      //Update MongoDB
-      api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneAddingAnswer(err, results) {
-        if (err) { 
-         next(err, false); 
-        }  
-        console.log(results)
-        connection.response.content = results; 
-        next(err, notify_info);     
-      });
-    }); 
-  };
 
   
-  /***************** editAnswer ****************************/
-  api.mongo.editAnswer = function(api, connection, next) {
-
-        var BSON = mongodb.BSONPure;
-        var o_id = new BSON.ObjectID(connection.params.id);
-        var query = { "_id":o_id};
-
-        var results = [];
-
-        //Find the Question
-        api.mongo.db.questions.find(query, function doneSearchingForQuestion(err, result) {
-            if (err) { 
-              next(err, false); 
-            } 
-
-            //Load existing data so it is not lost in update
-            for (var i = 0; i < result.length; i++) {
-              answer_record = result[i].answers;
-              questionTitle = result[i].questionTitle;
-              questionBody = result[i].questionBody;
-              username = result[i].username;
-              tags = result[i].tags;
-              question_id = result[i]._id;
-              notify_users = result[i].notify;
-              created_at = result[i].created_at;
-              status = result[i].status;
-              views = result[i].views;
-              numAnswers = result[i].numAnswers;
-            }         
-
-            //Do Updates Here....
-            answerBody = connection.params.answerBody;
-
-            //Iterate through the answers and find the right one to update
-            for (var i = 0; i < answer_record.length; i++) {
-
-              if (connection.params.answer_id == answer_record[i].id) {
-                answer_record[i].answerBody = connection.params.answerBody;
-              }
-              /*
-              if (connection.params.vote === "up" && i === parseInt(connection.params.answer_id)) {
-
-                  //Check to see if Voter is NOt in the Existing voters array
-                  // Position will be returned or -1 if not present
-                  if (answer_record[i].voters.indexOf(connection.params.userName) === -1) {
-                    console.log("Matched Up and Answer ID")
-                    answer_record[i].upvote = answer_record[i].upvote + 1;
-                    answer_record[i].voters.push(connection.params.userName);
-                  }
-                  else {
-                    console.log("Used Already Voted");
-                    update = false;
-                    next(err, "duplicate")
-                  }
-              }
-              */
-            
-            }
-
-            //Create JSON Entry to update in MongoDB
-            entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify_users, created_at:created_at, status:status, views:views, answers:answer_record, numAnswers:numAnswers}
-
-            //Update MongoDB
-            api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneAddingAnswer(err, results) {
-              if (err) { 
-               next(err, false); 
-              }  
-              console.log(results)
-              
-              console.log("Re-search for " + query )
-              api.mongo.db.questions.find(query, function doneSearchingForQuestion(err, result) {
-              if (err) { 
-                next(err, false); 
-              } 
-
-              connection.response.content = result; 
-              next(err, result);   
-              });  
-            });
-
-        });
-  };
-
 
   /***************** editQuestion ****************************/
   api.mongo.editQuestion = function(api, connection, next) {
@@ -1015,9 +771,9 @@ api.mongo.questionAdd = function(api, connection, next) {
   /***************** Add a User ****************************/
   api.mongo.userUpdateLastLoginTime = function(api, connection, next) {
 
-    var query = {username:connection.params.userName};
+    var query = {username:connection.params.username};
 
-    console.log("Updating " + connection.params.userName + " in MongoDB")
+    console.log("Updating " + connection.params.username + " in MongoDB")
 
     //Find User who provided Answer
     api.mongo.db.users.find(query, function doneSearching(err, results) {
@@ -1034,26 +790,23 @@ api.mongo.questionAdd = function(api, connection, next) {
         for (var i = 0; i < results.length; i++) {
           o_id = results[i]._id;
           username = results[i].username;
-          firstName = results[i].firstName;
-          lastName = results[i].lastName;
+          firstName = results[i].firstname;
+          lastName = results[i].lastname;
           email = results[i].email;
-          answerCount = results[i].answerCount;
-          acceptedAnswers = results[i].acceptedAnswers;
-          distinction = results[i].distinction;
           created_at = results[i].created_at;
-          lastLogin = lastLogin;
+          last_login = lastLogin;
         }
 
         //Create JSON Entry to update in MongoDB
-        entry = {username:username, email:email, acceptedAnswers:acceptedAnswers, answerCount:answerCount, distinction:distinction, created_at:created_at, lastLogin:lastLogin, firstName:firstName, lastName:lastName}
-        
+        entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
+                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+  
         //Update MongoDB
         api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
           if (err) { 
             next(err, false); 
           } 
-          console.log(results) 
-          next(err, results); 
+          console.log(results)  
         });
         
         next (err, "Updated"); 
@@ -1079,107 +832,6 @@ api.mongo.questionAdd = function(api, connection, next) {
   };
 
 
-
-    /***************** Get Statistics on questions ****************************/
-  api.mongo.statsAllUsers = function(api, connection, next) {
-
-        var query = {} 
-
-       //api.mongo.db.users.find(query, projection,  function doneSearching(err, results) {
-        api.mongo.db.users.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("Total Users:" + results.length)
-          next(err, results.length);   
-        });
-  };
-
-
-  /***************** Get Statistics on questions ****************************/
-  api.mongo.statsAllQuestions = function(api, connection, next) {
-
-        var query = {} 
-
-       //api.mongo.db.users.find(query, projection,  function doneSearching(err, results) {
-        api.mongo.db.questions.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("Total Questions:" + results.length)
-          next(err, results.length);   
-        });
-  };
-
-  
-  /***************** Get Statistics on questions ****************************/
-  api.mongo.statsOpenQuestions = function(api, connection, next) {
-
-        var query = {status:"open"} 
-
-       //api.mongo.db.users.find(query, projection,  function doneSearching(err, results) {
-        api.mongo.db.questions.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("Open Questions:" + results.length)
-          next(err, results.length);   
-        });
-  };
-
-  /***************** Get Statistics on questions ****************************/
-  api.mongo.statsClosedQuestions = function(api, connection, next) {
-
-        var query = {status:"closed"} 
-
-       //api.mongo.db.users.find(query, projection,  function doneSearching(err, results) {
-        api.mongo.db.questions.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("closed Questions:" + results.length)
-          next(err, results.length);   
-        });
-  };
-
-  /***************** Get Statistics on questions ****************************/
-  api.mongo.statsLastDay = function(api, connection, next) {
-
-        var now = new Date();
-
-        console.log("Now Native:" + now)
-
-        console.log("Now:" + now.toLocaleString() )
-
-        now.setDate(now.getDate()-1);
-
-        var lastday = now.toLocaleDateString() + " " + now.toLocaleTimeString();
-
-        console.log("Yesterday " + lastday)
-        //var query = {created_at: {$gte: "3/5/2015 11:34:43 AM" }} 
-        var query = {created_at: {$gte: lastday }}
-        //var query = {created_at: {$gte: "3/6/2015 6:34:43 PM" }}
-
-        console.log(query)
-
-        /*created_at: {
-        $gte:"Mon May 30 18:47:00 +0000 2015",
-        $lt: "Sun May 30 20:40:36 +0000 2010"
-        }
-        */
-        api.mongo.db.questions.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("Questions in last 24 hours:" + results.length)
-          next(err, results.length);   
-        });
-  };
 
   
   /***************** Get Archive of questions ****************************/
