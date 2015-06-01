@@ -2,8 +2,8 @@ exports.userAdd = {
   name: "userAdd",
   description: "I register a new user",
   inputs: {
-    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_ind', 'company_name'],
-    optional: [],
+    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_name'],
+    optional: ['company_ind'],
   },
   authenticated: false,
   outputExample: {},
@@ -93,20 +93,45 @@ exports.userEdit = {
   name: "userEdit",
   description: "I edit a user profile",
   inputs: {
-    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_ind', 'company_name'],
+    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_name'],
+    optional: ['company_ind'],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      console.log(connection.parameters)
+      api.mongo.userEdit(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response = users;
+      connection.rawConnection.responseHttpCode = 200;
+      next(connection, true);
+    });
+  }
+};
+
+
+exports.userPasswordEdit = {
+  name: "userPasswordEdit",
+  description: "I edit a user password",
+  inputs: {
+    required: ['username', 'password'],
     optional: [],
   },
   authenticated: false,
   outputExample: {},
   version: 1.0,
   run: function(api, connection, next){
-      api.mongo.userEdit(api, connection, function(err, users) {
+      console.log(connection.parameters)
+      api.mongo.userPasswordEdit(api, connection, function(err, users) {
       if (err) {
         connection.response.errors = err;
         next(connection, false);
       }
-      connection.response = "Success";
-      connection.rawConnection.responseHttpCode = 200;
+      connection.response = users;
       next(connection, true);
     });
   }
@@ -116,7 +141,7 @@ exports.userProfileList = {
   name: "userProfileList",
   description: "I list all the full profile of a user",
   inputs: {
-    required: ['userName'],
+    required: ['username'],
     optional: [],
   },
   authenticated: false,
@@ -133,7 +158,6 @@ exports.userProfileList = {
     });
   }
 };
-
 
 
 exports.userAuthenticate = {

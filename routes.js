@@ -2,7 +2,7 @@ exports.routes = {
   
   get: [
     { path: "/users", action: "usersList" },
-    { path: "/users/:userName", action: "userProfileList" },   
+    { path: "/users/:username", action: "userProfileList" },   
   ],
 
   post: [
@@ -13,6 +13,7 @@ exports.routes = {
 
   put: [
     { path: "/users/:username", action: "userEdit" },
+    { path: "/users/password/:username", action: "userPasswordEdit" },
   ],
 
   delete: [

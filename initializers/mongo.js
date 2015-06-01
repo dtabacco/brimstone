@@ -102,11 +102,65 @@ var mongo = function (api, next) {
         next(err, false); 
       } 
       //connection.response.content = results; 
-      console.log(results)
+      //console.log(results)
       next(err, results);   
     });
   };
 
+
+  
+  /***************** Edit User Password ****************************/
+  api.mongo.userPasswordEdit = function(api, connection, next) {
+
+      var query = {username:connection.params.username}
+
+      //Find User who's answer was accepted
+      api.mongo.db.users.find(query, function doneSearching(err, results) {
+        if (err) { 
+            next(err, false); 
+        } 
+
+        console.log("Account getting updated " + results[0].username)
+
+        //Hash Password before storing
+        hashed_password = crypto.createHash('sha256').update(connection.params.password).digest('hex');
+
+        //Copy all users attributes so they are not lost in update and increment accepted answer count
+        for (var i = 0; i < results.length; i++) {
+          o_id = results[i]._id;
+          username = results[i].username;
+          password = hashed_password;
+          firstname = results[i].firstname;
+          lastname = results[i].lastname;
+          email = results[i].email;
+          zipcode = results[i].zipcode;
+          company_ind = results[i].company_ind;
+          company_name = results[i].company_name;
+          created_at = results[i].created_at;
+          last_login =  results[i].last_Login;
+        }
+
+
+        //Create JSON Entry to update in MongoDB
+        entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
+                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+  
+        //Update MongoDB
+        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
+            if (err) { 
+              next(err, false); 
+            } 
+
+            api.mongo.db.users.find(query, function doneSearching(err, results) {
+            if (err) { 
+                next(err, false); 
+            } 
+            next(err, results); 
+            });
+          });
+        //next(err, results);   
+      });
+  } 
 
   /***************** Edit User Profile ****************************/
   api.mongo.userEdit = function(api, connection, next) {
@@ -121,32 +175,42 @@ var mongo = function (api, next) {
 
         console.log("Account getting updated " + results[0].username)
 
+
+
         //Copy all users attributes so they are not lost in update and increment accepted answer count
         for (var i = 0; i < results.length; i++) {
           o_id = results[i]._id;
           username = connection.params.username;
-          firstName = connection.params.firstName;
-          lastName = connection.params.lastName;
+          password = results[i].password;
+          firstname = connection.params.firstname;
+          lastname = connection.params.lastname;
           email = connection.params.email;
           zipcode = connection.params.zipcode;
           company_ind = connection.params.company_ind;
           company_name = connection.params.company_name;
           created_at = results[i].created_at;
-          lastLogin =  results[i].lastLogin;
+          last_login =  results[i].last_Login;
         }
+
 
         //Create JSON Entry to update in MongoDB
         entry = {username:connection.params.username, password:connection.params.password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
-                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at}; 
+                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:last_login}; 
   
         //Update MongoDB
         api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
             if (err) { 
               next(err, false); 
             } 
+
+            api.mongo.db.users.find(query, function doneSearching(err, results) {
+            if (err) { 
+                next(err, false); 
+            } 
             next(err, results); 
+            });
           });
-        next(err, results);   
+        //next(err, results);   
       });
   } 
 
@@ -947,27 +1011,6 @@ api.mongo.questionAdd = function(api, connection, next) {
   };
 
 
-    /***************** Add a Simulation User ****************************/
-  api.mongo.userAddSim = function(api, connection, user, next) {
-
-    console.log("Adding " + connection.params.userName + " To MongoDB")
-
-    var ldap_email = user.mail;
-    var firstName = user.firstName;
-    var lastName = user.lastName;
-    var created_at = user.created_at;
-    var lastLogin = user.lastLogin;
-
-    var entry = { username:connection.params.userName, email:ldap_email, firstName:firstName, lastName:lastName, answerCount:0, acceptedAnswers:0, distinction:"", created_at:created_at, lastLogin:lastLogin};
-
-    api.mongo.db.users.insert(entry, {safe : true}, function doneCreatingUserEntry(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
 
   /***************** Add a User ****************************/
   api.mongo.userUpdateLastLoginTime = function(api, connection, next) {
@@ -1036,24 +1079,6 @@ api.mongo.questionAdd = function(api, connection, next) {
   };
 
 
-  
-  
-
-/***************** Get Leaderboard for top 10 ****************************/
-  api.mongo.leaderboardTopTen = function(api, connection, next) {
-
-        var query = {acceptedAnswers:-1} // -1 is descending order, 1 is ascending (starting at 0)
-        var projection = {username:1, acceptedAnswers:1, _id:0}
-
-       //api.mongo.db.users.find(query, projection,  function doneSearching(err, results) {
-        api.mongo.db.users.find().limit(50).sort(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          next(err, results);   
-        });
-  };
 
     /***************** Get Statistics on questions ****************************/
   api.mongo.statsAllUsers = function(api, connection, next) {
