@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="brimstone">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+ 
+    <title>Create Listing</title>
+
+    <!-- Load the Angular Javascript -->
+    <script src="js/angular.min.js"></script>
+
+     <!-- Load your custom Javascript with the module defined -->
+    <script src="js/app.config.js"></script> 
+    <script src="js/controllers.js"></script>
+
+     <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet"> 
+
+  </head>
+
+  <body>
+    <div ng-controller="UserManager" ng-init="checkLoginStatus()">
+      <div ng-include="'header.html'">
+      </div>
+   
+      <div id="blue">
+        <div class="container">
+          <div class="row centered">
+            <div class="col-lg-8 col-lg-offset-2">
+            <h4>Create Listing</h4>
+            </div>
+          </div><!-- row -->
+        </div><!-- container -->
+      </div><!--  bluewrap --> 
+           
+      <div class="container w">
+        <div class="row">
+          <div class="col-lg-3">&nbsp;</div>  
+          <div class="col-lg-6">    
+            <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
+            <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+            <div ng-controller="listingManager">
+
+              <!-- FORM -->
+              <form  class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
+                <div class="form-group">
+                  <label>Title</label> <input type="text" class="form-control" name="username" maxlength="50" required ng-model="listing.title"><br />
+                  <label>Description</label><textarea class="form-control" rows="5" id="description" required maxlength="50" ng-model="listing.description"></textarea>        
+                </div>  <!-- End Form Group -->
+                <div class="form-group">
+                  <div class="form-group row">
+                    <div class="col-md-3">
+                      <label>Price</label> <input type="text" class="form-control" name="price" maxlength="10" required ng-model="listing.price"><br />
+                    </div>
+                    <div class="col-md-6">
+                      <label>Location</label> <input type="text" class="form-control" name="price" maxlength="25" required ng-model="listing.location"><br />
+                    </div>
+                    <div class="col-md-3">
+                       <label>Zipcode</label> <input type="text" class="form-control" name="price" maxlength="5" required ng-model="listing.zipcode"><br />
+                    </div> 
+                  </div> <!-- End Form Group --> 
+                </div>  <!-- End Form Group Row -->
+                <div class="form-group">
+                  Slide This button to prove you are a human<bR>
+                  <br>
+                  <button type="submit" class="btn btn-primary">Create Listing</button><br /> 
+                </div>
+              </form>
+        
+                   {{listing}}
+                   {{user}}
+                   {{loggedin}}
+              </div>
+          </div>  
+          <div class="col-lg-3">&nbsp;</div><!-- col-lg-4 -->
+        </div><!-- row -->
+        <br>
+      </div><!-- container -->
+      
+      
+    </div> <!-- End of UserManager -->   
+            
+
+           
+
+     
+        <div ng-include="'footer.html'"></div> 
+      </div>  <!-- End of User Manager Controller -->   
+                
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+
+</html>
+
+
+3

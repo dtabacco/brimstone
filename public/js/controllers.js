@@ -1,4 +1,4 @@
-
+glb_username = ''
 
 var BrimstoneApp = angular.module('brimstone', ['app.config'], function( appConfig) {
 	
@@ -19,7 +19,92 @@ var BrimstoneApp = angular.module('brimstone', ['app.config'], function( appConf
 
 
 
-	BrimstoneApp.controller('questionManager', function( $scope, $http, $filter, $location, $window, $sce, $document, appConfig) {
+	BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $location, $window, $sce, $document, appConfig) {
+		
+		$scope.listing = {};
+		var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
+		
+		//This is required or it will send as JSON by default and fail
+		$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+		$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+
+		$scope.addListing = function() {
+
+			username = glb_username;
+		
+			console.log(username)
+			console.log($scope.listing.title)
+
+			if (!$scope.listing.title) {
+       			$scope.queryError = 'Title Required';
+				return $scope.queryError;
+      		}
+      		if (!$scope.listing.description) {
+       			$scope.queryError = 'Description Required';
+				return $scope.queryError;
+      		}
+
+      		if (!$scope.listing.zipcode) {
+       			$scope.queryError = 'zipcode Required';
+				return $scope.queryError;
+      		}
+
+			$scope.queryError = null;
+			$scope.statusmsg = null;
+
+			//Define REST Endpoint
+			$scope.registerQuery = restURLEndpoint + '/api/listings';
+			console.log('URL:' + $scope.registerQuery)
+			
+			//Assign all the incoming scope parameters to the post data variable
+			postData = 'username=' + glb_username + '&' + 'title=' + $scope.listing.title + '&' + 'description=' + $scope.listing.description + '&' + 
+					   'price=' + $scope.listing.price + '&' + 'zipcode=' + $scope.listing.zipcode + '&' + 'location=' + $scope.listing.location; 
+						
+			console.log(postData)
+
+			$http.post($scope.registerQuery, postData)
+			.success(function(response) {
+				
+				//Convert to .id for angular
+				response.listing.id = response.listing._id;
+				$scope.listing = response.listing;
+				location = "viewlisting.html?id=" + $scope.listing.id;
+							 	
+			})
+			.error(function(data, status, headers, config) {
+				$scope.queryError = data;
+			});
+		};
+
+		$scope.getListing = function() {
+
+			console.log("Getting Listing")
+			if (QueryString.id) {
+				$scope.listing.id = QueryString.id;
+			}
+
+			$scope.queryError = null;
+			$scope.statusmsg = null;
+
+			$scope.listingQuery = restURLEndpoint + '/api/listings/' + $scope.listing.id ;
+			console.log($scope.listingQuery)
+
+			$http.get($scope.listingQuery)
+			.success(function(response) {
+
+				$scope.listing = response.listing[0]
+				console.log($scope.listing)
+				/*
+				document.getElementById('title').innerHTML = response.content[0].questionTitle;
+				document.getElementById('article4').innerHTML = response.content[0].questionBody;
+				document.getElementById('comment').innerHTML = response.content[0].tags;*/
+			})
+
+			.error(function(data, status, headers, config) {
+				$scope.queryError = data;
+			});	
+
+	};
 
 	});
 		
@@ -145,6 +230,15 @@ var BrimstoneApp = angular.module('brimstone', ['app.config'], function( appConf
        			$scope.queryError = 'Password Required';
 				return $scope.queryError;
       		}
+      		if (!$scope.user.confirmpassword) {
+       			$scope.queryError = 'Confirm Password Required';
+				return $scope.queryError;
+      		}
+
+      		if  ($scope.user.confirmpassword != $scope.user.newpassword) {
+       			$scope.queryError = 'Passwords Do Not Match'
+				return $scope.queryError;
+			}
 
 			$scope.queryError = null;
 			$scope.statusmsg = null;
@@ -229,6 +323,7 @@ var BrimstoneApp = angular.module('brimstone', ['app.config'], function( appConf
 				else {
 					$scope.authuser.username = response.token.username;
 					$scope.loggedin.username = response.token.username;
+					glb_username = response.token.username;
 					$scope.authuser.authenticated = true;
 					console.log($scope.authuser.username + ":" + $scope.loggedin.username + ":" + $scope.authuser.authenticated);
 				}

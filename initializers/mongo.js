@@ -137,7 +137,7 @@ var mongo = function (api, next) {
           company_ind = results[i].company_ind;
           company_name = results[i].company_name;
           created_at = results[i].created_at;
-          last_login =  results[i].last_Login;
+          last_login =  results[i].last_login;
         }
 
 
@@ -189,7 +189,7 @@ var mongo = function (api, next) {
           company_ind = connection.params.company_ind;
           company_name = connection.params.company_name;
           created_at = results[i].created_at;
-          last_login =  results[i].last_Login;
+          last_login =  results[i].last_login;
         }
 
 
@@ -216,46 +216,59 @@ var mongo = function (api, next) {
 
   
 /***************** Add a Question ****************************/
-api.mongo.questionAdd = function(api, connection, next) {
+api.mongo.listingAdd = function(api, connection, next) {
+ 
+  var now = new Date(); 
+  var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
-      //Add the person who asked the question to the notifier list
-      var notify_users = [];
-      notify_users.push(connection.params.userName);  
+  //Create JSON Entry to Add to MongoDB
+  var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
+              location:connection.params.location, zipcode:connection.params.zipcode, created_at:created_at, status:"open", views:0};
 
+  console.log(connection.params.questionBody)
 
-      var now = new Date(); 
-      //var created_at = now;
-      var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+  //Insert JSON Entry to Add to MongoDB
+  api.mongo.db.listings.insert(entry, {safe : true}, function doneCreatingListingEntry(err, results) {
+    if (err) { 
+       next(err, false); 
+    }
+    next(err, results);  
 
+  });
+};
 
-      //Create JSON Entry to Add to MongoDB
-      var entry = { questionTitle:connection.params.questionTitle, questionBody:connection.params.questionBody,  username:connection.params.userName, tags:connection.params.tags, 
-                  notify:notify_users, created_at:created_at, status:"open", views:0, numAnswers:0};
+/***************** Get Listing by ID ****************************/
+api.mongo.getListing = function(api, connection, next) {
 
-      console.log(connection.params.questionBody)
+  var BSON = mongodb.BSONPure;
+  var o_id = new BSON.ObjectID(connection.params.id);
+  var query = { "_id":o_id};
 
-       //Insert JSON Entry to Add to MongoDB
-        api.mongo.db.questions.insert(entry, {safe : true}, function doneCreatingQuestionEntry(err, results) {
-          if (err) { 
-             next(err, false); 
-          }
-          connection.response.content = results; 
-          next(err, results);  
+  var results = [];
 
-          archentry = { questionTitle:connection.params.questionTitle}
-          api.mongo.db.questionarchive.insert(archentry, {safe : true}, function doneCreatingQuestionEntry(err, results) {
-            if (err) { 
-               //next(err, false); 
-            } 
-            console.log("Added Question to Archive")
+  //Find the Question
+  api.mongo.db.listings.find(query, function doneSearchingForListing(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      next(err, results);
+  });
+};
 
-          });
+  /***************** Get All Available listings ****************************/
+  api.mongo.getAllListing = function(api, connection, next) {
 
-        });
+    var query = {}
+
+    api.mongo.db.listings.find(query, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      //connection.response.content = results; 
+      next(err, results);   
+    });
   };
-
-
-
 
   
 
@@ -319,24 +332,7 @@ api.mongo.questionAdd = function(api, connection, next) {
   };
 
   
-  /***************** Get Question by ID ****************************/
-  api.mongo.questionsGetSimple = function(api, connection, next) {
 
-        var BSON = mongodb.BSONPure;
-        var o_id = new BSON.ObjectID(connection.params.id);
-        var query = { "_id":o_id};
-
-        var results = [];
-
-        //Find the Question
-        api.mongo.db.questions.find(query, function doneSearchingForQuestion(err, results) {
-            if (err) { 
-              next(err, false); 
-            } 
-            connection.response.content = results; 
-            next(err, results);
-        });
-  };
 
   /***************** Get Question by ID and Add Extra ****************************/
   api.mongo.questionsGetFullExtra = function(api, connection, next) {
@@ -736,20 +732,7 @@ api.mongo.questionAdd = function(api, connection, next) {
     });
   };
 
-  /***************** Get All Available products ****************************/
-  api.mongo.questionsAll = function(api, connection, next) {
 
-    var query = {}
-
-    api.mongo.db.questions.find(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
 
   /***************** Delete All products ****************************/
   api.mongo.questionsDelete = function(api, connection, next) {

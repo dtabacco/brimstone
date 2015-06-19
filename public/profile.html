@@ -16,34 +16,45 @@
      <!-- Load your custom Javascript with the module defined -->
     <script src="js/app.config.js"></script> 
     <script src="js/controllers.js"></script>
-
+    
     <!-- Bootstrap core CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
     <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/responsive.css" rel="stylesheet">  
+    <link href="css/main.css" rel="stylesheet">
+    
 
   </head>
 
   <body>
-    <div class="container-fluid"> 
-      <div ng-controller="UserManager" ng-init="checkLoginStatus()">
-        <div ng-include="'header.html'"></div>
+    <div ng-controller="UserManager" ng-init="checkLoginStatus()">
+      <div ng-include="'header.html'">
+      </div>
 
-      
-        <div ng-init="getUserProfile()">
-        {{user}}
-          <div class="row centerpanelR">
-            <div class="col-md-2 leftbarR">&nbsp;</div>
-            <div class="col-md-1">&nbsp;</div>
-            <div class="col-md-6">
-              <div>
-                <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
-                <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+      <div ng-init="getUserProfile()">
+        <div id="blue">
+          <div class="container">
+            <div class="row centered">
+              <div class="col-lg-8 col-lg-offset-2">
+              <h4>User Profile</h4>
               </div>
-              <span id="ask-question-title">User Profile</span> <br><br>
-              <a ng-href="editprofile.html?username={{user.username}}"> <button class="btn btn-default btn-sm">Edit Profile</button></a>  <a ng-href="editpassword.html?username={{user.username}}"> <button class="btn btn-default btn-sm">Change Password</button></a> <br><br>
+            </div><!-- row -->
+          </div><!-- container -->
+        </div><!--  bluewrap --> 
+         
+        <div class="container w">
+          <div class="row">
+            <div>
+              <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
+              <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+            </div>
+          <div class="col-lg-4">
+            &nbsp;
+          </div><!-- col-lg-3 -->
+
+          <div class="col-lg-4">
+            <a ng-href="editprofile.html?username={{user.username}}"> <button class="btn btn-default btn-sm">Edit Profile</button></a>  <a ng-href="editpassword.html?username={{user.username}}"> <button class="btn btn-default btn-sm">Change Password</button></a> <br><br>
               <div class="row">
                 <div class="col-md-12">     
                   <div class="sepbar indenter">Basic Information</div>  
@@ -103,19 +114,28 @@
                  </span>
                 <br><br><br> 
                 </div>
-              </div>  
+              </div>       
+       
+          </div><!-- col-lg-4 -->
 
-            </div>
-            <div class="col-md-1">&nbsp;</div>
-            <div class="col-md-2 rightbarR">&nbsp;</div>
-          </div>
+           <div class="col-lg-4">
+            &nbsp;
+          </div><!-- col-lg-3 -->
 
-        </div> <!-- End of GetUserProfile -->  
+
+        </div><!-- row -->
+        <br>
+      </div><!-- container -->
+    </div> <!-- End of GetUserProfile -->   
+            
+
+           
+
+     
         <div ng-include="'footer.html'"></div> 
       </div>  <!-- End of User Manager Controller -->
             
-    </div> <!-- End of Container -->     
-                
+  
       <!-- Bootstrap core JavaScript
       ================================================== -->
       <!-- Placed at the end of the document so the pages load faster -->

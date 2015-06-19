@@ -10,58 +10,101 @@
  
     <title>Register</title>
 
-    <!-- Load the Angular Javascript -->
+     <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+
+     <!-- Load the Angular Javascript -->
     <script src="js/angular.min.js"></script>
 
      <!-- Load your custom Javascript with the module defined -->
-    <script src="js/app.config.js"></script> 
+    <script src="js/app.config.js"></script>
     <script src="js/controllers.js"></script>
 
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  
-    <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/responsive.css" rel="stylesheet">  
+    <!-- Browser Detection Library -->
+    <script src="js/bowser.js"></script>
 
   </head>
 
   <body>
     <div class="container-fluid"> 
       <div ng-controller="UserManager">
-        <div ng-include="'header-alt.html'"></div>
-      
-          <div class="row centerpanelR">
-            <div class="col-md-2 leftbarR">&nbsp;</div>
-            <div class="col-md-1">&nbsp;</div>
-            <div class="col-md-6">
-            
-             <span id="ask-question-title">Register</span> <br><br>
-             <div>
-                <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
-                <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
-            </div>
-                 
-            <!-- FORM -->
-                <!-- Which function do you want called in your controller when the submit button is pressed -->
-                <form class="center"  ng-submit="addUser()">
-                  <label>Username</label> <input type="text" class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
-                  <label>Password</label> <input type="password" class="form-control" name="password" maxlength="50" ng-model="user.password"><br />
-                  <label>First Name</label> <input type="text" class="form-control" name="firstname" maxlength="50" ng-model="user.firstname"><br />
-                  <label>Last Name</label> <input type="text" class="form-control" name="lastname" maxlength="50" ng-model="user.lastname"><br />
-                  <label>Email</label> <input type="text" class="form-control" name="email" maxlength="50" ng-model="user.email"><br />
-                  <label>Company</label> <input type="text" class="form-control" name="company_name" maxlength="50" ng-model="user.company_name"><br />
-                  <label>Zip</label> <input type="text" class="form-control" name="zip" maxlength="10" ng-model="user.zipcode"><br />
+        <div ng-include="'header.html'"></div>
+        
+         <div id="blue">
+          <div class="container">
+            <div class="row centered">
+              <div class="col-lg-8 col-lg-offset-2">
+              <h4>Register</h4>
+              </div>
+            </div><!-- row -->
+          </div><!-- container -->
+        </div><!--  bluewrap --> 
 
-                  <button type="submit" class="btn btn-primary">Register</button>
+        <div class="container w">
+          <div class="row">
+            <div class="col-lg-3">&nbsp;</div>  
+            <div class="col-lg-6">    
+              <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
+              <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+                <!-- FORM -->
+                <form  class="form-horizontal" role="form" ng-submit="addUser()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
+                  <div class="form-group">
+                    <label>Username</label> <input type="text" class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
+                  </div>
+                  <div class="form-group">
+                    <div class="form-group row">
+                      <div class="col-md-6">
+                        <label>Password</label> <input type="password" class="form-control" name="password" maxlength="10" required ng-model="user.password"><br />
+                      </div>
+                      <div class="col-md-6">
+                        <label>Confirm Password</label> <input type="password" class="form-control" name="confirm" maxlength="25" required ng-model="user.confirm_password"><br />
+                      </div>
+                    </div> <!-- End Form Group Row --> 
+                    <div class="form-group row">
+                      <div class="col-md-6">
+                        <label>First Name</label> <input type="text" class="form-control" name="firstname" maxlength="10" required ng-model="user.firstname"><br />
+                      </div>
+                      <div class="col-md-6">
+                        <label>Last Name</label> <input type="text" class="form-control" name="lastname" maxlength="25" required ng-model="user.lastname">
+                      </div>
+                    </div> <!-- End Form Group Row --> 
+                  </div>  <!-- End Form Group  -->
+                  <div class="form-group">
+                    <label>Email</label> <input type="text" class="form-control" name="email" maxlength="50" ng-model="user.email"><br />
+                  </div>
+                  <div class="form-group">
+                   <div class="form-group row">
+                      <div class="col-md-9">
+                        <label>Company Name</label> <input type="text" class="form-control" name="company_name" maxlength="15" ng-model="user.company_name"><br />
+                      </div>
+                      <div class="col-md-3">
+                        <label>Zip Code</label> <input type="text" class="form-control" name="zip" maxlength="5" required ng-model="user.zipcode"><br />
+                      </div>
+                    </div> <!-- End Form Group Row --> 
+                  </div> <!-- End Form Group -->
                   
-                </form>   
-                 <br><br>
+                  <div class="form-group">
+                    Slide This button to prove you are a human<br>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                  </div>
+                </form>
+          
+                
+            </div>  
+            <div class="col-lg-3">&nbsp;</div><!-- col-lg-4 -->
+          </div><!-- row -->
+          <br>
+        </div><!-- container -->
+        
+      
+    </div> <!-- End of UserManager -->   
 
-            </div>
-            <div class="col-md-1">&nbsp;</div>
-            <div class="col-md-2 rightbarR">&nbsp;</div>
-          </div>
+         
 
         <div ng-include="'footer.html'"></div> 
       </div>  <!-- End of User Manager Controller -->

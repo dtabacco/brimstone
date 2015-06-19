@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="brimstone">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+ 
+    <title>View Listing</title>
+
+    <!-- Load the Angular Javascript -->
+    <script src="js/angular.min.js"></script>
+
+     <!-- Load your custom Javascript with the module defined -->
+    <script src="js/app.config.js"></script> 
+    <script src="js/controllers.js"></script>
+
+     <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet"> 
+
+  </head>
+
+  <body>
+    <div ng-controller="UserManager" ng-init="checkLoginStatus()">
+      <div ng-include="'header.html'">
+      </div>
+     
+       
+      <div ng-controller="listingManager" ng-init="getListing()">
+   
+        <div id="blue">
+          <div class="container">
+            <div class="row centered">
+              <div class="col-lg-8 col-lg-offset-2">
+              <h4>{{listing.title}}</h4>
+              </div>
+            </div><!-- row -->
+          </div><!-- container -->
+        </div><!--  bluewrap --> 
+             
+        <div class="container w">
+          <div class="row">
+            <div class="col-lg-3">&nbsp;</div>  
+            <div class="col-lg-6">    
+              <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
+              <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+  
+               Title: {{listing.title}} <br>
+               Description: {{listing.description}} <br>
+               Price: {{listing.price}} <br>
+               Location: {{listing.location}} <br>
+               Zipcode: {{listing.zipcode}} <br>
+             
+            </div>  
+            <div class="col-lg-3">&nbsp;</div><!-- col-lg-4 -->
+          </div><!-- row -->
+          <br>
+        </div><!-- container -->
+      </div>  <!-- End of Listing Manager Controller -->   
+      
+    </div> <!-- End of User Manager Controller -->  
+            
+
+           
+
+     
+        <div ng-include="'footer.html'"></div> 
+      </div>  <!-- End of User Manager Controller -->   
+                
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+
+</html>
+
+
+3
