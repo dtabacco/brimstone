@@ -221,9 +221,12 @@ api.mongo.listingAdd = function(api, connection, next) {
   var now = new Date(); 
   var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
+  //make', 'model', 'dimensions','condition
+
   //Create JSON Entry to Add to MongoDB
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
-              location:connection.params.location, zipcode:connection.params.zipcode, created_at:created_at, status:"open", views:0};
+              location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
+              condition:connection.params.condition, created_at:created_at, status:"open", views:0};
 
   console.log(connection.params.questionBody)
 
@@ -271,6 +274,19 @@ api.mongo.getListing = function(api, connection, next) {
   };
 
   
+  /***************** Get My listings ****************************/
+  api.mongo.getMyListings = function(api, connection, next) {
+
+    var query = {username:connection.params.username};
+
+    api.mongo.db.listings.find(query, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      next(err, results);   
+    });
+  };
 
   /***************** editQuestion ****************************/
   api.mongo.editQuestion = function(api, connection, next) {

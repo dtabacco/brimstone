@@ -43,8 +43,8 @@
            
       <div class="container w">
         <div class="row">
-          <div class="col-lg-3">&nbsp;</div>  
-          <div class="col-lg-6">    
+          <div class="col-lg-2">&nbsp;</div>  
+          <div class="col-lg-8">    
             <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
             <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
             <div ng-controller="listingManager">
@@ -52,8 +52,9 @@
               <!-- FORM -->
               <form  class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                 <div class="form-group">
-                  <label>Title</label> <input type="text" class="form-control" name="username" maxlength="50" required ng-model="listing.title"><br />
-                  <label>Description</label><textarea class="form-control" rows="5" id="description" required maxlength="50" ng-model="listing.description"></textarea>        
+
+                  <label>Title</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
+                  <label>Description</label><textarea class="form-control" rows="5" id="description" required maxlength="150" ng-model="listing.description"></textarea>        
                 </div>  <!-- End Form Group -->
                 <div class="form-group">
                   <div class="form-group row">
@@ -61,14 +62,48 @@
                       <label>Price</label> <input type="text" class="form-control" name="price" maxlength="10" required ng-model="listing.price"><br />
                     </div>
                     <div class="col-md-6">
-                      <label>Location</label> <input type="text" class="form-control" name="price" maxlength="25" required ng-model="listing.location"><br />
+                      <label>Location</label> <input type="text" class="form-control" name="price" maxlength="35" required ng-model="listing.location"><br />
                     </div>
                     <div class="col-md-3">
                        <label>Zipcode</label> <input type="text" class="form-control" name="price" maxlength="5" required ng-model="listing.zipcode"><br />
                     </div> 
-                  </div> <!-- End Form Group --> 
-                </div>  <!-- End Form Group Row -->
+                  </div> <!-- End Form Group Row --> 
+                </div>  <!-- End Form Group -->
                 <div class="form-group">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Optional</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="form-group row">
+                        <div class="col-md-4">
+                          <label>Make / Manufacturer</label> <input type="text" class="form-control" name="price" maxlength="10" required ng-model="listing.make"><br />
+                        </div>
+                        <div class="col-md-4">
+                          <label>Model Name / Number</label> <input type="text" class="form-control" name="price" maxlength="50" required ng-model="listing.model"><br />
+                        </div>
+                        <div class="col-md-4">
+                           <label>Dimensions</label> <input type="text" class="form-control" placeholder="Length x Width x Height" name="dimensions" maxlength="25" required ng-model="listing.dimensions"><br />
+                        </div> 
+                      </div> <!-- End Form Group Row --> 
+
+                      <div class="form-group row">
+                        <div class="col-md-4">
+                          <label>Condition</label> 
+                          <select class="form-control" ng-model="listing.condition">
+                            <option value="new">New</option>
+                            <option value="likenew">Used - Like New</option>
+                            <option value="good">Used - Good</option>
+                            <option value="bad">Used - Bad</option>
+                          </select><br />
+                        </div>
+                      </div> <!-- End Form Group Row --> 
+
+                    </div>
+                  </div>
+                </div>  <!-- End Form Group -->
+                <div class="form-group">
+
                   Slide This button to prove you are a human<bR>
                   <br>
                   <button type="submit" class="btn btn-primary">Create Listing</button><br /> 
@@ -80,7 +115,7 @@
                    {{loggedin}}
               </div>
           </div>  
-          <div class="col-lg-3">&nbsp;</div><!-- col-lg-4 -->
+          <div class="col-lg-2">&nbsp;</div><!-- col-lg-4 -->
         </div><!-- row -->
         <br>
       </div><!-- container -->

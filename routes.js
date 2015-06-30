@@ -2,13 +2,17 @@ exports.routes = {
   
   get: [
     { path: "/users", action: "usersList" },
-    { path: "/users/:username", action: "userProfileList" },   
+    { path: "/users/:username", action: "userProfileList" },  
+    { path: "/listings", action: "getAllListing" },
+    { path: "/listings/:id", action: "getListing" }, 
+    { path: "/listings/profile/:username", action: "getMyListings" }, 
   ],
 
   post: [
     { path: "/users", action: "userAdd" },
     { path: "/users/authenticate", action: "userAuthenticate" },
     { path: "/users/verifyToken", action: "userVerifyToken" },
+    { path: "/listings", action: "listingAdd" },
   ],
 
   put: [

@@ -58,7 +58,9 @@ var BrimstoneApp = angular.module('brimstone', ['app.config'], function( appConf
 			
 			//Assign all the incoming scope parameters to the post data variable
 			postData = 'username=' + glb_username + '&' + 'title=' + $scope.listing.title + '&' + 'description=' + $scope.listing.description + '&' + 
-					   'price=' + $scope.listing.price + '&' + 'zipcode=' + $scope.listing.zipcode + '&' + 'location=' + $scope.listing.location; 
+					   'price=' + $scope.listing.price + '&' + 'zipcode=' + $scope.listing.zipcode + '&' + 'location=' + $scope.listing.location + '&' + 
+					   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
+					   'condition=' + $scope.listing.condition ; 
 						
 			console.log(postData)
 
@@ -94,17 +96,41 @@ var BrimstoneApp = angular.module('brimstone', ['app.config'], function( appConf
 
 				$scope.listing = response.listing[0]
 				console.log($scope.listing)
-				/*
-				document.getElementById('title').innerHTML = response.content[0].questionTitle;
-				document.getElementById('article4').innerHTML = response.content[0].questionBody;
-				document.getElementById('comment').innerHTML = response.content[0].tags;*/
 			})
 
 			.error(function(data, status, headers, config) {
 				$scope.queryError = data;
 			});	
 
-	};
+		};
+
+		$scope.getMyListings = function() {
+
+			if (QueryString.username) {
+				$scope.listing.username = QueryString.username;
+			}
+      		
+      		console.log("--> Fetching My Listings")
+			
+			//Define Rest Endpoint
+			$scope.listingQuery = restURLEndpoint + '/api/listings/profile/' + $scope.listing.username ;
+			
+			//Execute GET Request
+			$http.get($scope.listingQuery)
+			.success(function(response) {
+
+				for (var i = 0; i < response.listing.length; i++) {
+					response.listing[i].id = response.listing[i]._id;
+				}
+
+				//Reverse order so most recent shows up on top
+				$scope.listings = sortByKey(response.listing, 'created_at').reverse()				 	
+			})
+			.error(function(data, status, headers, config) {
+				console.log(data);
+			});	
+
+		};
 
 	});
 		

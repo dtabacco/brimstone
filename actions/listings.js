@@ -3,7 +3,7 @@ exports.listingAdd = {
   description: "I create a new listing",
   inputs: {
     required: ['username', 'title', 'description', 'price', 'location', 'zipcode'],
-    optional: [],
+    optional: ['make', 'model', 'dimensions','condition'],
   },
   authenticated: false,
   outputExample: {},
@@ -65,6 +65,29 @@ exports.getAllListing = {
       connection.response.listing = listing;
       next(connection, true);
       
+    }); 
+  }
+};
+
+exports.getMyListings = {
+  name: "getMyListings",
+  description: "I get your listings",
+  inputs: {
+    required: ['username'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+
+    api.mongo.getMyListings(api, connection, function(err, listing) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.listing = listing;
+      next(connection, true);
     }); 
   }
 };
