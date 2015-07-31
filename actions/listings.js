@@ -91,3 +91,47 @@ exports.getMyListings = {
     }); 
   }
 };
+
+exports.listingsDelete = {
+  name: "listingsDelete",
+  description: "I Delete all the listings",
+  inputs: {
+    required: [],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.listingsDelete(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.users = users;
+      next(connection, true);
+    });
+  }
+};
+
+exports.listingsDeleteID = {
+  name: "listingsDeleteID",
+  description: "I Delete a listing",
+  inputs: {
+    required: ['id'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.listingsDeleteID(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.users = users;
+      next(connection, true);
+    });
+  }
+};

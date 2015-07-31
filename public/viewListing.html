@@ -13,6 +13,9 @@
     <!-- Load the Angular Javascript -->
     <script src="js/angular.min.js"></script>
 
+    <!-- Load Angular File Upload Library -->
+    <script src="js/ng-file-upload.min.js"></script> 
+
      <!-- Load your custom Javascript with the module defined -->
     <script src="js/app.config.js"></script> 
     <script src="js/controllers.js"></script>
@@ -46,11 +49,15 @@
              
         <div class="container w">
           <div class="row">
-            <div class="col-lg-3">&nbsp;</div>  
-            <div class="col-lg-6">    
+            <div class="col-lg-2">&nbsp;</div>  
+            <div class="col-lg-8">    
               <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
               <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
   
+
+               <img width=300 height=250 ng-src={{listing.image}}><br> 
+
+
                Title: {{listing.title}} <br>
                Description: {{listing.description}} <br>
                Price: {{listing.price}} <br>
@@ -64,7 +71,7 @@
                <br><br>
              
             </div>  
-            <div class="col-lg-3">&nbsp;</div><!-- col-lg-4 -->
+            <div class="col-lg-2">&nbsp;</div><!-- col-lg-4 -->
           </div><!-- row -->
           <br>
         </div><!-- container -->

@@ -13,6 +13,7 @@ exports.routes = {
     { path: "/users/authenticate", action: "userAuthenticate" },
     { path: "/users/verifyToken", action: "userVerifyToken" },
     { path: "/listings", action: "listingAdd" },
+    { path: "/uploader", action: "uploader" },
   ],
 
   put: [
@@ -23,6 +24,8 @@ exports.routes = {
   delete: [
     { path: "/users", action: "usersDelete" },
     { path: "/users/:id", action: "usersDeleteID" },
+    { path: "/listings", action: "listingsDelete" },
+    { path: "/listings/:id", action: "listingsDeleteID" },
   ]
 
 };

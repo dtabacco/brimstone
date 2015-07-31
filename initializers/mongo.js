@@ -215,7 +215,7 @@ var mongo = function (api, next) {
   } 
 
   
-/***************** Add a Question ****************************/
+/***************** Add a listing ****************************/
 api.mongo.listingAdd = function(api, connection, next) {
  
   var now = new Date(); 
@@ -226,7 +226,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   //Create JSON Entry to Add to MongoDB
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
-              condition:connection.params.condition, created_at:created_at, status:"open", views:0};
+              condition:connection.params.condition, created_at:created_at, status:"open", views:0, image:null};
 
   console.log(connection.params.questionBody)
 
@@ -239,6 +239,61 @@ api.mongo.listingAdd = function(api, connection, next) {
 
   });
 };
+
+/***************** Edit User Profile ****************************/
+  api.mongo.addImage = function(api, connection, image_path, next) {
+
+      var BSON = mongodb.BSONPure;
+      var o_id = new BSON.ObjectID(connection.params.id);
+      var query = { "_id":o_id};
+
+      console.log("Searching for ", query)
+
+      //Find User who's answer was accepted
+      api.mongo.db.listings.find(query, function doneSearching(err, results) {
+        if (err) { 
+            next(err, false); 
+        } 
+
+        console.log("Results Length " + results.length)
+
+        for (var i = 0; i < results.length; i++) {
+
+          o_id = results[i]._id;
+          username = results[i].username;
+          title = results[i].title;
+          description = results[i].description;
+          price = results[i].price;
+          location = results[i].location;
+          zipcode = results[i].zipcode;
+          make = results[i].make;
+          model = results[i].model;
+          dimensions = results[i].dimensions;
+          condition = results[i].condition;
+          created_at = results[i].created_at;
+          status = results[i].status;
+          views = results[i].views;
+          image = image_path;
+        }
+
+        
+        //Create JSON Entry to update in MongoDB
+        entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+                 created_at:created_at, status:status, views:views, image:image}; 
+  
+        //Update MongoDB
+        api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
+            if (err) { 
+              next(err, false); 
+            } 
+            next(err, results);    
+        });
+        
+        //next(err, results); 
+         
+      });
+  } 
+
 
 /***************** Get Listing by ID ****************************/
 api.mongo.getListing = function(api, connection, next) {
@@ -287,6 +342,46 @@ api.mongo.getListing = function(api, connection, next) {
       next(err, results);   
     });
   };
+
+  /***************** Delete All Listings ****************************/
+  api.mongo.listingsDelete = function(api, connection, next) {
+
+    var query = {}
+
+    api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      connection.response.content = results; 
+      next(err, true);   
+    });
+  };
+
+
+  /***************** Delete All Listings ****************************/
+  api.mongo.listingsDeleteID = function(api, connection, next) {
+
+    var BSON = mongodb.BSONPure;
+    var o_id = new BSON.ObjectID(connection.params.id);
+    var query = { "_id":o_id};
+
+    api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      next(err, true);   
+    });
+  };
+
+
+
+
+
+
+
+
+
+
 
   /***************** editQuestion ****************************/
   api.mongo.editQuestion = function(api, connection, next) {
