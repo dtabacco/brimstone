@@ -17,11 +17,11 @@
     <!-- Custom styles for this template -->
     <link href="css/main.css" rel="stylesheet">
 
-    <!-- Load Angular File Upload Library -->
-    <script src="js/ng-file-upload.min.js"></script> 
-
     <!-- Load the Angular Javascript -->
     <script src="js/angular.min.js"></script>
+
+    <!-- Load Angular File Upload Library -->
+    <script src="js/ng-file-upload.min.js"></script> 
 
      <!-- Load your custom Javascript with the module defined -->
     <script src="js/app.config.js"></script>
@@ -39,7 +39,7 @@
        
       
         <div ng-init="getUserProfile()">
-        {{user}}
+       
         
         <div id="blue">
           <div class="container">
@@ -87,9 +87,7 @@
                   </div> <!-- End Form Group -->
                   
                   <div class="form-group">
-                    Slide This button to prove you are a human<br>
-                    <br>
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
                   </div>
                 </form>
           
@@ -101,7 +99,7 @@
         </div><!-- container -->      
                   
               
-                  
+               {{user}}    
 
         </div> <!-- End of GetUserProfile -->  
         <div ng-include="'footer.html'"></div> 
