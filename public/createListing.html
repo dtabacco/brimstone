@@ -26,6 +26,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/main.css" rel="stylesheet"> 
+    <link href="css/range.css" rel="stylesheet">
 
   </head>
 
@@ -48,16 +49,17 @@
         <div class="row">
           <div class="col-lg-2">&nbsp;</div>  
           <div class="col-lg-8">    
-            <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
-            <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+
+           
             <div ng-controller="listingManager">
+               <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
 
               <!-- FORM -->
               <form  class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                 <div class="form-group">
 
                   <label>Title</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
-                  <label>Description</label><textarea class="form-control" rows="5" id="description" required maxlength="150" ng-model="listing.description"></textarea>        
+                  <label>Description</label><textarea class="form-control" rows="5" id="description" maxlength="150" ng-model="listing.description"></textarea>        
                 </div>  <!-- End Form Group -->
                 <div class="form-group">
                   <div class="form-group row">
@@ -105,9 +107,30 @@
                     </div>
                   </div>
                 </div>  <!-- End Form Group -->
+
+
+                <div class="form-group">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Contact Information</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="form-group row">
+                        <div class="col-md-4">
+                          <label>Phone</label> <input type="tel" class="form-control" name="phone" maxlength="15" ng-model="listing.contact_phone"><br />
+                        </div>
+                        <div class="col-md-4">
+                          <label>Email</label> <input type="email" class="form-control" name="email" maxlength="50" required ng-model="listing.contact_email"><br />
+                        </div>
+                       
+                    </div>
+                  </div>
+                </div>  <!-- End Form Group -->
+
                 <div class="form-group">
 
-                  Slide This button to prove you are a human<bR>
+                  Slide This button to prove you are a human<br>
+                  <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="listing.humanoid">
                   <br>
                   <button type="submit" class="btn btn-primary">Create Listing</button><br /> 
                 </div>

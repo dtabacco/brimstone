@@ -64,7 +64,12 @@
                     <h3 class="title_heading">Your Recent Listings:</h3>
                     <div ng-init="getMyListings()">
                         <div ng-repeat="listing in listings| limitTo:50">
-                          <a ng-href="viewListing.html?id={{listing.id}}">{{listing.title}}</a>
+                          
+                          <a ng-href="viewListing.html?id={{listing.id}}">{{listing.title}}</a> &nbsp;&nbsp;&nbsp;
+                          {{listing.views}} Views  &nbsp;&nbsp;&nbsp;  
+                          <a href="">edit</a>  &nbsp;&nbsp;&nbsp;  
+                          <a href="">delete</a>
+
                         </div>
                     </div>
                     </br>

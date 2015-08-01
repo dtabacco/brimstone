@@ -2,7 +2,7 @@ exports.listingAdd = {
   name: "listingAdd",
   description: "I create a new listing",
   inputs: {
-    required: ['username', 'title', 'description', 'price', 'location', 'zipcode'],
+    required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_phone', 'contact_email'],
     optional: ['make', 'model', 'dimensions','condition'],
   },
   authenticated: false,
@@ -40,6 +40,9 @@ exports.getListing = {
       }
       connection.response.listing = listing;
       next(connection, true);
+
+      //Update the View Count for the Question
+      api.mongo.updateViewCount(api, connection);
       
     }); 
   }
@@ -88,6 +91,7 @@ exports.getMyListings = {
       }
       connection.response.listing = listing;
       next(connection, true);
+
     }); 
   }
 };

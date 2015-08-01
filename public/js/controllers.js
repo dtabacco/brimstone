@@ -64,6 +64,15 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
             }
         }
     };
+
+    $scope.skipImage = function () {
+
+		if (QueryString.id) {
+			$scope.listing.id = QueryString.id;
+		}
+    	location = "viewListing.html?id=" + $scope.listing.id; 
+    }
+
 });
 //}]);
 
@@ -73,6 +82,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $location, $window, $document, appConfig) {
 	
 	$scope.listing = {};
+
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	
 	//This is required or it will send as JSON by default and fail
@@ -86,12 +96,15 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		console.log(username)
 		console.log($scope.listing.title)
 
-		if (!$scope.listing.title) {
-   			$scope.queryError = 'Title Required';
+
+		if ($scope.listing.humanoid != 5) {
+			console.log("Failed:" + $scope.listing.humanoid)
+   			$scope.queryError = 'You Failed the Human Test';
 			return $scope.queryError;
   		}
-  		if (!$scope.listing.description) {
-   			$scope.queryError = 'Description Required';
+
+		if (!$scope.listing.title) {
+   			$scope.queryError = 'Title Required';
 			return $scope.queryError;
   		}
 
@@ -111,7 +124,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		postData = 'username=' + glb_username + '&' + 'title=' + $scope.listing.title + '&' + 'description=' + $scope.listing.description + '&' + 
 				   'price=' + $scope.listing.price + '&' + 'zipcode=' + $scope.listing.zipcode + '&' + 'location=' + $scope.listing.location + '&' + 
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
-				   'condition=' + $scope.listing.condition ; 
+				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
+				   'contact_email=' + $scope.listing.contact_email ; 
 					
 		console.log(postData)
 
@@ -147,6 +161,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		.success(function(response) {
 
 			$scope.listing = response.listing[0]
+			//$scope.listing.id = response.listing[0].id
 			console.log($scope.listing)
 		})
 
@@ -182,6 +197,17 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			console.log(data);
 		});	
 	};
+
+	$scope.updateImage = function () {
+
+		if (QueryString.id) {
+			$scope.listing.id = QueryString.id;
+		}
+    	console.log("Changing Image")
+    	console.log("scope Listing ID " + $scope.listing.id)
+    	location = "addImage.html?id=" + $scope.listing.id; 
+    }
+
 
 });
 	

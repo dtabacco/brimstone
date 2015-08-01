@@ -54,9 +54,17 @@
               <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
               <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
   
+               <div class="row">
+               <div class="col-lg-6"> 
+                <a ng-href="{{listing.image}}"><img class="img-thumbnail img-responsive" ng-src={{listing.image}}></a><br> 
 
-               <img width=300 height=250 ng-src={{listing.image}}><br> 
+                <!-- TO DO - Apply Security -->
+                <button type="submit" ng-click="updateImage()" class="btn btn-primary">Change Image</button>&nbsp;
+                <button type="submit" ng-click="editListing()" class="btn btn-primary">Edit Listing</button><br>
 
+               </div>
+              <div class="col-lg-6">&nbsp;</div> 
+               </div>
 
                Title: {{listing.title}} <br>
                Description: {{listing.description}} <br>
@@ -66,7 +74,10 @@
                Make: {{listing.make}} <br>
                Model: {{listing.model}} <br>
                Dimensions: {{listing.dimensions}} <br>
-               Condition: {{listing.condition}} <br>
+               Condition: {{listing.condition}} <br><br>
+
+               Email: {{listing.contact_email}} <br>
+               Phone: {{listing.contact_phone}} <br>
 
                <br><br>
              

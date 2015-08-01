@@ -226,7 +226,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   //Create JSON Entry to Add to MongoDB
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
-              condition:connection.params.condition, created_at:created_at, status:"open", views:0, image:null};
+              condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email,  created_at:created_at, status:"open", views:0, image:null};
 
   console.log(connection.params.questionBody)
 
@@ -273,13 +273,15 @@ api.mongo.listingAdd = function(api, connection, next) {
           created_at = results[i].created_at;
           status = results[i].status;
           views = results[i].views;
+          contact_email = results[i].contact_email
+          contact_phone = results[i].contact_phone
           image = image_path;
         }
 
         
         //Create JSON Entry to update in MongoDB
         entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
-                 created_at:created_at, status:status, views:views, image:image}; 
+                 created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
   
         //Update MongoDB
         api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
@@ -293,6 +295,53 @@ api.mongo.listingAdd = function(api, connection, next) {
          
       });
   } 
+
+  /****************** Update View Count ************************/
+ api.mongo.updateViewCount = function(api, connection) {
+
+  var BSON = mongodb.BSONPure;
+  var o_id = new BSON.ObjectID(connection.params.id);
+  var query = { "_id":o_id};
+
+  //Find the Question
+  api.mongo.db.listings.find(query, function doneSearching(err, results) {
+    if (err) { 
+      next(err, false); 
+    } 
+
+    //Load existing data so it is not lost in update
+    for (var i = 0; i < results.length; i++) {
+      o_id = results[i]._id;
+      username = results[i].username;
+      title = results[i].title;
+      description = results[i].description;
+      price = results[i].price;
+      location = results[i].location;
+      zipcode = results[i].zipcode;
+      make = results[i].make;
+      model = results[i].model;
+      dimensions = results[i].dimensions;
+      condition = results[i].condition;
+      created_at = results[i].created_at;
+      contact_email = results[i].contact_email
+      contact_phone = results[i].contact_phone
+      status = results[i].status;
+      views = results[i].views + 1;
+      image = results[i].image;
+    }
+
+    //Create JSON Entry to update in MongoDB
+    entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+                 created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+
+    //Update MongoDB
+    api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneAddingViewUpdate(err, results) {
+      if (err) { 
+       next(err, false); 
+      }  
+    });
+  });
+};
 
 
 /***************** Get Listing by ID ****************************/
@@ -372,6 +421,12 @@ api.mongo.getListing = function(api, connection, next) {
       next(err, true);   
     });
   };
+
+
+
+
+
+
 
 
 
@@ -521,47 +576,7 @@ api.mongo.getListing = function(api, connection, next) {
   };
 
 
-  /****************** Update View Count ************************/
-   api.mongo.updateViewCount = function(api, connection) {
 
-    var BSON = mongodb.BSONPure;
-    var o_id = new BSON.ObjectID(connection.params.id);
-    var query = { "_id":o_id};
-
-    var answer_record = [];
-
-    //Find the Question
-    api.mongo.db.questions.find(query, function doneSearching(err, result) {
-      if (err) { 
-        next(err, false); 
-      } 
-
-      //Load existing data so it is not lost in update
-      for (var i = 0; i < result.length; i++) {
-        answer_record = result[i].answers;
-        questionTitle = result[i].questionTitle;
-        questionBody = result[i].questionBody;
-        username = result[i].username;
-        tags = result[i].tags;
-        notify = result[i].notify;
-        created_at = result[i].created_at;
-        status = result[i].status;
-        views = result[i].views + 1;
-        answerMessage = result[i].answerMessage;
-        numAnswers = result[i].numAnswers;
-      }
-
-      //Create JSON Entry to update in MongoDB
-      entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify, created_at:created_at, status:status, views:views, answers:answer_record, answerMessage:answerMessage, numAnswers:numAnswers}
-
-      //Update MongoDB
-      api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneAddingViewUpdate(err, results) {
-        if (err) { 
-         next(err, false); 
-        }  
-      });
-    });
-  };
 
   /******************  Add Vote  *** ***************/
    api.mongo.addVote = function(api, connection, next) {
