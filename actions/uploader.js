@@ -22,7 +22,13 @@ exports.action = {
     //file_path = connection.params.file1.path
     file_path = connection.params.file.path
     
-    modified_path = file_path.replace("public\\listing_images\\", "listing_images/")
+    //1
+    //modified_path = file_path.replace("public\\listing_images\\", "listing_images/")
+
+    //modified_path = file_path.replace("public/listing_images/", "listing_images/")
+
+    modified_path = file_path  
+
     connection.response.path = modified_path
     console.log("modified_path: " + modified_path )
 

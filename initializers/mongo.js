@@ -267,7 +267,9 @@ api.mongo.listingAdd = function(api, connection, next) {
 
             console.log("Image Location: " + results[i].image)
             console.log(__dirname)
-            filepath1 = __dirname.replace("initializers", "public")
+            //1
+            //filepath1 = __dirname.replace("initializers", "public")
+            filepath1 = __dirname.replace("initializers", "")
             console.log(filepath1)
             filepath2 = filepath1 + "/" + results[i].image
             console.log(filepath2)
