@@ -259,6 +259,27 @@ api.mongo.listingAdd = function(api, connection, next) {
 
         for (var i = 0; i < results.length; i++) {
 
+          if  (results[i].image) {
+            console.log("Image Already Exists")
+            var fs = require('fs');
+
+            //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
+
+            console.log("Image Location: " + results[i].image)
+            console.log(__dirname)
+            filepath1 = __dirname.replace("initializers", "public")
+            console.log(filepath1)
+            filepath2 = filepath1 + "/" + results[i].image
+            console.log(filepath2)
+            filepath3 = filepath2.replace("/", "/")
+            console.log(filepath3)
+
+            fs.unlink(filepath3, function (err) {
+              if (err) next(err, false); 
+              console.log('successfully deleted ' + filepath3);
+            });
+          }
+
           o_id = results[i]._id;
           username = results[i].username;
           title = results[i].title;
@@ -274,7 +295,7 @@ api.mongo.listingAdd = function(api, connection, next) {
           status = results[i].status;
           views = results[i].views;
           contact_email = results[i].contact_email
-          contact_phone = results[i].contact_phone
+          contact_phone = results[i].contact_phone 
           image = image_path;
         }
 
