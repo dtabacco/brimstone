@@ -290,6 +290,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $location, $window, appConfig) {	
 
 	$scope.user = {};
+	$scope.unique = {};
+	$scope.started = {};
 	$scope.authuser = {};
 	$scope.loggedin = {};
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
@@ -302,6 +304,33 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	//This is required or it will send as JSON by default and fail
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+
+	//array of all usernames
+	usernames = [];
+	usernames.push("r");
+	usernames.push("t");
+	usernames.push("tabacco");
+	$scope.started = false;
+
+	//call get all users, to populate array
+
+	/// This function will fire every time the username checkbox has a key press event
+	$scope.checkUnique = function() { 
+		$scope.started = true;
+		//console.log("Checking Unique")
+		if ($scope.user.username == null) {
+			$scope.started = false;
+			return;
+		}
+		if (usernames.indexOf($scope.user.username) != -1) {
+			//console.log("Not Unique")
+			$scope.unique = false;
+		}
+		else {
+			//console.log("Unique")
+			$scope.unique = true;
+		}
+	}
 
 	$scope.addUser = function() {
 	

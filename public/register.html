@@ -66,7 +66,21 @@
                 <!-- FORM -->
                 <form  class="form-horizontal" role="form" ng-submit="addUser()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                   <div class="form-group">
-                    <label>Username</label><label class="formrequired">&nbsp;*</label> <input type="text" required class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
+                    <label>Username</label><label class="formrequired">&nbsp;*&nbsp;&nbsp;</label> 
+                    <span ng-if="unique == true && started == true">
+                       <span class="success">
+                      <b>Username is available</b>
+                    </span>
+                   
+                    </span>
+                    <span ng-if="unique != true && started == true">
+                      
+                      <span class="formrequired">
+                      <b>Username is not available</b>
+                    </span>
+
+                    </span>
+                    <input type="text" ng-change="checkUnique()" required class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
                   </div>
                   <div class="form-group">
                     <div class="form-group row">
