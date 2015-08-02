@@ -16,9 +16,18 @@
     <!-- Load Angular File Upload Library -->
     <script src="js/ng-file-upload.min.js"></script> 
 
+    <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
      <!-- Load your custom Javascript with the module defined -->
     <script src="js/app.config.js"></script> 
     <script src="js/controllers.js"></script>
+
+
+     <!-- Toaster -->
+    <script src="js/toastr.min.js"></script>
+    <link href="css/toastr.min.css" rel="stylesheet">
+
 
      <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -49,8 +58,6 @@
         <div class="row">
           <div class="col-lg-2">&nbsp;</div>  
           <div class="col-lg-8">    
-
-           
             <div ng-controller="listingManager">
                <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
 
@@ -58,19 +65,23 @@
               <form  class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                 <div class="form-group">
 
-                  <label>Title</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
-                  <label>Description</label><textarea class="form-control" rows="5" id="description" maxlength="150" ng-model="listing.description"></textarea>        
+                  <label>Title</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
+                  <label>Description</label><label class="formrequired">&nbsp;*</label><textarea class="form-control" rows="5" id="description" maxlength="1000" ng-model="listing.description"></textarea>        
                 </div>  <!-- End Form Group -->
                 <div class="form-group">
                   <div class="form-group row">
                     <div class="col-md-3">
-                      <label>Price</label> <input type="text" class="form-control" name="price" maxlength="10" required ng-model="listing.price"><br />
+                      <label>Price</label><label class="formrequired">&nbsp;*</label> 
+                       <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="text" class="form-control" name="price" maxlength="10" required ng-model="listing.price"><br />
+                      </div>
                     </div>
                     <div class="col-md-6">
-                      <label>Location</label> <input type="text" class="form-control" name="price" maxlength="35" required ng-model="listing.location"><br />
+                      <label>City</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="price" maxlength="35" required ng-model="listing.location"><br />
                     </div>
                     <div class="col-md-3">
-                       <label>Zipcode</label> <input type="text" class="form-control" name="price" maxlength="5" required ng-model="listing.zipcode"><br />
+                       <label>Zipcode</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="price" maxlength="5" required ng-model="listing.zipcode"><br />
                     </div> 
                   </div> <!-- End Form Group Row --> 
                 </div>  <!-- End Form Group -->
@@ -117,28 +128,31 @@
                     <div class="panel-body">
                       <div class="form-group row">
                         <div class="col-md-4">
-                          <label>Phone</label> <input type="tel" class="form-control" name="phone" maxlength="15" ng-model="listing.contact_phone"><br />
+                          <label>Email</label><label class="formrequired">&nbsp;*</label> <input type="email" class="form-control" name="email" maxlength="50" required ng-model="listing.contact_email"><br />
+                         
                         </div>
                         <div class="col-md-4">
-                          <label>Email</label> <input type="email" class="form-control" name="email" maxlength="50" required ng-model="listing.contact_email"><br />
+                           <label>Phone</label> <input type="tel" class="form-control" name="phone" maxlength="15" ng-model="listing.contact_phone"><br />
                         </div>
                        
+                      </div>
                     </div>
-                  </div>
+                  </div>  <!-- End Panel -->
                 </div>  <!-- End Form Group -->
 
                 <div class="form-group">
-
-                  Slide This button to prove you are a human<br>
-                  <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="listing.humanoid">
-                  <br>
-                  <button type="submit" class="btn btn-primary">Create Listing</button><br /> 
+                  <center>
+                    <h3>Prove You Are a Human, Slide to Right</h3>
+                    <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="listing.humanoid">
+                    <br></center><br>
+                  
+                  <button type="submit" class="btn btn-primary btn-lg">Create Listing</button><br /> 
                 </div>
               </form>
         
-                   {{listing}}
+                   <!--{{listing}}
                    {{user}}
-                   {{loggedin}}
+                   {{loggedin}}-->
               </div>
           </div>  
           <div class="col-lg-2">&nbsp;</div><!-- col-lg-4 -->
@@ -156,14 +170,9 @@
         <div ng-include="'footer.html'"></div> 
       </div>  <!-- End of User Manager Controller -->   
                 
-      <!-- Bootstrap core JavaScript
-      ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
-      <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
-      <script src="bootstrap/js/bootstrap.min.js"></script>
+
     </body>
 
 </html>
 
 
-3

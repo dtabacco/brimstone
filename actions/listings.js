@@ -112,7 +112,6 @@ exports.listingsDelete = {
         connection.response.errors = err;
         next(connection, false);
       }
-      connection.response.users = users;
       next(connection, true);
     });
   }
@@ -134,7 +133,6 @@ exports.listingsDeleteID = {
         connection.response.errors = err;
         next(connection, false);
       }
-      connection.response.users = users;
       next(connection, true);
     });
   }

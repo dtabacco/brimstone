@@ -415,4 +415,6 @@ a:after {
     background: #ff7878;
 }
 
-
+.formrequired {
+    color: red;
+}

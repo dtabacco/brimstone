@@ -326,7 +326,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   var o_id = new BSON.ObjectID(connection.params.id);
   var query = { "_id":o_id};
 
-  //Find the Question
+  //Find the Listing
   api.mongo.db.listings.find(query, function doneSearching(err, results) {
     if (err) { 
       next(err, false); 
@@ -418,6 +418,13 @@ api.mongo.getListing = function(api, connection, next) {
   /***************** Delete All Listings ****************************/
   api.mongo.listingsDelete = function(api, connection, next) {
 
+    var fs = require('fs');
+
+    filepath = __dirname.replace("initializers", "public/listing_images/")
+
+    console.log(__dirname)
+    console.log(filepath)
+
     var query = {}
 
     api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
@@ -425,8 +432,30 @@ api.mongo.getListing = function(api, connection, next) {
         next(err, false); 
       } 
       connection.response.content = results; 
-      next(err, true);   
+      next(err, results);   
     });
+
+
+    path = filepath;
+    
+    var files = [];
+    if( fs.existsSync(path) ) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file,index){
+            var curPath = path + "/" + file;
+            console.log("Deleting " + curPath)
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        //fs.rmdirSync(path);
+      }
+    
+    console.log("files are gone")
+
+      
   };
 
 
@@ -437,12 +466,40 @@ api.mongo.getListing = function(api, connection, next) {
     var o_id = new BSON.ObjectID(connection.params.id);
     var query = { "_id":o_id};
 
-    api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
+    //Find the Listing
+    api.mongo.db.listings.find(query, function doneSearching(err, results) {
       if (err) { 
         next(err, false); 
       } 
-      next(err, true);   
+
+      for (var i = 0; i < results.length; i++) {
+
+        if (results[i].image) {
+          console.log("Image Exists")
+          var fs = require('fs');
+
+          console.log("Image Location: " + results[i].image)
+          console.log(__dirname)
+        
+          filepath1 = __dirname.replace("initializers", "")
+          filepath2 = filepath1 + "/" + results[i].image
+          filepath3 = filepath2.replace("/", "/")
+
+          fs.unlink(filepath3, function (err) {
+            if (err) next(err, false); 
+            console.log('successfully deleted ' + filepath3);
+
+            api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
+              if (err) { 
+                next(err, false); 
+              } 
+              next(err, true);   
+            });
+          });
+        }
+      }
     });
+
   };
 
 
@@ -872,23 +929,6 @@ api.mongo.getListing = function(api, connection, next) {
     var query = {"answers.username":connection.params.userName};
 
     api.mongo.db.questions.find(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
-
-
-
-  /***************** Delete All products ****************************/
-  api.mongo.questionsDelete = function(api, connection, next) {
-
-    var query = {}
-
-    api.mongo.db.questions.remove(query, function doneSearching(err, results) {
       if (err) { 
         next(err, false); 
       } 

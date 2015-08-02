@@ -45,9 +45,12 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
     // set default directive values
     // Upload.setDefaults( {ngf-keep:false ngf-accept:'image/*', ...} );
     $scope.upload = function (files) {
+
         if (files && files.length) {
+
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
+
                 Upload.upload({
                     url: $scope.uploadQuery,
                     fields: {'username': $scope.username, 'id': $scope.listing.id},
@@ -62,6 +65,10 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
                     console.log('error status: ' + status);
                 })
             }
+        }
+        else {
+        	console.log("Fail")
+        	
         }
     };
 
@@ -88,6 +95,9 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	//This is required or it will send as JSON by default and fail
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+	
+
+
 
 	$scope.addListing = function() {
 
@@ -96,21 +106,14 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		console.log(username)
 		console.log($scope.listing.title)
 
-
 		if ($scope.listing.humanoid != 5) {
 			console.log("Failed:" + $scope.listing.humanoid)
-   			$scope.queryError = 'You Failed the Human Test';
-			return $scope.queryError;
-  		}
-
-		if (!$scope.listing.title) {
-   			$scope.queryError = 'Title Required';
-			return $scope.queryError;
-  		}
-
-  		if (!$scope.listing.zipcode) {
-   			$scope.queryError = 'zipcode Required';
-			return $scope.queryError;
+			//Added Toaster Button
+			toastr.options.closeButton = true;
+			toastr.error('You Failed the Human Test')
+   			//$scope.queryError = 'You Failed the Human Test';
+			//return $scope.queryError;
+			return;
   		}
 
 		$scope.queryError = null;
@@ -198,6 +201,28 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		});	
 	};
 
+	
+	$scope.deleteListing = function(id) {
+		console.log("delete " + id )
+
+		//Define Rest Endpoint
+		$scope.deleteQuery = restURLEndpoint + '/api/listings/' + id ;
+
+		postData = "";
+
+		$http.delete($scope.deleteQuery, postData)
+		.success(function(response) {
+			
+			console.log("Deleted")
+			location = "mylistings.html?username=" + $scope.listing.username;
+
+						 	
+		})
+		.error(function(data, status, headers, config) {
+			$scope.queryError = data;
+		});
+	}
+
 	$scope.updateImage = function () {
 
 		if (QueryString.id) {
@@ -231,18 +256,13 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	$scope.addUser = function() {
 	
 		console.log($scope.user.username)
-		if (!$scope.user.username) {
-   			$scope.queryError = 'Username Required';
-			return $scope.queryError;
-  		}
-  		if (!$scope.user.password) {
-   			$scope.queryError = 'Password Required';
-			return $scope.queryError;
-  		}
 
-  		if (!$scope.user.lastname) {
-   			$scope.queryError = 'Lastname Required';
-			return $scope.queryError;
+		if ($scope.user.humanoid != 5) {
+			console.log("Failed:" + $scope.user.humanoid)
+			//Added Toaster Button
+			toastr.options.closeButton = true;
+			toastr.error('You Failed the Human Test')
+			return;
   		}
 
 		$scope.queryError = null;
@@ -263,8 +283,9 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		.success(function(response) {
 			$scope.users = response;
 			
-			//sessionStorage.brimstone_token = $scope.user.username;
-			window.location.href = "index.html";
+			//Authenticate the user with newly registered credentials
+			$scope.authenticateUser();
+			
 						 	
 		})
 		.error(function(data, status, headers, config) {

@@ -25,8 +25,6 @@ exports.action = {
     //1
     //modified_path = file_path.replace("public\\listing_images\\", "listing_images/")
 
-    //modified_path = file_path.replace("public/listing_images/", "listing_images/")
-
     modified_path = file_path  
 
     connection.response.path = modified_path

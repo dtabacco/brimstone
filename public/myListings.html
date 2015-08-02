@@ -68,7 +68,7 @@
                           <a ng-href="viewListing.html?id={{listing.id}}">{{listing.title}}</a> &nbsp;&nbsp;&nbsp;
                           {{listing.views}} Views  &nbsp;&nbsp;&nbsp;  
                           <a href="">edit</a>  &nbsp;&nbsp;&nbsp;  
-                          <a href="">delete</a>
+                          <button ng-click="deleteListing(listing.id)" >delete</button>
 
                         </div>
                     </div>
