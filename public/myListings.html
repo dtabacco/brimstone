@@ -70,7 +70,7 @@
                              
                               <td><a ng-href="viewListing.html?id={{listing.id}}">{{listing.title}}</a> </td>
                               <td><b>{{listing.views}} Views </b></td>
-                              <td><button class="btn btn-warning" ng-click="editListing(listing.id)" >edit</button> </td>
+                              <td> <a href="editListing.html?id={{listing.id}}"><button class="btn btn-warning">edit</button></a> </td>
                               <td><button class="btn btn-danger" ng-click="deleteListing(listing.id)" >delete</button></td>
                                
                           </tr>

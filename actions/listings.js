@@ -21,6 +21,29 @@ exports.listingAdd = {
   }
 };
 
+exports.listingEdit = {
+  name: "listingEdit",
+  description: "I edit a listing",
+  inputs: {
+    required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_phone', 'contact_email'],
+    optional: ['make', 'model', 'dimensions','condition'],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+
+      api.mongo.listingEdit(api, connection, function(err, listing) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.listing = listing;
+      next(connection, true);
+    });
+  }
+};
+
 exports.getListing = {
   name: "getListing",
   description: "I get a listing by ID",
