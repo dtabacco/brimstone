@@ -45,7 +45,8 @@
             <div class="row centered">
               <div class="col-lg-6 col-lg-offset-3">
               <h1> Search for stuff </h1>
-              <form class="form-horizontal" role="form" ng-submit="searchListings()">
+              <!--<form class="form-horizontal" role="form" ng-submit="searchListings()">-->
+              <form class="form-horizontal" role="form" action="search.html">
                 <div class="form-group">
                    <h4>What are you looking for?</h4> <input type="text" class="form-control" name="query" maxlength="50" ng-model="listing.query"><br />
                 </div>
@@ -74,7 +75,6 @@
             <div class="row">
               <div class="col-lg-10 col-lg-offset-1">
                  <div ng-show="complete.status"> <h5 id="num_search_results"><b>{{num_of_results}}</b> Results for <b>{{original_query}}</b></h5><hr></div>
-                 
               </div>
             </div><!-- row -->
         </div><!-- container -->
@@ -90,15 +90,14 @@
                 <div ng-repeat="listing in listings | limitTo:15">
                   <div class="row">
                     <div class="col-md-2" style="background:#FFFFFF;">
-                      <a href="viewlisting.html?id={{listing.id}}"><img height=80 width=120 ng-src="{{listing.image}}"></a>
+                      <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" ng-src="{{listing.image}}"></a>
                     </div>
                     <div class="col-md-10" style="background:#FFFFFF;">
-                      <h1 id="results-title"><a href="viewlisting.html?id={{listing.id}}"> {{listing.title}}</a></h1>  
-                      <h2 id="results-description"> <i>{{listing.description}}<i></h2>
+                      <h3 class="no_top_margin min_bottom_margin"> <a href="viewlisting.html?id={{listing.id}}"> {{listing.title}}</a></h3>  
+                      <h5 class="no_top_margin min_bottom_margin description"><i>{{listing.description}}<i></h5>
                       <div class="row">
                         <div class="col-md-2" style="background:#FFFFFF;">
-                          <h3 id="results-price">${{listing.price}}</h3>
-                          <h3 id="results-detail">{{listing.search_preview}}</h3>
+                          <h5><b>${{listing.price}}</b></5>
                         </div>
                       </div>
                     </div>
