@@ -46,7 +46,8 @@ p {
 
 /* Links */
 a {
-    color: #f85c37;
+    /*color: #f85c37;  Original Red  */
+    color: #2B2B74;
     word-wrap: break-word;
 
     -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
@@ -160,6 +161,55 @@ a:after {
 }
 
 #headerwrap h4 {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#searchwrap {
+    /*background: url(../assets/img/header-bg.jpg) no-repeat center top;*/
+    
+    background: #575757;
+    /*background: #000032 ;*/
+    /*background: url(../assets/img/header2.jpg) no-repeat center top;*/
+    margin-top: -10px;
+    padding-top:10px;
+    text-align:center;
+    background-attachment: relative;
+    background-position: center center;
+    min-height: 200px;
+    width: 100%;
+    
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#searchwrap h1 {
+    margin-top: 50px;
+    color: white;
+    font-size: 70px;
+    font-weight: 300;
+    letter-spacing: 3px;
+}
+
+#searchwrap h2 {
+    color: white;
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#searchwrap h4 {
     color: white;
     font-size: 20px;
     font-weight: 700;
@@ -418,3 +468,8 @@ a:after {
 .formrequired {
     color: red;
 }
+
+.success {
+    color: green;
+}
+
