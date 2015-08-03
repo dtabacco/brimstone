@@ -289,6 +289,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $location, $window, appConfig) {	
 
 	$scope.listing = {};
+	$scope.complete = {};
+	$scope.complete.status = false;
 	
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	//console.log("Configuration: " + restURLEndpoint)	
@@ -327,7 +329,6 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		$scope.statusmsg = null;
 		$scope.searched = true;
 		$scope.searching = true;
-		$scope.complete = false;
 		
 		//$scope.searchQuery = 'http://localhost:9010/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
 		$scope.searchQuery = restURLEndpoint + '/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
@@ -346,7 +347,7 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 			$scope.num_of_results = response.listing.length;
 			$scope.original_query = $scope.listing.query;
 			$scope.searching = false;
-			$scope.complete = true;
+			$scope.complete.status = true;
 			console.log(response)
 						 	
 		})

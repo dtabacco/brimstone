@@ -73,7 +73,8 @@
         <div class="container w" style="background:#FFFFFF;">
             <div class="row">
               <div class="col-lg-10 col-lg-offset-1">
-                 <h5 ng-cloak ng-show="complete"> <h5 id="num_search_results"><b>{{num_of_results}}</b> Results for <b>{{original_query}}</b></h5></h5><hr>
+                 <div ng-show="complete.status"> <h5 id="num_search_results"><b>{{num_of_results}}</b> Results for <b>{{original_query}}</b></h5><hr></div>
+                 
               </div>
             </div><!-- row -->
         </div><!-- container -->
@@ -115,7 +116,7 @@
       <!-- Close NG Controller Div-->  
       </div>
 
- 
+       <div ng-include="'footer.html'"></div> 
  
 
   </body>
