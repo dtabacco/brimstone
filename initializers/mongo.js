@@ -567,6 +567,24 @@ api.mongo.getListing = function(api, connection, next) {
 
     var query = {};
 
+    console.log("phrase " + connection.params.query)
+
+    console.log("Zip " + connection.params.zip)
+
+    /*{ $text: { $search: "mermaid jackson" } },
+   { score: { $meta: "textScore" } }
+).sort( { score: { $meta: "textScore" } } )*/
+
+   
+    if (connection.params.zip === "null") {
+      console.log("Zip code is null")
+       query =  { $text: { $search: connection.params.query } }
+    }
+    else {
+      console.log("Zip code exists")
+      query = { $text: { $search: connection.params.query }, zipcode:connection.params.zip}
+    }
+
     api.mongo.db.listings.find(query, function doneSearching(err, results) {
       if (err) { 
         next(err, false); 

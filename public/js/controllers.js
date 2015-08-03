@@ -300,14 +300,18 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 	}
 
 	if (QueryString.query) {
-		$scope.listing.query = QueryString.query;
+		$scope.listing.query = QueryString.query.split('+').join(' ');
+
+
 	}
 
-	if (QueryString.zip) {
-		$scope.listing.zip = QueryString.zip;
+	if (QueryString.zipcode) {
+		$scope.listing.zip = QueryString.zipcode;
 	}
 	else {
-		$scope.listing.zip = "00000";
+		//$scope.listing.zip = "00000";
+		console.log("Setting zip to null")
+		$scope.listing.zip = null;
 	}
 
 	console.log('scope.listing.query:' + $scope.listing.query )
@@ -341,6 +345,14 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 			for (var i = 0; i < response.listing.length; i++) {
 				response.listing[i].id = response.listing[i]._id;
+
+				if (response.listing[i].title.length > 100) {
+					response.listing[i].title = response.listing[i].title.substring(0, 100) + "...";
+				}
+
+				if (response.listing[i].description.length > 250) {
+					response.listing[i].description = response.listing[i].description.substring(0, 250) + "...";
+				}
 			}
 
 			$scope.listings = response.listing;
