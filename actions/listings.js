@@ -160,3 +160,28 @@ exports.listingsDeleteID = {
     });
   }
 };
+
+exports.listingSearch = {
+  name: "listingSearch",
+  description: "I Search for relevant listings",
+  inputs: {
+    required: ['query', 'zip'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.listingSearch(api, connection, function(err, listings) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        connection.response.listing = listings
+        //connection.response.status = 'success';
+        next(connection, true);
+        
+
+      }); 
+  }
+};

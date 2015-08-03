@@ -6,6 +6,7 @@ exports.routes = {
     { path: "/listings", action: "getAllListing" },
     { path: "/listings/:id", action: "getListing" }, 
     { path: "/listings/profile/:username", action: "getMyListings" }, 
+    { path: "/listings/:query/:zip", action: "listingSearch" },
   ],
 
   post: [

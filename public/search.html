@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="brimstone">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+ 
+    <title>Search</title>
+
+     <!-- Load the Angular Javascript -->
+    <script src="js/angular.min.js"></script>
+
+    <!-- Load Angular File Upload Library -->
+    <script src="js/ng-file-upload.min.js"></script> 
+
+     <!-- Load your custom Javascript with the module defined -->
+    <script src="js/app.config.js"></script>
+    <script src="js/controllers.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+  
+  </head>
+
+  <body>
+    <div ng-controller="UserManager" ng-init="checkLoginStatus()">
+      <div ng-include="'header.html'">
+      </div>
+
+      <!-- Name the controller which manages this part of the page --> 
+      <div ng-controller="SearchManager" data-ng-init="searchListings()">
+
+        <div id="searchwrap">
+          <div class="container">
+            <div class="row centered">
+              <div class="col-lg-6 col-lg-offset-3">
+              <h1> Search for stuff </h1>
+              <form class="form-horizontal" role="form" ng-submit="searchListings()">
+                <div class="form-group">
+                   <h4>What are you looking for?</h4> <input type="text" class="form-control" name="query" maxlength="50" ng-model="listing.query"><br />
+                </div>
+                <div class="form-group">
+                   <div class="col-md-10">
+                    <div class="form-group row">
+                      <label for="Zipcode" class="col-md-2 control-label whitelabel">Near</label>
+                      <div class="col-md-4">
+                          <input type="text" class="form-control" placeholder="zipcode" name="zipcode" maxlength="5" ng-model="listing.zip">
+                      </div>
+                      <div class="col-md-3">
+                          <button type="submit" class="btn btn-primary">Search</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+              </form>   
+
+              </div>
+            </div><!-- row -->
+          </div><!-- container -->
+        </div><!-- searchwrap -->
+     
+        <!-- Start of Search results Middle Column -->
+        <div class="container w" style="background:#FFFFFF;">
+            <div class="row">
+              <div class="col-lg-10 col-lg-offset-1">
+                 <h5 ng-cloak ng-show="complete"> <h5 id="num_search_results"><b>{{num_of_results}}</b> Results for <b>{{original_query}}</b></h5></h5><hr>
+              </div>
+            </div><!-- row -->
+        </div><!-- container -->
+    
+
+        
+        <div class="container w" style="background:#FFFFFF;">
+            <div class="row">
+              <div class="col-lg-10 col-lg-offset-1">
+                <div ng-show="searching">
+                  <center><img src="assets/images/loading.gif" alt="Loading" /></center>
+                </div>
+                <div ng-repeat="listing in listings | limitTo:15">
+                  <div class="row">
+                    <div class="col-md-2" style="background:#FFFFFF;">
+                      <a href="viewlisting.html?id={{listing.id}}"><img height=80 width=120 ng-src="{{listing.image}}"></a>
+                    </div>
+                    <div class="col-md-10" style="background:#FFFFFF;">
+                      <h1 id="results-title"><a href="viewlisting.html?id={{listing.id}}"> {{listing.title}}</a></h1>  
+                      <h2 id="results-description"> <i>{{listing.description}}<i></h2>
+                      <div class="row">
+                        <div class="col-md-2" style="background:#FFFFFF;">
+                          <h3 id="results-price">${{listing.price}}</h3>
+                          <h3 id="results-detail">{{listing.search_preview}}</h3>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                </div>
+
+
+              </div>
+            </div><!-- row -->
+        </div><!-- container -->
+
+      
+
+      <!-- Close NG Controller Div-->  
+      </div>
+
+ 
+ 
+
+  </body>
+</html>
+
+

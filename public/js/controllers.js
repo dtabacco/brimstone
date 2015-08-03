@@ -285,7 +285,80 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 
 });
+
+BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $location, $window, appConfig) {	
+
+	$scope.listing = {};
 	
+	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
+	//console.log("Configuration: " + restURLEndpoint)	
+
+	if ($window.sessionStorage.brimstone_token) {
+		$scope.user.token = $window.sessionStorage.brimstone_token;
+	}
+
+	if (QueryString.query) {
+		$scope.listing.query = QueryString.query;
+	}
+
+	if (QueryString.zip) {
+		$scope.listing.zip = QueryString.zip;
+	}
+	else {
+		$scope.listing.zip = "00000";
+	}
+
+	console.log('scope.listing.query:' + $scope.listing.query )
+	console.log('scope.listing.zip:' + $scope.listing.zip )
+
+	//This is required or it will send as JSON by default and fail
+	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+
+	$scope.searchListings = function() {
+
+		if (!$scope.listing.query) {
+   			$scope.queryError = 'You Must provide a query';
+			return $scope.queryError;
+		
+		}
+      		
+		$scope.queryError = null;
+		$scope.statusmsg = null;
+		$scope.searched = true;
+		$scope.searching = true;
+		$scope.complete = false;
+		
+		//$scope.searchQuery = 'http://localhost:9010/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
+		$scope.searchQuery = restURLEndpoint + '/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
+
+		console.log('URL:' + $scope.searchQuery)
+		
+		$http.get($scope.searchQuery)
+		
+		.success(function(response) {
+
+			for (var i = 0; i < response.listing.length; i++) {
+				response.listing[i].id = response.listing[i]._id;
+			}
+
+			$scope.listings = response.listing;
+			$scope.num_of_results = response.listing.length;
+			$scope.original_query = $scope.listing.query;
+			$scope.searching = false;
+			$scope.complete = true;
+			console.log(response)
+						 	
+		})
+		.error(function(data, status, headers, config) {
+			
+			$scope.searched = false;
+			$scope.searching = false;
+			$scope.queryError = data;
+		});	
+	};
+
+});
 
 BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $location, $window, appConfig) {	
 
@@ -305,14 +378,29 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
 
-	//array of all usernames
+	//array of all usernames - Will be populated by buildUserNameList()
 	usernames = [];
-	usernames.push("r");
-	usernames.push("t");
-	usernames.push("tabacco");
 	$scope.started = false;
 
 	//call get all users, to populate array
+	$scope.buildUsernameList = function() { 
+		
+		//Define REST Endpoint
+		$scope.searchQuery = restURLEndpoint + '/api/users';
+
+		//Execute GET Request
+		$http.get($scope.searchQuery)
+		.success(function(response) {
+		
+			for (var i = 0; i < response.users.length; i++) {
+				usernames.push(response.users[i].username);
+			}
+				 	
+		})
+		.error(function(data, status, headers, config) {
+			console.log(data);
+		});	
+	}
 
 	/// This function will fire every time the username checkbox has a key press event
 	$scope.checkUnique = function() { 
@@ -332,6 +420,11 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		}
 	}
 
+	
+	$scope.clearUserScope = function() {
+	console.log("Clearing User Scope")
+	}
+
 	$scope.addUser = function() {
 	
 		console.log($scope.user.username)
@@ -342,6 +435,13 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 			toastr.options.closeButton = true;
 			toastr.error('You Failed the Human Test')
 			return;
+  		}
+
+  		if (!$scope.unique) {
+  			toastr.options.closeButton = true;
+			toastr.error('You Must Select a Unique Username')
+  			return
+
   		}
 
 		$scope.queryError = null;
@@ -364,7 +464,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 			
 			//Authenticate the user with newly registered credentials
 			$scope.authenticateUser();
-			
+			//location = "index.html"
 						 	
 		})
 		.error(function(data, status, headers, config) {

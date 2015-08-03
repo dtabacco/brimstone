@@ -38,6 +38,9 @@ var mongo = function (api, next) {
     var entry = { username:connection.params.username, password:hashed_password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
                 email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at};
 
+    console.log("Printing Entry as it will be registered")
+    console.log(entry)
+
    //Insert JSON Entry to Add to MongoDB
     api.mongo.db.users.insert(entry, {safe : true}, function doneCreatingUserEntry(err, results) {
       if (err) { 
@@ -175,9 +178,7 @@ var mongo = function (api, next) {
 
         console.log("Account getting updated " + results[0].username)
 
-
-
-        //Copy all users attributes so they are not lost in update and increment accepted answer count
+        //Copy all users attributes so they are not lost in update
         for (var i = 0; i < results.length; i++) {
           o_id = results[i]._id;
           username = connection.params.username;
@@ -194,9 +195,11 @@ var mongo = function (api, next) {
 
 
         //Create JSON Entry to update in MongoDB
-        entry = {username:connection.params.username, password:connection.params.password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
-                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:last_login}; 
-  
+        entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
+                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+        console.log("Printing Update")
+        console.log(entry)
+
         //Update MongoDB
         api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
             if (err) { 
@@ -559,6 +562,19 @@ api.mongo.getListing = function(api, connection, next) {
     });
   };
 
+  /***************** Search for Listings ****************************/
+  api.mongo.listingSearch = function(api, connection, next) {
+
+    var query = {};
+
+    api.mongo.db.listings.find(query, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      next(err, results);   
+    });
+  };
 
 
 
