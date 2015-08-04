@@ -341,6 +341,10 @@ a:after {
 	padding: 5px;
 }
 
+.y {
+    padding-top: 15px;
+}
+
 /***** MODAL CONTACT *****/
 .modal-content {
 	border-radius: 0px;
@@ -477,6 +481,15 @@ a:after {
     margin-top: 0px;
 }
 
+.med_top_margin {
+    margin-top: 10px;
+}
+
 .min_bottom_margin {
     margin-bottom: 5px;
 }
+
+.med_bottom_margin {
+    margin-bottom: 10px;
+}
+

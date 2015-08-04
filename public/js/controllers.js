@@ -90,14 +90,13 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	
 	$scope.listing = {};
 
+
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	
 	//This is required or it will send as JSON by default and fail
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
 	
-
-
 
 	$scope.addListing = function() {
 
@@ -108,13 +107,30 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 		if ($scope.listing.humanoid != 5) {
 			console.log("Failed:" + $scope.listing.humanoid)
+			
 			//Added Toaster Button
 			toastr.options.closeButton = true;
 			toastr.error('You Failed the Human Test')
-   			//$scope.queryError = 'You Failed the Human Test';
-			//return $scope.queryError;
 			return;
   		}
+  		
+  		if (!$scope.listing.make) {
+  			$scope.listing.make = "";
+  		}
+  		if (!$scope.listing.model) {
+  			$scope.listing.model = "";
+  		}
+  		if (!$scope.listing.condition) {
+  			$scope.listing.condition = "";
+  		}
+  		if (!$scope.listing.dimensions) {
+  			$scope.listing.dimensions = "";
+  		}
+  		if (!$scope.listing.contact_phone) {
+  			$scope.listing.contact_phone = "";
+  		}
+  		
+
 
 		$scope.queryError = null;
 		$scope.statusmsg = null;

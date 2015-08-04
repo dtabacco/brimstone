@@ -509,6 +509,10 @@ api.mongo.getListing = function(api, connection, next) {
   /***************** editListing ****************************/
   api.mongo.listingEdit = function(api, connection, next) {
 
+    if (connection.params.make == 'undefined' ) {
+      connection.params.make = ""
+    }
+
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
     var query = { "_id":o_id};
@@ -575,7 +579,7 @@ api.mongo.getListing = function(api, connection, next) {
    { score: { $meta: "textScore" } }
 ).sort( { score: { $meta: "textScore" } } )*/
 
-   
+ 
     if (connection.params.zip === "null") {
       console.log("Zip code is null")
        query =  { $text: { $search: connection.params.query } }

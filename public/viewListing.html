@@ -36,49 +36,101 @@
      
        
       <div ng-controller="listingManager" ng-init="getListing()">
-   
+
+        <div class="container">
+           <div class="row ">
+              <div class="col-lg-8 col-lg-offset-2"><br>
+                <h1>{{listing.title}}</h1>
+          </div>
+        </div>
+      </div>
+    <!--
         <div id="blue">
           <div class="container">
             <div class="row centered">
               <div class="col-lg-8 col-lg-offset-2">
               <h4>{{listing.title}}</h4>
               </div>
-            </div><!-- row -->
-          </div><!-- container -->
-        </div><!--  bluewrap --> 
+            </div>
+          </div>
+        </div>--> 
              
-        <div class="container w">
+        <div class="container y">
           <div class="row">
             <div class="col-lg-2">&nbsp;</div>  
-            <div class="col-lg-8">    
+            <div class="col-lg-8" style="background:#FFFFFF;">    
               <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
               <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
   
                <div class="row">
                <div class="col-lg-6"> 
-                <a ng-href="{{listing.image}}"><img class="img-thumbnail img-responsive" ng-src={{listing.image}}></a><br> 
+                <a ng-href="{{listing.image}}"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a><br> 
 
-                <!-- TO DO - Apply Security -->
-                <button type="submit" ng-click="updateImage()" class="btn btn-primary">Change Image</button>&nbsp;
-                <a ng-href="editListing.html?id={{listing.id}}"><button class="btn btn-warning">Edit Listing</button></a> 
+                <span ng-if="listing.username === loggedin.username">
+                  <button type="submit" ng-click="updateImage()" class="btn btn-primary">Change Image</button>&nbsp;
+                  <a ng-href="editListing.html?id={{listing.id}}"><button class="btn btn-warning">Edit Listing</button></a> 
+                  <br>
+                </span>
                 
 
                </div>
-              <div class="col-lg-6">&nbsp;</div> 
+              <div class="col-lg-6" >&nbsp;</div> 
                </div>
 
-               Title: {{listing.title}} <br>
-               Description: {{listing.description}} <br>
-               Price: {{listing.price}} <br>
-               Location: {{listing.location}} <br>
-               Zipcode: {{listing.zipcode}} <br>
-               Make: {{listing.make}} <br>
-               Model: {{listing.model}} <br>
-               Dimensions: {{listing.dimensions}} <br>
-               Condition: {{listing.condition}} <br><br>
+              
+               <h4><strong>Description</strong></h4>
+                {{listing.description}}<br>
 
-               Email: {{listing.contact_email}} <br>
-               Phone: {{listing.contact_phone}} <br>
+               
+
+               <div class="row">
+                <div class="col-lg-6">
+                  <h4><strong>Price</strong></h4> 
+                  {{listing.price}} <br>
+                </div>
+                <div class="col-lg-6">
+                  <h4><strong>Condition</strong></h4>
+                  {{listing.condition}}
+                </div>
+              </div>
+              <br> 
+
+               <div class="row">
+                <div class="col-lg-6">
+                  <h4><strong>Location</strong></h4>
+                  {{listing.location}} 
+                </div>
+                <div class="col-lg-6">
+                   <h4><strong>Zipcode</strong></h4>
+                  {{listing.zipcode}} 
+                </div>
+              </div>
+              <br> 
+              
+             
+
+               <h4><strong>Additional Information</strong></h4>
+               <table class="table table-striped">
+                  <tr>
+                   <td>Make</td> 
+                   <td>{{listing.make}}</td> 
+                 </tr>
+                 <tr>
+                   <td>Model</td> 
+                   <td>{{listing.model}}</td> 
+                 </tr>
+                 <tr>
+                   <td> Dimensions</td> 
+                   <td> {{listing.dimensions}}</td> 
+                 </tr>
+              
+               </table>
+
+                
+
+               <h4><strong>Please Contact</strong></h4>
+                <i>{{listing.contact_email}}</i> <br>
+                <i>{{listing.contact_phone}}</i> 
 
                <br><br>
              
