@@ -44,16 +44,6 @@
           </div>
         </div>
       </div>
-    <!--
-        <div id="blue">
-          <div class="container">
-            <div class="row centered">
-              <div class="col-lg-8 col-lg-offset-2">
-              <h4>{{listing.title}}</h4>
-              </div>
-            </div>
-          </div>
-        </div>--> 
              
         <div class="container y">
           <div class="row">
@@ -64,7 +54,8 @@
   
                <div class="row">
                <div class="col-lg-6"> 
-                <a ng-href="{{listing.image}}"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a><br> 
+                <a data-toggle="modal" data-target="#myModal" href="#myModal"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a>
+                <!--<a ng-href="{{listing.image}}"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a><br> -->
 
                 <span ng-if="listing.username === loggedin.username">
                   <button type="submit" ng-click="updateImage()" class="btn btn-primary">Change Image</button>&nbsp;
@@ -126,8 +117,7 @@
               
                </table>
 
-                
-
+              
                <h4><strong>Please Contact</strong></h4>
                 <i>{{listing.contact_email}}</i> <br>
                 <i>{{listing.contact_phone}}</i> 
@@ -139,6 +129,29 @@
           </div><!-- row -->
           <br>
         </div><!-- container -->
+
+                        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog" style="width: 75%">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Full-Size Image</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row centered">
+                  <div class="col-md-12">
+                  <img img-responsive ng-src="{{listing.image}}">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
       </div>  <!-- End of Listing Manager Controller -->   
       
     </div> <!-- End of User Manager Controller -->  
@@ -148,7 +161,14 @@
 
      
         <div ng-include="'footer.html'"></div> 
+
+
+
+
       </div>  <!-- End of User Manager Controller -->   
+
+
+      
                 
       <!-- Bootstrap core JavaScript
       ================================================== -->
