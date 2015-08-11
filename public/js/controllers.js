@@ -267,6 +267,30 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		});	
 	};
 
+	$scope.getRecentListings = function() {
+
+  		console.log("--> Fetching Recent Listings")
+		
+		//Define Rest Endpoint
+		$scope.listingQuery = restURLEndpoint + '/api/listings';
+		
+		//Execute GET Request
+		$http.get($scope.listingQuery)
+		.success(function(response) {
+
+			for (var i = 0; i < response.listing.length; i++) {
+				response.listing[i].id = response.listing[i]._id;
+			}
+
+			//Reverse order so most recent shows up on top
+			$scope.listings = sortByKey(response.listing, 'created_at').reverse()
+			//console.log($scope.listings)				 	
+		})
+		.error(function(data, status, headers, config) {
+			console.log(data);
+		});	
+	};
+
 	
 	$scope.deleteListing = function(id) {
 		console.log("delete " + id )
@@ -386,6 +410,8 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 			$scope.queryError = data;
 		});	
 	};
+
+
 
 });
 
@@ -656,6 +682,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 				$scope.loggedin.username = response.token.username;
 				glb_username = response.token.username;
 				$scope.authuser.authenticated = true;
+				$scope.user.username = response.token.username;
 				console.log($scope.authuser.username + ":" + $scope.loggedin.username + ":" + $scope.authuser.authenticated);
 			}
 						 	

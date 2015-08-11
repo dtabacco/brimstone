@@ -124,7 +124,7 @@ a:after {
 
 #headerwrap {
 	/*background: url(../assets/img/header-bg.jpg) no-repeat center top;*/
-    background: url(../assets/img/header2.jpg) no-repeat center top;
+    background: url(../assets/img/header3d.jpg) no-repeat center top;
 	margin-top: -10px;
 	padding-top:20px;
 	text-align:center;
@@ -172,6 +172,7 @@ a:after {
     /*background: url(../assets/img/header-bg.jpg) no-repeat center top;*/
     
     background: #575757;
+    background: url(../assets/img/header3d.jpg) no-repeat center top;
     /*background: #000032 ;*/
     /*background: url(../assets/img/header2.jpg) no-repeat center top;*/
     margin-top: -10px;
@@ -210,6 +211,55 @@ a:after {
 }
 
 #searchwrap h4 {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#titlewrap {
+    /*background: url(../assets/img/header-bg.jpg) no-repeat center top;*/
+    
+    /*background: #575757;*/
+    background: #f2f2f2 ;
+    /*background: url(../assets/img/header2.jpg) no-repeat center top;*/
+    margin-top: -10px;
+    padding-top:10px;
+    text-align:center;
+    background-attachment: relative;
+    background-position: center center;
+    min-height: 100px;
+    width: 100%;
+    
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#titlewrap h1 {
+    margin-top: 50px;
+    color: #555;
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: 3px;
+}
+
+#titlewrap h2 {
+    color: white;
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#titlewrap h4 {
     color: white;
     font-size: 20px;
     font-weight: 700;
@@ -492,4 +542,3 @@ a:after {
 .med_bottom_margin {
     margin-bottom: 10px;
 }
-
