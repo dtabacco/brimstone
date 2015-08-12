@@ -52,76 +52,89 @@
               <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
               <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
             </div>
-          <div class="col-lg-4">
+          <div class="col-lg-3">
             &nbsp;
           </div><!-- col-lg-3 -->
 
-          <div class="col-lg-4">
-            <a ng-href="editprofile.html?username={{user.username}}"> <button class="btn btn-default btn-sm">Edit Profile</button></a>  <a ng-href="editpassword.html?username={{user.username}}"> <button class="btn btn-default btn-sm">Change Password</button></a> <a ng-href="mylistings.html?username={{user.username}}"> <button class="btn btn-default btn-sm">My Listings</button></a> <br><br>
+          <div class="col-lg-6">
+            <a ng-href="editprofile.html?username={{user.username}}"> <button class="btn btn-primary btn-sm">Edit Profile</button></a>  <a ng-href="editpassword.html?username={{user.username}}"> <button class="btn btn-success btn-sm">Change Password</button></a> <a ng-href="mylistings.html?username={{user.username}}"> <button class="btn btn-warning btn-sm">My Listings</button></a> <br><br>
               <div class="row">
-                <div class="col-md-12">     
-                  <div class="sepbar indenter">Basic Information</div>  
-                  <span class="profile-attribute indenter">Username: 
-                    <span class="profile-value"> {{user.username}} 
-                    </span>
-                  </span>
-                  <br> 
+                <div class="col-md-12">
+                  <div class="panel panel-info">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Profile Information</h3>
+                    </div>
+                    <div class="panel-body">     
+                     <!-- <div class="sepbar indenter">Basic Information</div> --> 
+                      <span class="profile-attribute indenter">Username: 
+                        <span class="profile-value"> {{user.username}} 
+                        </span>
+                      </span>
+                      <br> 
 
-                  <span class="profile-attribute indenter">First Name: 
-                    <span class="profile-value"> {{user.firstname}}
-                    </span>
-                  </span>
-                  <br> 
+                      <span class="profile-attribute indenter">First Name: 
+                        <span class="profile-value"> {{user.firstname}}
+                        </span>
+                      </span>
+                      <br> 
 
-                  <span class="profile-attribute indenter">Last Name: 
-                    <span class="profile-value"> {{user.lastname}}
-                    </span>
-                  </span>
-                  <br> 
+                      <span class="profile-attribute indenter">Last Name: 
+                        <span class="profile-value"> {{user.lastname}}
+                        </span>
+                      </span>
+                      <br> 
 
-                  <span class="profile-attribute indenter">Email:
-                    <span class="profile-value">{{user.email}}  <br>
-                    </span>
-                  </span>
+                      <span class="profile-attribute indenter">Email:
+                        <span class="profile-value">{{user.email}}  <br>
+                        </span>
+                      </span>
 
-                  <span class="profile-attribute indenter">Account Created: 
-                    <span class="profile-value"> {{user.created_at}}
-                    </span>
-                  </span>
-                  <br> 
+                      <span class="profile-attribute indenter">Account Created: 
+                        <span class="profile-value"> {{user.created_at}}
+                        </span>
+                      </span>
+                      <br> 
 
-                   <span class="profile-attribute indenter">Zip Code: 
-                    <span class="profile-value"> {{user.zipcode}}
-                    </span>
-                  </span>
-                  <br> 
+                       <span class="profile-attribute indenter">Zip Code: 
+                        <span class="profile-value"> {{user.zipcode}}
+                        </span>
+                      </span>
+                      <br> 
 
-                  <span class="profile-attribute indenter">Is this a Company: 
-                    <span class="profile-value"> {{user.company_ind}}
-                    </span>
-                  </span>
-                  <br> 
+                      <span class="profile-attribute indenter">Is this a Company: 
+                        <span class="profile-value"> {{user.company_ind}}
+                        </span>
+                      </span>
+                      <br> 
 
-                  <span class="profile-attribute indenter">Company Name: 
-                    <span class="profile-value"> {{user.company_name}}
-                    </span>
-                  </span>
-                  <br> 
+                      <span class="profile-attribute indenter">Company Name: 
+                        <span class="profile-value"> {{user.company_name}}
+                        </span>
+                      </span>
+                    </div> <!-- End Panel Body -->
+                  </div>  <!-- End Panel -->
+                    
                   
-                  <br>
-                <div class="sepbar indenter">Activity</div>   
-                
-                <span class="profile-attribute indenter">Last Login: 
-                  <span class="profile-value"> {{user.last_login}} 
-                  </span>
-                 </span>
-                <br><br><br> 
+                 
+                 <div class="panel panel-info">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">User Activity</h3>
+                    </div>
+                    <div class="panel-body">      
+                      <span class="profile-attribute indenter">Last Login: 
+                        <span class="profile-value"> {{user.last_login}} 
+                        </span>
+                     </span>
+                      <br> 
+                    </div> <!-- End Panel Body -->
+                  </div>  <!-- End Panel --> 
                 </div>
-              </div>       
+              </div>  
+                       
        
           </div><!-- col-lg-4 -->
 
-           <div class="col-lg-4">
+           <div class="col-lg-3">
             &nbsp;
           </div><!-- col-lg-3 -->
 

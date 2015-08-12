@@ -24,6 +24,9 @@ BrimstoneApp.directive('myRepeatDirective', function() {
 BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $window, $document, appConfig, Upload) {
 
 	$scope.listing = {};
+	$scope.fileError = "";
+	$scope.fileErrorDetail = "";
+	var initialized = 0;
 
     $scope.$watch('files', function () {
         $scope.upload($scope.files);
@@ -41,7 +44,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
     console.log(glb_username)
     console.log(glb_title)
 
-    $scope.uploadQuery = "http://localhost:80" + '/api/uploader';
+    $scope.uploadQuery = restURLEndpoint + '/api/uploader';
     // set default directive values
     // Upload.setDefaults( {ngf-keep:false ngf-accept:'image/*', ...} );
     $scope.upload = function (files) {
@@ -67,8 +70,14 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
             }
         }
         else {
-        	console.log("Fail")
-        	
+        	//Workaround because it always hits this when the page loads...so may it only happen for real attempts
+        	if (initialized > 0) {
+	        	$scope.fileError = "Error Uploading File"
+	        	$scope.fileErrorDetail = "This means your image was larger than 6MB or your file type was not supported. Only PNG, GIF, JPG, JPEG and BMP are supported"
+        	}
+        	else {
+        		initialized = initialized + 1;  
+        	}        	
         }
     };
 
@@ -283,7 +292,9 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			}
 
 			//Reverse order so most recent shows up on top
-			$scope.listings = sortByKey(response.listing, 'created_at').reverse()
+			console.log(response.listing)
+			$scope.listings = sortByKey(response.listing, 'created_at').reverse();
+			console.log($scope.listings)
 			//console.log($scope.listings)				 	
 		})
 		.error(function(data, status, headers, config) {
