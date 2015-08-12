@@ -217,6 +217,55 @@ var mongo = function (api, next) {
       });
   } 
 
+  /***************** Update Last Login Time ****************************/
+  api.mongo.userUpdateLastLoginTime = function(api, connection, next) {
+
+    var query = {username:connection.params.username};
+
+    console.log("Updating " + connection.params.username + " in MongoDB")
+
+    //Find User who provided Answer
+    api.mongo.db.users.find(query, function doneSearching(err, results) {
+        if (err) { 
+          next(err, false); 
+        }
+
+        console.log("Account that gets the login time Update: " + results[0].username)
+        var now = new Date(); 
+        lastLogin = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+        console.log("last Login " + lastLogin) 
+
+        //Copy all users attributes so they are not lost in update and increment answer count
+        for (var i = 0; i < results.length; i++) {
+          o_id = results[i]._id;
+          username = results[i].username;
+          firstName = results[i].firstname;
+          lastName = results[i].lastname;
+          email = results[i].email;
+          zipcode = results[i].zipcode;
+          created_at = results[i].created_at;
+          last_login = lastLogin;
+          password = results[i].password;
+          company_ind = results[i].company_ind;
+          company_name = results[i].company_name;
+        }
+
+        //Create JSON Entry to update in MongoDB
+        entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
+                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+  
+        //Update MongoDB
+        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
+          if (err) { 
+            next(err, false); 
+          } 
+          console.log(results)  
+        });
+        
+        next (err, "Updated"); 
+      });
+  };  
+
   
 /***************** Add a listing ****************************/
 api.mongo.listingAdd = function(api, connection, next) {
@@ -229,7 +278,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   //Create JSON Entry to Add to MongoDB
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
-              condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email,  created_at:created_at, status:"open", views:0, image:null};
+              condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email,  created_at:created_at, updated_at:created_at,  status:"open", views:0, image:null};
 
   console.log(connection.params.questionBody)
 
@@ -354,11 +403,12 @@ api.mongo.listingAdd = function(api, connection, next) {
       status = results[i].status;
       views = results[i].views + 1;
       image = results[i].image;
+      updated_at = results[i].updated_at;
     }
 
     //Create JSON Entry to update in MongoDB
     entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
-                 created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+                 created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
 
     //Update MongoDB
     api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneAddingViewUpdate(err, results) {
@@ -513,6 +563,8 @@ api.mongo.getListing = function(api, connection, next) {
       connection.params.make = ""
     }
 
+    
+
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
     var query = { "_id":o_id};
@@ -542,11 +594,15 @@ api.mongo.getListing = function(api, connection, next) {
         status = results[i].status;
         views = results[i].views;
         image = results[i].image;
+        updated_at = results[i].updated_at;
       }         
+
+      var now = new Date();
+      updated_at = now;
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
-           created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
 
       //Update MongoDB
       api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
@@ -1033,50 +1089,7 @@ api.mongo.getListing = function(api, connection, next) {
 
 
 
-  /***************** Add a User ****************************/
-  api.mongo.userUpdateLastLoginTime = function(api, connection, next) {
-
-    var query = {username:connection.params.username};
-
-    console.log("Updating " + connection.params.username + " in MongoDB")
-
-    //Find User who provided Answer
-    api.mongo.db.users.find(query, function doneSearching(err, results) {
-        if (err) { 
-          next(err, false); 
-        }
-
-        console.log("Account that gets the login time Update: " + results[0].username)
-        var now = new Date(); 
-        lastLogin = now.toLocaleDateString() + " " + now.toLocaleTimeString();
-        console.log("last Login " + lastLogin) 
-
-        //Copy all users attributes so they are not lost in update and increment answer count
-        for (var i = 0; i < results.length; i++) {
-          o_id = results[i]._id;
-          username = results[i].username;
-          firstName = results[i].firstname;
-          lastName = results[i].lastname;
-          email = results[i].email;
-          created_at = results[i].created_at;
-          last_login = lastLogin;
-        }
-
-        //Create JSON Entry to update in MongoDB
-        entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
-                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
   
-        //Update MongoDB
-        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          console.log(results)  
-        });
-        
-        next (err, "Updated"); 
-      });
-  };
 
 
 
