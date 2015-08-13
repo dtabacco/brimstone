@@ -622,6 +622,83 @@ api.mongo.getListing = function(api, connection, next) {
     });
   };
 
+    /***************** ListingImageRemove ****************************/
+  api.mongo.listingImageRemove = function(api, connection, next) {
+
+    var BSON = mongodb.BSONPure;
+    var o_id = new BSON.ObjectID(connection.params.id);
+    var query = { "_id":o_id};
+
+    //Find the Listing
+    api.mongo.db.listings.find(query, function doneSearchingForQuestion(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      //Load existing data so it is not lost in update, and new fields come from update
+      for (var i = 0; i < results.length; i++) {
+        o_id = results[i]._id;
+        username = results[i].username;
+        title = results[i].title;
+        description = results[i].description;
+        price = results[i].price;
+        location = results[i].location;
+        zipcode = results[i].zipcode;
+        make = results[i].make;
+        model = results[i].model;
+        dimensions = results[i].dimensions;
+        condition = results[i].condition;
+        created_at = results[i].created_at;
+        contact_email = results[i].contact_email;
+        contact_phone = results[i].contact_phone;
+        status = results[i].status;
+        views = results[i].views;
+        previous_image = results[i].image;
+        image = null;
+        updated_at = results[i].updated_at;
+      }
+
+      if (previous_image) {
+        var fs = require('fs');
+
+        console.log("Image Location: " + previous_image)
+        console.log(__dirname)
+        
+        filepath1 = __dirname.replace("initializers", "")
+        filepath2 = filepath1 + "/" + previous_image
+        filepath3 = filepath2.replace("/", "/")
+
+        fs.unlink(filepath3, function (err) {
+          if (err) next(err, false); 
+          console.log('successfully deleted ' + filepath3);  
+        });
+      }       
+
+      var now = new Date();
+      updated_at = now;
+
+      //Create JSON Entry to update in MongoDB
+      entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+
+      //Update MongoDB
+      api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
+        if (err) { 
+         next(err, false); 
+        }  
+        console.log(results)
+        
+        console.log("Re-search for " + query )
+        api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
+        if (err) { 
+          next(err, false); 
+        }  
+        next(err, result);   
+        });  
+      });
+    });
+  };
+
   /***************** Search for Listings ****************************/
   api.mongo.listingSearch = function(api, connection, next) {
 

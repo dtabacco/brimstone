@@ -20,7 +20,8 @@ exports.routes = {
   put: [
     { path: "/users/:username", action: "userEdit" },
     { path: "/users/password/:username", action: "userPasswordEdit" },
-    { path: "/listings/:id", action: "listingEdit" },
+    { path: "/listings/:id", action: "listingEdit" },    
+    { path: "/listings/:id/imageRemove", action: "listingImageRemove" },
   ],
 
   delete: [

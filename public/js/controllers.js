@@ -189,7 +189,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 		//Define REST Endpoint
 		$scope.editQuery = restURLEndpoint + '/api/listings/' + $scope.listing.id;
-		console.log('URL:' + $scope.registerQuery)
+		console.log('URL:' + $scope.editQuery)
 		
 		//Assign all the incoming scope parameters to the post data variable
 		postData = 'username=' + glb_username + '&' + 'title=' + $scope.listing.title + '&' + 'description=' + $scope.listing.description + '&' + 
@@ -197,6 +197,48 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
 				   'contact_email=' + $scope.listing.contact_email ; 
+					
+		console.log(postData)
+
+		$http.put($scope.editQuery, postData)
+		.success(function(response) {
+			
+			//Convert to .id for angular
+			response.listing.id = response.listing._id;
+			$scope.listing = response.listing;
+			glb_title = $scope.listing.title;
+			//toastr.options.closeButton = true;
+			//toastr.success('Your Post has been successfully Updated')
+			
+			location = "viewListing.html?id=" + listingid;
+			
+						 	
+		})
+		.error(function(data, status, headers, config) {
+			$scope.queryError = data;
+		});
+	};
+
+	$scope.removeImage = function() {
+
+		username = glb_username;
+	
+		console.log(username)
+
+		if (QueryString.id) {
+			$scope.listing.id = QueryString.id;
+			var listingid = $scope.listing.id
+		}
+
+		$scope.queryError = null;
+		$scope.statusmsg = null;
+
+		//Define REST Endpoint
+		$scope.editQuery = restURLEndpoint + '/api/listings/' + $scope.listing.id + "/imageRemove";
+		console.log('URL:' + $scope.editQuery)
+		
+		//Assign all the incoming scope parameters to the post data variable
+		postData = 'username=' + glb_username; 
 					
 		console.log(postData)
 

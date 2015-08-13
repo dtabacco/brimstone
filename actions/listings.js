@@ -44,6 +44,30 @@ exports.listingEdit = {
   }
 };
 
+
+exports.listingImageRemove = {
+  name: "listingImageRemove",
+  description: "I remove a listing image",
+  inputs: {
+    required: ['username'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+
+      api.mongo.listingImageRemove(api, connection, function(err, listing) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.listing = listing;
+      next(connection, true);
+    });
+  }
+};
+
 exports.getListing = {
   name: "getListing",
   description: "I get a listing by ID",
