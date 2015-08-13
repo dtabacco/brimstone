@@ -31,26 +31,27 @@
 
     <script>
     function clearToken() {
-      sessionStorage.removeItem('brimstone_token');
+      localStorage.removeItem('brimstone_token');
     }
     </script>
 
     <body onload="clearToken()">
       <div class="container-fluid"> 
         
-          <div ng-include="'header.html'"></div> 
+        <div ng-include="'header.html'"></div> 
 
-          <div id="blue">
+        <div id="blue">
           <div class="container">
             <div class="row centered">
               <div class="col-lg-8 col-lg-offset-2">
-              <h4>Login to Brimstone</h4>
+              <h4><b>Login to Brimstone</b></h4>
               </div>
             </div><!-- row -->
           </div><!-- container -->
         </div><!--  bluewrap --> 
             
         <div ng-controller="UserManager">
+          <div ng-init="clearUserScope()"></div>
         
           <div class="row centerpanelR">
           
@@ -67,7 +68,7 @@
                 <label>Password</label> <input type="password" class="form-control" name="password" placeholder="" maxlength="50" ng-model="user.password" required><br />
                
                 <button type="submit" class="btn btn-primary">Login</button>
-             
+              
               </form>   
 
               

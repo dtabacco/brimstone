@@ -93,7 +93,7 @@ exports.userEdit = {
   name: "userEdit",
   description: "I edit a user profile",
   inputs: {
-    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_name'],
+    required: ['username', 'firstname', 'lastname', 'email', 'zipcode', 'company_name'],
     optional: ['company_ind'],
   },
   authenticated: false,
@@ -210,16 +210,18 @@ exports.userVerifyToken = {
       //console.log(connection);
 
       api.user.verifyToken(api, connection, function(err, token) {
-        console.log("Returning: " + token);
+        
         if (err) {
           connection.response.errors = err;
           //You want to return if token is expired, so client can handle
           next(connection, true);   
         }
-
-        connection.response.token = token;
-        next(connection, true);
-      });
+        else {
+          console.log("Returning: " + token);  
+          connection.response.token = token;
+          next(connection, true);
+        }
+    });
 
   }
 };

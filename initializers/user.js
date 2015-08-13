@@ -33,26 +33,32 @@ var user = function (api, next) {
      
   };
 
+  //Nicely Cleaned up
   api.user.verifyToken = function(api, connection, next) {
 
-      console.log("Token was received: " + connection.params.token)
-  
+    //console.log("Token passed in: " + connection.params.token)
+    if (connection.params.token !== 'undefined') {
+      console.log("Token Received")
+
       jwt.verify(connection.params.token, secret, function(err, decodedToken) {
         if (err) {
+          console.log("triggered err")
+          console.log("Token is bad, must be expired or modified")
           next(err);
         }
-        console.log(decodedToken)
-        if (decodedToken !== undefined) {
-          console.log(decodedToken.username)
-        } 
         else {
-          console.log("Token is null, must be expired")
-          decodedToken = "Expired";
+          console.log(decodedToken)
+          if (decodedToken !== undefined) {
+            console.log(decodedToken.username)
+            console.log("Returning decodedToken")
+            next (false, decodedToken);
+          } 
         }
-        console.log("Returning decodedToken")
-        next (false, decodedToken);
       });
-     
+    }
+    else {
+      console.log("No Token Sent")
+    }
   };
 
   /***************** Search for questions ****************************/
@@ -79,11 +85,12 @@ var user = function (api, next) {
         
         //Create Info to put in the Token
         var profile = {
-          username: connection.params.username
+          username: connection.params.username,
+          zip: "19401"  //should get this from profile
         }
 
         //Create the Token
-        token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
+        token = jwt.sign(profile, secret, { expiresInMinutes: 30*24*60 });
         
         api.mongo.userUpdateLastLoginTime(api, connection, function(err, user) {
               if (err) {

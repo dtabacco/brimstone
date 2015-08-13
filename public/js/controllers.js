@@ -98,6 +98,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $location, $window, $document, appConfig) {
 	
 	$scope.listing = {};
+	$scope.popular = {};
 
 
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
@@ -350,7 +351,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			//$scope.listings = sortByKey(response.listing, 'created_at').reverse();
 
 			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();
-
+			$scope.popular = sortByKey(response.listing, 'views').reverse();
 
 			//console.log($scope.listings)
 					 	
@@ -404,8 +405,8 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	//console.log("Configuration: " + restURLEndpoint)	
 
-	if ($window.sessionStorage.brimstone_token) {
-		$scope.user.token = $window.sessionStorage.brimstone_token;
+	if ($window.localStorage.brimstone_token) {
+		$scope.user.token = $window.localStorage.brimstone_token;
 	}
 
 	if (QueryString.query) {
@@ -498,8 +499,8 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	//console.log("Configuration: " + restURLEndpoint)	
 
-	if ($window.sessionStorage.brimstone_token) {
-		$scope.user.token = $window.sessionStorage.brimstone_token;
+	if ($window.localStorage.brimstone_token) {
+		$scope.user.token = $window.localStorage.brimstone_token;
 	}
 
 	//This is required or it will send as JSON by default and fail
@@ -748,7 +749,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 			$scope.users = response;
 
 			if (response.token === "Expired") {
-				sessionStorage.removeItem('brimstone_token');
+				localStorage.removeItem('brimstone_token');
 			}
 			else {
 				$scope.authuser.username = response.token.username;
@@ -800,7 +801,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 			//Create a Local Sessage Object to store token"
 			$scope.user.token = response.token;
-			sessionStorage.brimstone_token = response.token;
+			localStorage.brimstone_token = response.token;
 			$scope.user.authenticated = true;
 
 			console.log($scope.user.username + ":" + $scope.user.authenticated);
