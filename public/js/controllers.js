@@ -340,13 +340,20 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				if (response.listing[i].image == null) {
 				response.listing[i].image = "/assets/img/placeholder1.png"
 				}
+
+				//Convert Strings to Date for Sorting later
+				response.listing[i].updated_at = new Date(response.listing[i].updated_at) 
 			}
 
 			//Reverse order so most recent shows up on top
-			console.log(response.listing)
-			$scope.listings = sortByKey(response.listing, 'created_at').reverse();
-			console.log($scope.listings)
-			//console.log($scope.listings)				 	
+			//console.log(response.listing)
+			//$scope.listings = sortByKey(response.listing, 'created_at').reverse();
+
+			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();
+
+
+			//console.log($scope.listings)
+					 	
 		})
 		.error(function(data, status, headers, config) {
 			console.log(data);
@@ -829,6 +836,13 @@ function sortByKey(array, key) {
     return array.sort(function(a, b) {
         var x = a[key]; var y = b[key];
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+
+function sortByKeyDates(array, key) {
+    return array.sort(function(a, b) {
+        return a[key].getTime() - b[key].getTime();
     });
 }
 
