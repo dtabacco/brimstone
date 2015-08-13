@@ -312,10 +312,13 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 			for (var i = 0; i < response.listing.length; i++) {
 				response.listing[i].id = response.listing[i]._id;
+				//Convert Strings to Date for Sorting later
+				response.listing[i].updated_at = new Date(response.listing[i].updated_at) 
 			}
 
 			//Reverse order so most recent shows up on top
-			$scope.listings = sortByKey(response.listing, 'created_at').reverse()				 	
+			//$scope.listings = sortByKey(response.listing, 'created_at').reverse()	
+			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();			 	
 		})
 		.error(function(data, status, headers, config) {
 			console.log(data);
