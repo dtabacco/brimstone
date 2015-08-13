@@ -329,6 +329,11 @@ a:after {
 	font-weight: 700;
 }
 
+#blue h1 {
+    color: white;
+    font-weight: 700;
+}
+
 #blue p {
 	color: white;
 }

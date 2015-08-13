@@ -51,7 +51,7 @@
           <div class="container">
             <div class="row centered">
               <div class="col-lg-8 col-lg-offset-2">
-              <h4>Register</h4>
+              <h1>Create an account</h1>
               </div>
             </div><!-- row -->
           </div><!-- container -->
@@ -63,6 +63,10 @@
             <div class="col-lg-6">    
               <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
               <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+
+              <!-- This function will populate the list of usernames -->
+              <div ng-init="buildUsernameList()"></div>
+
                 <!-- FORM -->
                 <form  class="form-horizontal" role="form" ng-submit="addUser()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                   <div class="form-group">
@@ -130,7 +134,7 @@
           </div><!-- row -->
           <br>
         </div><!-- container -->
-        
+        {{user}}
       
     </div> <!-- End of UserManager -->   
 

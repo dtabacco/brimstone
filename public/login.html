@@ -44,7 +44,7 @@
           <div class="container">
             <div class="row centered">
               <div class="col-lg-8 col-lg-offset-2">
-              <h4><b>Login to Brimstone</b></h4>
+              <h1><b>Login to Brimstone</b></h1>
               </div>
             </div><!-- row -->
           </div><!-- container -->
@@ -55,9 +55,7 @@
         
           <div class="row centerpanelR">
           
-            <div class="col-md-5">&nbsp;</div>
-
-            <div class="col-md-2">
+            <div class="col-lg-2 col-lg-offset-5">
               <br>               
               <div class="alert alert-danger" ng-cloak ng-show="queryError">
                 <strong>Error! </strong>{{queryError}}
@@ -66,7 +64,8 @@
               <form class="center auth_box"  ng-submit="authenticateUser()">
                 <label>Username</label> <input type="text" class="form-control" name="username" maxlength="50" ng-model="user.username" autofocus="autofocus" required><br />
                 <label>Password</label> <input type="password" class="form-control" name="password" placeholder="" maxlength="50" ng-model="user.password" required><br />
-               
+                
+                
                 <button type="submit" class="btn btn-primary">Login</button>
               
               </form>   
@@ -76,7 +75,7 @@
               <br><br><br><br><br><br><br><br>     
             </div>   
 
-            <div class="col-md-5">&nbsp;</div>
+           
           </div>
                   
           <div ng-include="'footer.html'"></div> 
