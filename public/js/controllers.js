@@ -236,8 +236,13 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		.success(function(response) {
 
 			$scope.listing = response.listing[0]
+
 			//Convert to .id for angular
 			$scope.listing.id = response.listing[0]._id;
+
+			if (response.listing[0].image == null) {
+				response.listing[0].image = "/assets/img/placeholder1.png"
+			}
 
 			console.log($scope.listing)
 
@@ -289,6 +294,10 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 			for (var i = 0; i < response.listing.length; i++) {
 				response.listing[i].id = response.listing[i]._id;
+
+				if (response.listing[i].image == null) {
+				response.listing[i].image = "/assets/img/placeholder1.png"
+				}
 			}
 
 			//Reverse order so most recent shows up on top
@@ -403,6 +412,10 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 				if (response.listing[i].description.length > 250) {
 					response.listing[i].description = response.listing[i].description.substring(0, 250) + "...";
+				}
+
+				if (response.listing[i].image == null) {
+				response.listing[i].image = "/assets/img/placeholder1.png"
 				}
 			}
 
