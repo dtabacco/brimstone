@@ -98,8 +98,6 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $location, $window, $document, appConfig) {
 	
 	$scope.listing = {};
-	$scope.popular = {};
-
 
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	
@@ -351,7 +349,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			//$scope.listings = sortByKey(response.listing, 'created_at').reverse();
 
 			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();
-			$scope.popular = sortByKey(response.listing, 'views').reverse();
+			
 
 			//console.log($scope.listings)
 					 	
