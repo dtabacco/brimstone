@@ -1,0 +1,33 @@
+{
+  "contributors": [
+    "David Tabacco <dtabacco@gmail.com>"
+  ],
+  "name": "Brimstone",
+  "description": "Brimstone Project",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "actionhero": "9.3.2",
+    "grunt": "latest",
+    "mongojs": "~0.15.1",
+    "request": "~2.46.0",
+    "underscore": "~1.7.0",
+    "mongodb": "1.4.28",
+    "nodemailer": "1.3.0", 
+    "jsonwebtoken": "3.2.2",
+    "ws": "latest"
+  },
+  "devDependencies": {
+    "mocha": "latest",
+    "should": "latest"
+  },
+  "scripts": {
+    "help": "actionhero help",
+    "start": "actionhero start",
+    "actionhero": "actionhero",
+    "startCluster": "actionhero startCluster",
+    "test": "mocha"
+  }
+}
