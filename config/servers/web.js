@@ -54,8 +54,8 @@ exports.default = {
         // Options to be applied to incoming file uploads.
         //  More options and details at https://github.com/felixge/node-formidable
         formOptions: {
-          uploadDir: '/tmp',
-          keepExtensions: false,
+          uploadDir: 'public/listing_images',
+          keepExtensions: true,
           maxFieldsSize: 1024 * 1024 * 100
         },
         // Should we pad JSON responses with whitespace to make them more human-readable?
