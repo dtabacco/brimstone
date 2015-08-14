@@ -86,7 +86,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 		if (QueryString.id) {
 			$scope.listing.id = QueryString.id;
 		}
-    	location = "viewListing.html?id=" + $scope.listing.id; 
+    	location = "viewlisting.html?id=" + $scope.listing.id; 
     }
 
 });
@@ -209,7 +209,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			//toastr.options.closeButton = true;
 			//toastr.success('Your Post has been successfully Updated')
 			
-			location = "viewListing.html?id=" + listingid;
+			location = "viewlisting.html?id=" + listingid;
 			
 						 	
 		})
@@ -251,7 +251,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			//toastr.options.closeButton = true;
 			//toastr.success('Your Post has been successfully Updated')
 			
-			location = "viewListing.html?id=" + listingid;
+			location = "viewlisting.html?id=" + listingid;
 			
 						 	
 		})
@@ -391,7 +391,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		}
     	console.log("Changing Image")
     	console.log("scope Listing ID " + $scope.listing.id)
-    	location = "addImage.html?id=" + $scope.listing.id; 
+    	location = "addimage.html?id=" + $scope.listing.id; 
     }
 
 
