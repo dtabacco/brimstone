@@ -55,13 +55,12 @@
                <div class="row">
                <div class="col-lg-6"> 
                 <a data-toggle="modal" data-target="#myModal" href="#myModal"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a>
-                <!--<a ng-href="{{listing.image}}"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a><br> -->
 
                 <span ng-if="listing.username === loggedin.username">
                   <br>
                   <button type="submit" ng-click="updateImage()" class="btn btn-primary">Change Image</button>&nbsp;
                   <button type="submit" ng-click="removeImage()" class="btn btn-danger">Remove Image</button>&nbsp;
-                  <a ng-href="editListing.html?id={{listing.id}}"><button class="btn btn-warning">Edit Listing</button></a> 
+                  <a ng-href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning">Edit Listing</button></a> 
                   <br>
                 </span>
                 
