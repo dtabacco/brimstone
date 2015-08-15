@@ -63,13 +63,13 @@
                <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
 
               <!-- FORM -->
-              <form  class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
-                <div class="form-group">
+              <form class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
+                <div class="form-group sm-form-spacer">
 
                   <label>Title</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
                   <label>Description</label><label class="formrequired">&nbsp;*</label><textarea class="form-control" rows="5" id="description" maxlength="5000" ng-model="listing.description"></textarea>        
                 </div>  <!-- End Form Group -->
-                <div class="form-group">
+                <div class="form-group sm-form-spacer">
                   <div class="form-group row">
                     <div class="col-md-3">
                       <label>Price</label><label class="formrequired">&nbsp;*</label> 
