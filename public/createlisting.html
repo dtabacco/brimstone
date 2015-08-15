@@ -67,7 +67,7 @@
                 <div class="form-group">
 
                   <label>Title</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
-                  <label>Description</label><label class="formrequired">&nbsp;*</label><textarea class="form-control" rows="5" id="description" maxlength="1000" ng-model="listing.description"></textarea>        
+                  <label>Description</label><label class="formrequired">&nbsp;*</label><textarea class="form-control" rows="5" id="description" maxlength="5000" ng-model="listing.description"></textarea>        
                 </div>  <!-- End Form Group -->
                 <div class="form-group">
                   <div class="form-group row">
@@ -133,7 +133,7 @@
                          
                         </div>
                         <div class="col-md-4">
-                           <label>Phone</label> <input type="tel" class="form-control" name="phone" maxlength="15" ng-model="listing.contact_phone"><br />
+                           <label>Phone</label> <input type="tel" class="form-control" name="phone" maxlength="12" placeholder="555-555-5555" ng-model="listing.contact_phone"><br />
                         </div>
                        
                       </div>
@@ -143,9 +143,9 @@
 
                 <div class="form-group">
                   <center>
-                    <h3>Prove You Are a Human, Slide to Right</h3>
+                    <h3>Prove You Are a Human<h3> <h4>Slide to Right</h4>
 
-                    <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="listing.humanoid"> Over Here
+                    <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="listing.humanoid"> 
                     <br></center><br>
                   
                   <button type="submit" class="btn btn-primary btn-lg">Create Listing</button><br /> 
