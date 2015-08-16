@@ -60,20 +60,21 @@
                 <!-- FORM -->
                 <form  class="form-horizontal" role="form" ng-submit="editUser()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                   <div class="form-group">
-                    <label>Username</label> <input type="text" class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
+                    <label>Username</label><label class="formrequired">&nbsp;*&nbsp;&nbsp;</label> 
+                    <input type="text" class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
                   </div>
                   <div class="form-group">
                     <div class="form-group row">
                       <div class="col-md-6">
-                        <label>First Name</label> <input type="text" class="form-control" name="firstname" maxlength="10" required ng-model="user.firstname"><br />
+                        <label>First Name</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="firstname" maxlength="25" required ng-model="user.firstname"><br />
                       </div>
                       <div class="col-md-6">
-                        <label>Last Name</label> <input type="text" class="form-control" name="lastname" maxlength="25" required ng-model="user.lastname">
+                         <label>Last Name</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="lastname" maxlength="35" required ng-model="user.lastname">
                       </div>
                     </div> <!-- End Form Group Row --> 
                   </div>  <!-- End Form Group  -->
                   <div class="form-group">
-                    <label>Email</label> <input type="email" class="form-control" name="email" maxlength="50" required ng-model="user.email"><br />
+                    <label>Email</label><label class="formrequired">&nbsp;*</label> <input type="email" class="form-control" name="email" maxlength="50" required ng-model="user.email"><br />
                   </div>
                   <div class="form-group">
                    <div class="form-group row">
@@ -81,13 +82,14 @@
                         <label>Company Name</label> <input type="text" class="form-control" name="company_name" maxlength="15" ng-model="user.company_name"><br />
                       </div>
                       <div class="col-md-3">
-                        <label>Zip Code</label> <input type="text" class="form-control" name="zip" maxlength="5" required ng-model="user.zipcode"><br />
+                        <label>Zip Code</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="zip" maxlength="5" required ng-model="user.zipcode"><br />
                       </div>
                     </div> <!-- End Form Group Row --> 
                   </div> <!-- End Form Group -->
                   
                   <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Update Profile</button>&nbsp;
+                     <a ng-href="profile.html?id={{user.username}}"><button class="btn btn-default btn-lg">Cancel</button></a> <br /> 
                   </div>
                 </form>
           
@@ -98,8 +100,7 @@
           <br>
         </div><!-- container -->      
                   
-              
-               {{user}}    
+            
 
         </div> <!-- End of GetUserProfile -->  
         <div ng-include="'footer.html'"></div> 

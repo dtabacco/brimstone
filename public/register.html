@@ -97,10 +97,10 @@
                     </div> <!-- End Form Group Row --> 
                     <div class="form-group row">
                       <div class="col-md-6">
-                        <label>First Name</label><label class="formrequired">&nbsp;*</label> <input type="text" required class="form-control" name="firstname" maxlength="10" required ng-model="user.firstname"><br />
+                        <label>First Name</label><label class="formrequired">&nbsp;*</label> <input type="text" required class="form-control" name="firstname" maxlength="25" required ng-model="user.firstname"><br />
                       </div>
                       <div class="col-md-6">
-                        <label>Last Name</label><label class="formrequired">&nbsp;*</label> <input type="text" required class="form-control" name="lastname" maxlength="25" required ng-model="user.lastname">
+                        <label>Last Name</label><label class="formrequired">&nbsp;*</label> <input type="text" required class="form-control" name="lastname" maxlength="35" required ng-model="user.lastname">
                       </div>
                     </div> <!-- End Form Group Row --> 
                   </div>  <!-- End Form Group  -->
@@ -120,7 +120,7 @@
                   
                   <div class="form-group">
                   <center>
-                    <h3>Prove You Are a Human, Slide to Right</h3>
+                    <h3>Prove You Are a Human<h3> <h4>Slide to Right</h4>
                     <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="user.humanoid">
                     <br></center><br>
                   
@@ -134,7 +134,6 @@
           </div><!-- row -->
           <br>
         </div><!-- container -->
-        {{user}}
       
     </div> <!-- End of UserManager -->   
 
