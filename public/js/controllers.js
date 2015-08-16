@@ -105,6 +105,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
 	
+	
 
 	$scope.addListing = function() {
 
@@ -163,7 +164,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			response.listing.id = response.listing._id;
 			$scope.listing = response.listing;
 			glb_title = $scope.listing.title;
-			location = "addImage.html?id=" + $scope.listing.id;
+			location = "addimage.html?id=" + $scope.listing.id;
 						 	
 		})
 		.error(function(data, status, headers, config) {
@@ -728,6 +729,36 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 			}
 
 			$scope.user = response.users[0];
+				 	
+		})
+		.error(function(data, status, headers, config) {
+			console.log(data);
+		});	
+	};
+
+
+	$scope.getUserProfileLite = function() {
+
+			
+		console.log("--> Fetching User ProfileLite")
+		console.log($scope.loggedin.username)
+
+		//Define REST Endpoint
+		$scope.searchQuery = restURLEndpoint + '/api/users/lite/' + $scope.loggedin.username;
+
+		//Execute GET Request
+		$http.get($scope.searchQuery)
+		.success(function(response) {
+		
+			//console.log(response)
+
+			//For Angular
+			for (var i = 0; i < response.users.length; i++) {
+				response.users[i].id = response.users[i]._id;
+			}
+
+			$scope.user = response.users[0];
+			console.log($scope.user)
 				 	
 		})
 		.error(function(data, status, headers, config) {
