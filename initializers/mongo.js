@@ -94,6 +94,22 @@ var mongo = function (api, next) {
     });
   };
 
+  
+  /***************** Search for User and return lite profile ****************************/
+  api.mongo.userProfileLite = function(api, connection, next) {
+
+    var query = {username:connection.params.username}
+    var projection = {email:1, zipcode:1}
+
+    api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      console.log(results)
+      next(err, results);   
+    });
+  };
 
   /***************** Search for User ****************************/
   api.mongo.userFind = function(api, connection, next) {
@@ -239,8 +255,8 @@ var mongo = function (api, next) {
         for (var i = 0; i < results.length; i++) {
           o_id = results[i]._id;
           username = results[i].username;
-          firstName = results[i].firstname;
-          lastName = results[i].lastname;
+          firstname = results[i].firstname;
+          lastname = results[i].lastname;
           email = results[i].email;
           zipcode = results[i].zipcode;
           created_at = results[i].created_at;
@@ -512,18 +528,22 @@ api.mongo.getListing = function(api, connection, next) {
   };
 
 
-  /***************** Delete All Listings ****************************/
+  /***************** Delete Listing by ID ****************************/
   api.mongo.listingsDeleteID = function(api, connection, next) {
 
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
     var query = { "_id":o_id};
 
+    console.log("Delete: " + query)
+
     //Find the Listing
     api.mongo.db.listings.find(query, function doneSearching(err, results) {
       if (err) { 
         next(err, false); 
       } 
+
+      console.log("Located listing to delete")
 
       for (var i = 0; i < results.length; i++) {
 
@@ -548,6 +568,14 @@ api.mongo.getListing = function(api, connection, next) {
               } 
               next(err, true);   
             });
+          });
+        }
+        else {
+          api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
+            if (err) { 
+              next(err, false); 
+            } 
+            next(err, true);   
           });
         }
       }
