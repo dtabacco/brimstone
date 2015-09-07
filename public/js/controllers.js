@@ -296,6 +296,19 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 	};
 
+	/// This function will fire every time the phone input box is changed
+	// We want to add formatting spaces for the dashes
+	$scope.checkPhoneFormatting = function(event) { 
+
+		//Only true for certain positions and if the key is not backspace
+		if ($scope.listing.contact_phone.length === 3 && event.keyCode != 8) {
+			$scope.listing.contact_phone += "-"
+		} 
+		else if ($scope.listing.contact_phone.length === 7 && event.keyCode != 8) {
+			$scope.listing.contact_phone += "-"
+		} 
+	}
+
 	$scope.getMyListings = function() {
 
 		if (QueryString.username) {
@@ -862,7 +875,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 });
 
-	
+
 
 //Custom Array Sorter - Pass Array and then sort key
 function sortByKey(array, key) {
