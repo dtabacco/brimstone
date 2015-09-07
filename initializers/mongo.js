@@ -371,7 +371,7 @@ api.mongo.listingAdd = function(api, connection, next) {
 
         
         //Create JSON Entry to update in MongoDB
-        entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+        entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
                  created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
   
         //Update MongoDB
@@ -423,7 +423,7 @@ api.mongo.listingAdd = function(api, connection, next) {
     }
 
     //Create JSON Entry to update in MongoDB
-    entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+    entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
                  created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
 
     //Update MongoDB
@@ -629,7 +629,7 @@ api.mongo.getListing = function(api, connection, next) {
       updated_at = now;
 
       //Create JSON Entry to update in MongoDB
-      entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+      entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
            created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
 
       //Update MongoDB
