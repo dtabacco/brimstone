@@ -106,7 +106,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
 	
-	console.log(localStorage.personalization)
+	//console.log(localStorage.personalization)
 	
 	var personalization = JSON.parse(localStorage.personalization)
 
