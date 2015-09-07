@@ -1,6 +1,7 @@
 var glb_username = '';
-glb_listing_id = '';
+var glb_listing_id = '';
 var glb_title = "";
+var glb_personalization = {email:"glb_email", zipcode:"glb_zipcode"};
 
 var BrimstoneApp = angular.module('brimstone', ['app.config','ngFileUpload'], function( appConfig) {
 	
@@ -105,7 +106,14 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
 	
+	console.log(localStorage.personalization)
 	
+	var personalization = JSON.parse(localStorage.personalization)
+
+	//Populate Personalizations
+	$scope.listing.zipcode = personalization.zipcode;
+	$scope.listing.contact_email = personalization.email;
+
 
 	$scope.addListing = function() {
 
@@ -113,6 +121,9 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	
 		console.log(username)
 		console.log($scope.listing.title)
+
+
+
 
 		if ($scope.listing.humanoid != 5) {
 			console.log("Failed:" + $scope.listing.humanoid)
@@ -846,7 +857,13 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 			//Create a Local Sessage Object to store token"
 			$scope.user.token = response.token;
+			$scope.user.personalization = response.personalization;
+
 			localStorage.brimstone_token = response.token;
+
+			//Requires stringifying JSObject in order to store it in localstorage
+			localStorage.setItem('personalization', JSON.stringify(response.personalization));
+
 			$scope.user.authenticated = true;
 
 			console.log($scope.user.username + ":" + $scope.user.authenticated);

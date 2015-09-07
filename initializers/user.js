@@ -86,7 +86,7 @@ var user = function (api, next) {
         //Create Info to put in the Token
         var profile = {
           username: connection.params.username,
-          zip: "19401"  //should get this from profile
+          //zip: "19401"  //should get this from profile
         }
 
         //Create the Token
@@ -98,8 +98,19 @@ var user = function (api, next) {
               }
         });
         
-        //Return the Token to the user
-        next (false, token);
+        api.mongo.userProfileLite(api, connection, function(err, user) {
+              if (err) {
+                connection.response.errors = err;
+              }
+              
+              console.log(user)
+              //Create a response with a javascript object containing the personalization
+              //user is an array with key/value pairs
+              connection.response.personalization = {email:user[0].email, zipcode:user[0].zipcode}
+               //Return the Token to the user
+              next (false, token);
+        });  
+       
       }
 
       //Bad password
