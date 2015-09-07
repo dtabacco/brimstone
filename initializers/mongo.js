@@ -116,7 +116,26 @@ var mongo = function (api, next) {
 
     var query = {username:connection.params.username}
 
-    api.mongo.db.users.find(query, function doneSearching(err, results) {
+    var projection = {username:1, firstname:1, lastname:1, email:1, zipcode:1, company_ind:1, company_name:1, created_at:1, last_login:1}
+
+    api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+      //connection.response.content = results; 
+      //console.log(results)
+      next(err, results);   
+    });
+  };
+
+    /***************** Search for User ****************************/
+  api.mongo.userGetPassword = function(api, connection, next) {
+
+    var query = {username:connection.params.username}
+
+    var projection = {password:1}
+
+    api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
       if (err) { 
         next(err, false); 
       } 

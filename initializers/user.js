@@ -70,7 +70,7 @@ var user = function (api, next) {
     password_attempt_hash = crypto.createHash('sha256').update(connection.params.password).digest('hex');
 
     //Find the User Attempting to Login
-    api.mongo.userFind(api, connection, function(err, result) {
+    api.mongo.userGetPassword(api, connection, function(err, result) {
       if (err) {
         connection.response.errors = err;
         next(connection, false);
