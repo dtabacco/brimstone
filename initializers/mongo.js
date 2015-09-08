@@ -397,9 +397,12 @@ api.mongo.listingAdd = function(api, connection, next) {
           //image_path = public\listing_images\e71e02492637559fd656b464ec6dcbcb.jpg
           
           //Change backslashes to forward slashes globally
-          image_path_cleaned = image_path.replace("\\/g", "/")
-          //console.log(image_path_cleaned)
-          image_filename = image_path.split('\\');
+          console.log(image_path)
+          //If it's a windows machine, this will convert to normal notation
+          image_path_cleaned = image_path.replace(/\\/g,"/")
+          console.log(image_path_cleaned)
+          image_filename = image_path_cleaned.split('/');
+          console.log(image_filename)
 
           var Thumbnail = require('thumbnail');
           var thumbnail = new Thumbnail('public/listing_images', 'public/listing_images');
