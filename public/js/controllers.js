@@ -108,11 +108,14 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	
 	//console.log(localStorage.personalization)
 	
-	var personalization = JSON.parse(localStorage.personalization)
+	if (localStorage.personalization) {
+		var personalization = JSON.parse(localStorage.personalization)
 
-	//Populate Personalizations
-	$scope.listing.zipcode = personalization.zipcode;
-	$scope.listing.contact_email = personalization.email;
+		//Populate Personalizations
+		$scope.listing.zipcode = personalization.zipcode;
+		$scope.listing.contact_email = personalization.email;
+	}
+
 
 
 	$scope.addListing = function() {
