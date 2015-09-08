@@ -358,17 +358,23 @@ api.mongo.listingAdd = function(api, connection, next) {
             //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
             console.log("Image Location: " + results[i].image)
             console.log(__dirname)
+            // --- /home/brimstoneuser/brimstone/initializers
+            // --- C:\Users\tabacco\Desktop\brimstone\initializers
             
             filepath1 = __dirname.replace("initializers", "")
             console.log(filepath1)
-            filepath2 = filepath1 + "/" + results[i].image
+            // --- /home/brimstoneuser/brimstone/
+            // --- C:\Users\tabacco\Desktop\brimstone\
+            filepath2 = filepath1 +  results[i].image
             console.log(filepath2)
-            filepath3 = filepath2.replace("/", "/")
-            console.log(filepath3)
+            // --- /home/brimstoneuser/brimstone//public/listing_images/upload_036c41fd741e0f38af8d22c3b561b7b5.jpg
+            // --- C:\Users\tabacco\Desktop\brimstone\public\listing_images\c40e1871fce1b3a5f29108b766c9db27.jpg
+            //filepath3 = filepath2.replace("/", "/")
+            //console.log(filepath3)
 
-            fs.unlink(filepath3, function (err) {
+            fs.unlink(filepath2, function (err) {
               if (err) console.log("failed to delete image"); 
-              console.log('successfully deleted image ' + filepath3);
+              console.log('successfully deleted image ' + filepath2);
             });
           }
 
@@ -408,6 +414,7 @@ api.mongo.listingAdd = function(api, connection, next) {
           var thumbnail = new Thumbnail('public/listing_images', 'public/listing_images');
           thumbnail.ensureThumbnail(image_filename[2], 150, null, function (err, filename) {
             // "filename" is the name of the thumb in '/path/to/thumbnails'
+            if (err) console.log("error with thumbnail " + err)
             console.log(filename)
             thumbnail_path = image_filename[0] + '/' + image_filename[1] + '/' + filename
             console.log(thumbnail_path)
