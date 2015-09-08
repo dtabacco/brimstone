@@ -313,7 +313,8 @@ api.mongo.listingAdd = function(api, connection, next) {
   //Create JSON Entry to Add to MongoDB
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
-              condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email,  created_at:created_at, updated_at:created_at,  status:"open", views:0, image:null};
+              condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email, delivery:connection.params.delivery, unit:connection.params.unit, payment:connection.params.payment, 
+              created_at:created_at, updated_at:created_at,  status:"open", views:0, image:null};
 
   console.log(connection.params.questionBody)
 
@@ -380,6 +381,9 @@ api.mongo.listingAdd = function(api, connection, next) {
           model = results[i].model;
           dimensions = results[i].dimensions;
           condition = results[i].condition;
+          delivery = results[i].delivery;
+          unit = results[i].unit;
+          payment =  results[i].payment;
           created_at = results[i].created_at;
           status = results[i].status;
           views = results[i].views;
@@ -391,7 +395,7 @@ api.mongo.listingAdd = function(api, connection, next) {
         
         //Create JSON Entry to update in MongoDB
         entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-                 created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+                 created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
   
         //Update MongoDB
         api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
@@ -432,6 +436,9 @@ api.mongo.listingAdd = function(api, connection, next) {
       model = results[i].model;
       dimensions = results[i].dimensions;
       condition = results[i].condition;
+      delivery = results[i].delivery;
+      unit = results[i].unit;
+      payment =  results[i].payment;
       created_at = results[i].created_at;
       contact_email = results[i].contact_email
       contact_phone = results[i].contact_phone
@@ -443,7 +450,7 @@ api.mongo.listingAdd = function(api, connection, next) {
 
     //Create JSON Entry to update in MongoDB
     entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-                 created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+                 created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
 
     //Update MongoDB
     api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneAddingViewUpdate(err, results) {
@@ -464,7 +471,6 @@ api.mongo.getListing = function(api, connection, next) {
 
   var results = [];
 
-  //Find the Question
   api.mongo.db.listings.find(query, function doneSearchingForListing(err, results) {
       if (err) { 
         next(err, false); 
@@ -634,6 +640,9 @@ api.mongo.getListing = function(api, connection, next) {
         make = connection.params.make;
         model = connection.params.model;
         dimensions = connection.params.dimensions;
+        delivery = connection.params.delivery;
+        unit = connection.params.unit;
+        payment =  connection.params.payment;
         condition = connection.params.condition;
         created_at = results[i].created_at;
         contact_email = connection.params.contact_email;
@@ -649,7 +658,7 @@ api.mongo.getListing = function(api, connection, next) {
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
 
       //Update MongoDB
       api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
@@ -695,6 +704,9 @@ api.mongo.getListing = function(api, connection, next) {
         model = results[i].model;
         dimensions = results[i].dimensions;
         condition = results[i].condition;
+        delivery = results[i].delivery;
+        unit = results[i].unit;
+        payment = results[i].payment;
         created_at = results[i].created_at;
         contact_email = results[i].contact_email;
         contact_phone = results[i].contact_phone;
@@ -726,7 +738,7 @@ api.mongo.getListing = function(api, connection, next) {
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
-           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, status:status, views:views, image:image}; 
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
 
       //Update MongoDB
       api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {

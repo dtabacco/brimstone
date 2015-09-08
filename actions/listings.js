@@ -3,7 +3,7 @@ exports.listingAdd = {
   description: "I create a new listing",
   inputs: {
     required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_email'],
-    optional: ['make', 'model', 'dimensions','condition', 'contact_phone',],
+    optional: ['make', 'model', 'dimensions','condition', 'contact_phone', 'delivery', 'unit', 'payment'],
   },
   authenticated: false,
   outputExample: {},
@@ -26,7 +26,7 @@ exports.listingEdit = {
   description: "I edit a listing",
   inputs: {
     required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_email'],
-    optional: ['make', 'model', 'dimensions','condition', 'contact_phone'],
+    optional: ['make', 'model', 'dimensions','condition', 'contact_phone', 'delivery', 'unit', 'payment'],
   },
   authenticated: false,
   outputExample: {},
