@@ -314,9 +314,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
               condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email, delivery:connection.params.delivery, unit:connection.params.unit, payment:connection.params.payment, 
-              created_at:created_at, updated_at:created_at,  status:"open", views:0, image:null};
-
-  console.log(connection.params.questionBody)
+              created_at:created_at, updated_at:created_at,  status:"open", views:0, image:null, thumbnail:null};
 
   //Insert JSON Entry to Add to MongoDB
   api.mongo.db.listings.insert(entry, {safe : true}, function doneCreatingListingEntry(err, results) {
@@ -337,7 +335,10 @@ api.mongo.listingAdd = function(api, connection, next) {
 
       console.log("Searching for ", query)
 
-      //Find User who's answer was accepted
+      var now = new Date(); 
+      var updated_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+
+      //Find the listing where we will add the image link
       api.mongo.db.listings.find(query, function doneSearching(err, results) {
         if (err) { 
             next(err, false); 
@@ -345,18 +346,19 @@ api.mongo.listingAdd = function(api, connection, next) {
 
         console.log("Results Length " + results.length)
 
+        //Should never return more than 1 result
         for (var i = 0; i < results.length; i++) {
 
-          if  (results[i].image) {
+          console.log('for i = ' + i)
+          // If Image exists already, delete the old image first
+          if (results[i].image) {
             console.log("Image Already Exists")
             var fs = require('fs');
 
             //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
-
             console.log("Image Location: " + results[i].image)
             console.log(__dirname)
-            //1
-            //filepath1 = __dirname.replace("initializers", "public")
+            
             filepath1 = __dirname.replace("initializers", "")
             console.log(filepath1)
             filepath2 = filepath1 + "/" + results[i].image
@@ -365,49 +367,92 @@ api.mongo.listingAdd = function(api, connection, next) {
             console.log(filepath3)
 
             fs.unlink(filepath3, function (err) {
-              if (err) next(err, false); 
-              console.log('successfully deleted ' + filepath3);
+              if (err) console.log("failed to delete image"); 
+              console.log('successfully deleted image ' + filepath3);
             });
           }
 
-          o_id = results[i]._id;
-          username = results[i].username;
-          title = results[i].title;
-          description = results[i].description;
-          price = results[i].price;
-          location = results[i].location;
-          zipcode = results[i].zipcode;
-          make = results[i].make;
-          model = results[i].model;
-          dimensions = results[i].dimensions;
-          condition = results[i].condition;
-          delivery = results[i].delivery;
-          unit = results[i].unit;
-          payment =  results[i].payment;
-          created_at = results[i].created_at;
-          status = results[i].status;
-          views = results[i].views;
-          contact_email = results[i].contact_email
-          contact_phone = results[i].contact_phone 
-          image = image_path;
-        }
+          if (results[i].thumbnail) {
+            console.log("Thumbnail Image Already Exists")
+            var fs = require('fs');
 
-        
-        //Create JSON Entry to update in MongoDB
-        entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-                 created_at:created_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
-  
-        //Update MongoDB
-        api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
-            if (err) { 
-              next(err, false); 
-            } 
-            next(err, results);    
-        });
-        
-        //next(err, results); 
-         
-      });
+            //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
+            console.log("Image Location: " + results[i].thumbnail)
+            console.log(__dirname)
+            
+            filepath1 = __dirname.replace("initializers", "")
+            console.log(filepath1)
+            filepath2 = filepath1 + "/" + results[i].thumbnail
+            console.log(filepath2)
+            filepath3 = filepath2.replace("/", "/")
+            console.log(filepath3)
+
+            fs.unlink(filepath3, function (err) {
+              if (err) console.log("failed to delete thumbnail: " + err); 
+              console.log('successfully deleted thumbnail' + filepath3);
+            });
+          }
+
+          //Create Thumbnail
+          //image_path = public\listing_images\e71e02492637559fd656b464ec6dcbcb.jpg
+          
+          //Change backslashes to forward slashes globally
+          image_path_cleaned = image_path.replace("\\/g", "/")
+          //console.log(image_path_cleaned)
+          image_filename = image_path.split('\\');
+
+          var Thumbnail = require('thumbnail');
+          var thumbnail = new Thumbnail('public/listing_images', 'public/listing_images');
+          thumbnail.ensureThumbnail(image_filename[2], 150, null, function (err, filename) {
+            // "filename" is the name of the thumb in '/path/to/thumbnails'
+            console.log(filename)
+            thumbnail_path = image_filename[0] + '/' + image_filename[1] + '/' + filename
+            console.log(thumbnail_path)
+
+            //Reset to 0, because for loop variable gets lost in callback
+            var i = 0;
+
+            //Add the new image to the listing
+            o_id = results[i]._id;
+            username = results[i].username;
+            title = results[i].title;
+            description = results[i].description;
+            price = results[i].price;
+            location = results[i].location;
+            zipcode = results[i].zipcode;
+            make = results[i].make;
+            model = results[i].model;
+            dimensions = results[i].dimensions;
+            condition = results[i].condition;
+            delivery = results[i].delivery;
+            unit = results[i].unit;
+            payment =  results[i].payment;
+            created_at = results[i].created_at;
+            updated_at = updated_at;
+            status = results[i].status;
+            views = results[i].views;
+            contact_email = results[i].contact_email;
+            contact_phone = results[i].contact_phone; 
+            image = image_path;
+            thumbnail = thumbnail_path;
+
+             //Create JSON Entry to update in MongoDB
+            entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
+                     created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+                     image:image, thumbnail:thumbnail}; 
+      
+            //Update MongoDB
+            api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
+                if (err) { 
+                  next(err, false); 
+                } 
+                console.log("Done Updating Mongo - initiating next()")
+                next(err, results);    
+            }); //End Mongo Listing Update Callback
+
+          }); //End Thumbnail Creation Callback
+        } //End FOR Loop
+      }); //End Listing Search callback
   } 
 
   /****************** Update View Count ************************/
@@ -440,17 +485,19 @@ api.mongo.listingAdd = function(api, connection, next) {
       unit = results[i].unit;
       payment =  results[i].payment;
       created_at = results[i].created_at;
+      updated_at = results[i].updated_at;
       contact_email = results[i].contact_email
       contact_phone = results[i].contact_phone
       status = results[i].status;
       views = results[i].views + 1;
       image = results[i].image;
-      updated_at = results[i].updated_at;
+      thumbnail = results[i].thumbnail;
     }
 
     //Create JSON Entry to update in MongoDB
     entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-                 created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
+                 created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+                 image:image, thumbnail:thumbnail}; 
 
     //Update MongoDB
     api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneAddingViewUpdate(err, results) {
@@ -616,11 +663,12 @@ api.mongo.getListing = function(api, connection, next) {
       connection.params.make = ""
     }
 
-    
-
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
     var query = { "_id":o_id};
+
+    var now = new Date(); 
+    var updated_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
     //Find the Listing
     api.mongo.db.listings.find(query, function doneSearchingForQuestion(err, results) {
@@ -650,7 +698,8 @@ api.mongo.getListing = function(api, connection, next) {
         status = results[i].status;
         views = results[i].views;
         image = results[i].image;
-        updated_at = results[i].updated_at;
+        thumbnail = results[i].thumbnail;
+        updated_at = updated_at;
       }         
 
       var now = new Date();
@@ -658,7 +707,8 @@ api.mongo.getListing = function(api, connection, next) {
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+           image:image, thumbnail:thumbnail}; 
 
       //Update MongoDB
       api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
@@ -684,6 +734,9 @@ api.mongo.getListing = function(api, connection, next) {
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
     var query = { "_id":o_id};
+
+    var now = new Date(); 
+    var updated_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
     //Find the Listing
     api.mongo.db.listings.find(query, function doneSearchingForQuestion(err, results) {
@@ -713,8 +766,10 @@ api.mongo.getListing = function(api, connection, next) {
         status = results[i].status;
         views = results[i].views;
         previous_image = results[i].image;
+        previous_thumbnail = results[i].thumbnail;
         image = null;
-        updated_at = results[i].updated_at;
+        thumbnail = null;
+        updated_at = updated_at;
       }
 
       if (previous_image) {
@@ -728,17 +783,34 @@ api.mongo.getListing = function(api, connection, next) {
         filepath3 = filepath2.replace("/", "/")
 
         fs.unlink(filepath3, function (err) {
-          if (err) next(err, false); 
-          console.log('successfully deleted ' + filepath3);  
+          if (err) console.log("failed to delete image");  
+          console.log('successfully deleted image ' + filepath3);  
         });
-      }       
+      }    
+
+       if (previous_thumbnail) {
+        var fs = require('fs');
+
+        console.log("Image Location: " + previous_thumbnail)
+        console.log(__dirname)
+        
+        filepath1 = __dirname.replace("initializers", "")
+        filepath2 = filepath1 + "/" + previous_thumbnail;
+        filepath3 = filepath2.replace("/", "/")
+
+        fs.unlink(filepath3, function (err) {
+          if (err) console.log("failed to delete thumbnail"); 
+          console.log('successfully deleted thumbail ' + filepath3);  
+        });
+      }      
 
       var now = new Date();
       updated_at = now;
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
-           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, image:image}; 
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+           image:image, thumbnail:thumbnail}; 
 
       //Update MongoDB
       api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {

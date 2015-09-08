@@ -74,7 +74,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
         	//Workaround because it always hits this when the page loads...so may it only happen for real attempts
         	if (initialized > 0) {
 	        	$scope.fileError = "Error Uploading File"
-	        	$scope.fileErrorDetail = "This means your image was larger than 6MB or your file type was not supported. Only PNG, GIF, JPG, JPEG and BMP are supported"
+	        	$scope.fileErrorDetail = "This means your image was larger than 6MB or your file type was not supported. Only PNG, GIF, JPG and JPEG  are supported"
         	}
         	else {
         		initialized = initialized + 1;  
@@ -382,7 +382,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();
 			
 
-			//console.log($scope.listings)
+			console.log($scope.listings)
 					 	
 		})
 		.error(function(data, status, headers, config) {
