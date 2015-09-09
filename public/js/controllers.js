@@ -125,9 +125,6 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		console.log(username)
 		console.log($scope.listing.title)
 
-
-
-
 		if ($scope.listing.humanoid != 5) {
 			console.log("Failed:" + $scope.listing.humanoid)
 			
@@ -152,7 +149,25 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
   		if (!$scope.listing.contact_phone) {
   			$scope.listing.contact_phone = "";
   		}
+  		if (!$scope.listing.unit) {
+  			$scope.listing.unit = "";
+  		}
+
+		console.log($scope.listing.delivery)
   		
+  		var payment = [];
+  		if ($scope.listing.cash)
+  		{
+  			payment.push("cash");
+  		}
+  		if ($scope.listing.credit)
+  		{
+  			payment.push("credit");
+  		}
+  		if ($scope.listing.paypal)
+  		{
+  			payment.push("paypal");
+  		}
 
 
 		$scope.queryError = null;
@@ -167,7 +182,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'price=' + $scope.listing.price + '&' + 'zipcode=' + $scope.listing.zipcode + '&' + 'location=' + $scope.listing.location + '&' + 
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
-				   'contact_email=' + $scope.listing.contact_email ; 
+				   'contact_email=' + $scope.listing.contact_email + '&' + 'payment=' + payment + '&' + 
+				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit ;
 					
 		console.log(postData)
 
@@ -646,10 +662,6 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
    			$scope.queryError = 'Username Required';
 			return $scope.queryError;
   		}
-  		if (!$scope.user.password) {
-   			$scope.queryError = 'Password Required';
-			return $scope.queryError;
-  		}
 
   		if (!$scope.user.lastname) {
    			$scope.queryError = 'Lastname Required';
@@ -665,7 +677,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 		//Assign all the incoming scope parameters to the post data variable
 		postData = 'firstname=' + $scope.user.firstname + '&' + 'lastname=' + $scope.user.lastname + '&' + 
-				   'password=' + $scope.user.password + '&' + 'zipcode=' + $scope.user.zipcode + '&' + 'email=' + $scope.user.email + '&' + 
+				   'zipcode=' + $scope.user.zipcode + '&' + 'email=' + $scope.user.email + '&' + 
 				   'company_name=' + $scope.user.company_name; 
 					
 		console.log(postData)
