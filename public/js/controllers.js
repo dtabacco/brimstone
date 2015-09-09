@@ -299,6 +299,9 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			if (response.listing[0].image == null) {
 				response.listing[0].image = "/assets/img/placeholder1.png"
 			}
+			if (response.listing[0].thumbnail == null) {
+				response.listing[0].thumbnail = "/assets/img/placeholder1.png"
+			}
 
 			console.log($scope.listing)
 
