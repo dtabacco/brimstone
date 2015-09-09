@@ -373,6 +373,9 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				if (response.listing[i].image == null) {
 				response.listing[i].image = "/assets/img/placeholder1.png"
 				}
+				if (response.listing[i].thumbnail == null) {
+				response.listing[i].thumbnail = "/assets/img/placeholder1.png"
+			}
 
 				//Convert Strings to Date for Sorting later
 				response.listing[i].updated_at = new Date(response.listing[i].updated_at) 
