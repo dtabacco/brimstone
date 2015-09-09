@@ -2,8 +2,8 @@ exports.userAdd = {
   name: "userAdd",
   description: "I register a new user",
   inputs: {
-    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'company_name'],
-    optional: ['company_ind'],
+    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode'],
+    optional: ['company_ind', 'company_name'],
   },
   authenticated: false,
   outputExample: {},
@@ -93,8 +93,8 @@ exports.userEdit = {
   name: "userEdit",
   description: "I edit a user profile",
   inputs: {
-    required: ['username', 'firstname', 'lastname', 'email', 'zipcode', 'company_name'],
-    optional: ['company_ind'],
+    required: ['username', 'firstname', 'lastname', 'email', 'zipcode'],
+    optional: ['company_ind', 'company_name'],
   },
   authenticated: false,
   outputExample: {},
@@ -159,6 +159,27 @@ exports.userProfileList = {
   }
 };
 
+exports.userProfileLite = {
+  name: "userProfileLite",
+  description: "I list all the lite profile of a user",
+  inputs: {
+    required: ['username'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.userProfileLite(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.users = users;
+      next(connection, true);
+    });
+  }
+};
 
 exports.userAuthenticate = {
   name: "userAuthenticate",
