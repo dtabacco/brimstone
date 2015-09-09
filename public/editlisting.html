@@ -70,23 +70,27 @@
                   <label>Title</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="username" maxlength="75" required ng-model="listing.title"><br />
                   <label>Description</label><label class="formrequired">&nbsp;*</label><textarea class="form-control" rows="5" id="description" maxlength="5000" ng-model="listing.description"></textarea>        
                 </div>  <!-- End Form Group -->
-                <div class="form-group">
-                  <div class="form-group row">
-                    <div class="col-md-3">
-                      <label>Price</label><label class="formrequired">&nbsp;*</label> 
-                       <div class="input-group">
-                        <div class="input-group-addon">$</div>
-                        <input type="text" class="form-control" name="price" maxlength="10" required ng-model="listing.price"><br />
+                   <div class="form-group sm-form-spacer">
+                    <div class="form-group row">
+                      <div class="col-md-3">
+                        <label>Price</label><label class="formrequired">&nbsp;*</label> 
+                         <div class="input-group">
+                          <div class="input-group-addon">$</div>
+                          <input type="text" class="form-control" name="price" maxlength="12" required ng-model="listing.price">
+                          <br />
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-6">
-                      <label>City</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="price" maxlength="35" required ng-model="listing.location"><br />
-                    </div>
-                    <div class="col-md-3">
-                       <label>Zipcode</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="price" maxlength="5" required ng-model="listing.zipcode"><br />
-                    </div> 
-                  </div> <!-- End Form Group Row --> 
-                </div>  <!-- End Form Group -->
+                       <div class="col-md-3">
+                         <label>Unit</label><label class="formrequired">&nbsp;</label> <input type="text" class="form-control" name="unit" maxlength="15" placeholder="Per Dozen" ng-model="listing.unit"><br />
+                      </div> 
+                      <div class="col-md-4">
+                        <label>City</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="location" maxlength="35" required ng-model="listing.location"><br />
+                      </div>
+                      <div class="col-md-2">
+                         <label>Zipcode</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="zipcode" maxlength="5" required ng-model="listing.zipcode"><br />
+                      </div> 
+                    </div> <!-- End Form Group Row --> 
+                  </div>  <!-- End Form Group -->
                 <div class="form-group">
                   <div class="panel panel-success">
                     <div class="panel-heading">
@@ -138,6 +142,30 @@
                         </div>
                        
                       </div>
+
+                      <div class="form-group row">
+                             <div class="col-md-4">
+                               <label>Payment Accepted</label> <br />
+                               <div class="checkbox">
+                                  <label><input type="checkbox" ng-model="listing.cash" value="Cash">Cash</label>
+                                </div>
+                                <div class="checkbox">
+                                  <label><input type="checkbox" ng-model="listing.credit" value="Credit">Credit</label>
+                                </div>
+                                <div class="checkbox">
+                                  <label><input type="checkbox" ng-model="listing.paypal" value="Paypal">Paypal</label>
+                                </div>
+                            </div>
+                             <div class="col-md-4">
+                               <label>Delivery Available</label> <br />
+                               <div class="radio">
+                                <label><input type="radio" ng-model="listing.delivery" value="yes" name="optradio">Yes</label>
+                              </div>
+                              <div class="radio">
+                                <label><input type="radio" ng-model="listing.delivery" value="no" name="optradio">No</label>
+                              </div>
+                            </div>
+                          </div>
                     </div>
                   </div>  <!-- End Panel -->
                 </div>  <!-- End Form Group -->

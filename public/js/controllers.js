@@ -214,6 +214,20 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			var listingid = $scope.listing.id
 		}
 
+		var payment = [];
+  		if ($scope.listing.cash)
+  		{
+  			payment.push("cash");
+  		}
+  		if ($scope.listing.credit)
+  		{
+  			payment.push("credit");
+  		}
+  		if ($scope.listing.paypal)
+  		{
+  			payment.push("paypal");
+  		}
+
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 
@@ -226,7 +240,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'price=' + $scope.listing.price + '&' + 'zipcode=' + $scope.listing.zipcode + '&' + 'location=' + $scope.listing.location + '&' + 
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
-				   'contact_email=' + $scope.listing.contact_email ; 
+				   'contact_email=' + $scope.listing.contact_email + '&' + 'payment=' + payment + '&' + 
+				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit ; 
 					
 		console.log(postData)
 
@@ -317,6 +332,42 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			}
 			if (response.listing[0].thumbnail == null) {
 				response.listing[0].thumbnail = "/assets/img/placeholder1.png"
+			}
+			
+			if (response.listing[0].unit == "") {
+				response.listing[0].unit = "N/A";
+			} /*
+			if (response.listing[0].condition == "") {
+				response.listing[0].condition = "Not Specified";
+			} 
+			if (response.listing[0].make == "") {
+				response.listing[0].make = "Not Specified";
+			} 
+			if (response.listing[0].model == "") {
+				response.listing[0].model = "Not Specified";
+			}
+			if (response.listing[0].dimensions == "") {
+				response.listing[0].dimensions = "Not Specified";
+			 }  */
+
+			if (response.listing[0].payment) {
+				console.log(response.listing[0].payment)
+				payments = response.listing[0].payment.split(",")
+
+				for (var i = 0; i < payments.length; i++) {
+					if (payments[i] == "cash" ) {
+						$scope.listing.cash = true;
+					}
+					else if (payments[i] == "credit" ) {
+						$scope.listing.credit = true;
+					}
+					else if (payments[i] == "paypal" ) {
+						$scope.listing.paypal = true;
+					}
+				};
+				
+				//Reformat for viewlisting display - Add space between Commas
+				response.listing[0].payment = response.listing[0].payment.replace(/,/g, ", " )
 			}
 
 			console.log($scope.listing)
@@ -517,6 +568,9 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 				if (response.listing[i].image == null) {
 				response.listing[i].image = "/assets/img/placeholder1.png"
+				}
+				if (response.listing[i].thumbnail == null) {
+				response.listing[i].thumbnail = "/assets/img/placeholder1.png"
 				}
 			}
 

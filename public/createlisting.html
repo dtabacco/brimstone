@@ -62,7 +62,7 @@
             <div class="col-lg-8">    
               <div ng-controller="listingManager">
                  <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
-
+                 <!--{{listing}}-->
                 <!-- FORM -->
                 <form class="form-horizontal" role="form" ng-submit="addListing()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                   <div class="form-group sm-form-spacer">
@@ -76,13 +76,17 @@
                         <label>Price</label><label class="formrequired">&nbsp;*</label> 
                          <div class="input-group">
                           <div class="input-group-addon">$</div>
-                          <input type="text" class="form-control" name="price" maxlength="12" required ng-model="listing.price"><br />
+                          <input type="text" class="form-control" name="price" maxlength="12" required ng-model="listing.price">
+                          <br />
                         </div>
                       </div>
-                      <div class="col-md-6">
+                       <div class="col-md-3">
+                         <label>Unit</label><label class="formrequired">&nbsp;</label> <input type="text" class="form-control" name="unit" maxlength="15" placeholder="Per Dozen" ng-model="listing.unit"><br />
+                      </div> 
+                      <div class="col-md-4">
                         <label>City</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="location" maxlength="35" required ng-model="listing.location"><br />
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                          <label>Zipcode</label><label class="formrequired">&nbsp;*</label> <input type="text" class="form-control" name="zipcode" maxlength="5" required ng-model="listing.zipcode"><br />
                       </div> 
                     </div> <!-- End Form Group Row --> 
@@ -125,33 +129,46 @@
                     <div class="form-group">
                       <div class="panel panel-info">
                         <div class="panel-heading">
-                          <h3 class="panel-title">Contact Information</h3>
+                          <h3 class="panel-title">Contact &amp; Purchase Information</h3>
                         </div>
                         <div class="panel-body">
                           <div class="form-group row">
                             <div class="col-md-4">
                               <label>Email</label><label class="formrequired">&nbsp;*</label> <input type="email" class="form-control" name="email" maxlength="50" required ng-model="listing.contact_email"><br />
-
-                              <!--
-                              <label>Email</label> 
-                            <select class="form-control" ng-focus="getUserProfileLite()" ng-model="listing.contact_email">
-                              <option value="new">New</option>
-                            </select><br />
-
-                            <select class="form-control" ng-focus="getUserProfileLite()" ng-options="user.email for item in user" ng-model="listing.contact_email"></select><br /> 
-
-                            <select ng-focus="getUserProfileLite()" ng-model="listing.contact_email">
-                              <option ng-repeat="info in user" value="{{info.email}}">{{info.email}}</option>
-                            </select>
-                              -->
                             </div>
-                           
+
                             <div class="col-md-4">
                                <label>Phone</label> <input ng-keyup="checkPhoneFormatting($event)" type="tel" class="form-control" name="phone" maxlength="12" placeholder="555-555-5555" ng-model="listing.contact_phone"><br />
                             </div>
-                           
                           </div>
-                        </div>
+                          
+                          <div class="form-group row">
+                             <div class="col-md-4">
+                               <label>Payment Accepted</label> <br />
+                               <div class="checkbox">
+                                  <label><input type="checkbox" checked ng-model="listing.cash" value="Cash">Cash</label>
+                                </div>
+                                <div class="checkbox">
+                                  <label><input type="checkbox" ng-model="listing.credit" value="Credit">Credit</label>
+                                </div>
+                                <div class="checkbox">
+                                  <label><input type="checkbox" ng-model="listing.paypal" value="Paypal">Paypal</label>
+                                </div>
+                            </div>
+                             <div class="col-md-4">
+                               <label>Delivery Available</label> <br />
+                               <div class="radio">
+                                <label><input type="radio" ng-model="listing.delivery" value="yes" name="optradio">Yes</label>
+                              </div>
+                              <div class="radio">
+                                <label><input checked type="radio" ng-model="listing.delivery" value="no" name="optradio">No</label>
+                              </div>
+                            </div>
+                          </div>
+                       
+                           
+                          
+                        </div> <!-- End Body -->
                       </div>  <!-- End Panel -->
                     </div>  <!-- End Form Group -->
 
