@@ -129,7 +129,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
     }
 
 });
-//}]);
+
 
 
 		
@@ -137,6 +137,10 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $location, $window, $document, appConfig) {
 	
 	$scope.listing = {};
+
+	//Defaults
+	$scope.listing.delivery = "no";
+	$scope.listing.cash = true;
 
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	
@@ -191,7 +195,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
   			$scope.listing.unit = "";
   		}
 
-		console.log($scope.listing.delivery)
+
+		console.log("Delivery:" + $scope.listing.delivery)
   		
   		var payment = [];
   		if ($scope.listing.cash)
@@ -206,7 +211,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
   		{
   			payment.push("paypal");
   		}
-
+  		console.log("Payment:" + payment)
 
 		$scope.queryError = null;
 		$scope.statusmsg = null;
