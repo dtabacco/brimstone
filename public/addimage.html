@@ -68,6 +68,7 @@
                   <br>
                 </div>
 
+
                <div class="btn btn-primary btn-lg btn-block" ngf-select ngf-change="upload($files)" ngf-multiple="false" ngf-max-size='6000000' ngf-accept="'.jpg,.jpeg,.png,.gif'" ngf-capture="'camera'">Add Image
                </div>
                <button type="submit" ng-click="skipImage()" class="btn btn-default btn-lg btn-block">Skip</button><br>
@@ -78,6 +79,20 @@
                 {{progress}} Complete
                 </div>
                 </div>
+
+                <br>
+                <br>
+                <button type="file" ngf-select="uploadFiles($file)" accept="image/*" ngf-max-size="6000000">Select File</button>
+                  <br><br>
+                  File:
+                  <div style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                      <span class="progress" ng-show="f.progress >= 0">
+                          <div style="width:{{f.progress}}%"  
+                               ng-bind="f.progress + '%'"></div>
+                      </span>
+                  </div>     
+                  {{errorMsg}}
+
              </center>
           </div>
            

@@ -22,7 +22,7 @@ BrimstoneApp.directive('myRepeatDirective', function() {
 
 
 //BrimstoneApp.controller('MyCtrl', ['$scope', 'Upload', 'appConfig', function ($scope, Upload, appConfig) {
-BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $window, $document, appConfig, Upload) {
+BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $window, $document, $timeout, appConfig, Upload) {
 
 	$scope.listing = {};
 	$scope.progress = {};
@@ -97,6 +97,35 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 			$scope.listing.id = QueryString.id;
 		}
     	location = "viewlisting.html?id=" + $scope.listing.id; 
+    }
+
+    $scope.uploadFiles = function(file) {
+        $scope.f = file;
+        if (file && !file.$error) {
+        	console.log("Starting upload")
+            file.upload = Upload.upload({
+               
+                url: $scope.uploadQuery,
+                fields: {'username': $scope.username, 'id': $scope.listing.id},
+                file: file
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                    console.log("Upload.then")
+                    location = "viewlisting.html?id=" + $scope.listing.id;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                    $scope.errorMsg = response.status + ': ' + response.data;
+            });
+
+            file.upload.progress(function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 * 
+                                                       evt.loaded / evt.total));
+            });
+        }   
     }
 
 });
