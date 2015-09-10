@@ -146,7 +146,7 @@
                              <div class="col-md-4">
                                <label>Payment Accepted</label> <br />
                                <div class="checkbox">
-                                  <label><input type="checkbox" checked ng-model="listing.cash" value="Cash">Cash</label>
+                                  <label><input type="checkbox" ng-checked="true" ng-model="listing.cash" value="Cash">Cash</label>
                                 </div>
                                 <div class="checkbox">
                                   <label><input type="checkbox" ng-model="listing.credit" value="Credit">Credit</label>
@@ -161,7 +161,7 @@
                                 <label><input type="radio" ng-model="listing.delivery" value="yes" name="optradio">Yes</label>
                               </div>
                               <div class="radio">
-                                <label><input checked type="radio" ng-model="listing.delivery" value="no" name="optradio">No</label>
+                                <label><input ng-checked="true" type="radio" ng-model="listing.delivery" value="no" name="optradio">No</label>
                               </div>
                             </div>
                           </div>

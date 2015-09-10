@@ -610,6 +610,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	$scope.started = {};
 	$scope.authuser = {};
 	$scope.loggedin = {};
+	$scope.user.terms = true;
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
 	//console.log("Configuration: " + restURLEndpoint)	
 
@@ -668,6 +669,15 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	console.log("Clearing User Scope")
 	}
 
+	$scope.accept_terms = function() {
+		if ($scope.user.terms) {
+			$('#terms_button').prop('disabled', false);
+		}
+		else {
+			$('#terms_button').prop('disabled', true);
+		}
+	}
+
 	$scope.addUser = function() {
 	
 		console.log($scope.user.username)
@@ -683,8 +693,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
   		if (!$scope.unique) {
   			toastr.options.closeButton = true;
 			toastr.error('You Must Select a Unique Username')
-  			return
-
+  			return;
   		}
 
 		$scope.queryError = null;

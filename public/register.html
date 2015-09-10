@@ -68,7 +68,7 @@
               <div ng-init="buildUsernameList()"></div>
 
                 <!-- FORM -->
-                <form  class="form-horizontal" role="form" ng-submit="addUser()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
+                <form class="form-horizontal" role="form" ng-submit="addUser()">  <!-- Which function do you want called in your controller when the submit button is pressed -->
                   <div class="form-group">
                     <label>Username</label><label class="formrequired">&nbsp;*&nbsp;&nbsp;</label> 
                     <span ng-if="unique == true && started == true">
@@ -118,14 +118,31 @@
                     </div> <!-- End Form Group Row --> 
                   </div> <!-- End Form Group -->
                   
-                  <div class="form-group">
-                  <center>
-                    <h3>Prove You Are a Human<h3> <h4>Slide to Right</h4>
-                    <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="user.humanoid">
-                    <br></center><br>
                   
-                  <button type="submit" class="btn btn-primary btn-lg">Register</button><br /> 
-                </div>
+                  <div class="form-group">
+                    <center>
+                      <h3>Prove You Are a Human<h3> <h4>Slide to Right</h4>
+                      <input type="range" size="2" name="humanoid" min="1" max="5" value="1" ng-model="user.humanoid">
+                      <br>
+                    </center>
+                    <br>
+                  </div>
+                  
+                  <div class="form-group">
+                    
+                      <div>
+                        <center>
+                          <label class="small_subtext"><input type="checkbox" ng-change="accept_terms()" ng-checked="true" ng-model="user.terms" value="Terms">&nbsp;&nbsp;I agree to the <a target="_new" href="#">terms and conditions</a>
+                         
+                          </label>
+                        </center>
+                      </div>
+                  
+                  </div>  
+                  
+                  <center><button id="terms_button" type="submit" class="btn btn-primary btn-lg">Register</button></center><br /> 
+                  
+              
                 </form>
           
                 
