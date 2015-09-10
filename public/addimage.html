@@ -83,9 +83,9 @@
 
                 <br>
                 <br>
-                <button class="btn btn-primary btn-lg btn-block" type="file" ngf-select="uploadFiles($file)" accept="image/*" ngf-max-size="6000000">Select File</button>
+                <button class="btn btn-primary btn-lg btn-block" type="file" ngf-select="uploadFiles($file)" ngf-capture="'camera'" accept="image/*" ngf-max-size="6000000">Select File</button>
 
-                <button type="file" ngf-select="uploadFiles($file)" accept="image/*" ngf-max-size="6000000">Select File</button>
+                <button type="file" ngf-select="uploadFiles($file)" accept="image/*" ngf-capture="'camera'" ngf-max-size="6000000">Select File</button>
                   <br><br>
                   File:
                   <div style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
