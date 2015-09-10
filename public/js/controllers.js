@@ -25,6 +25,7 @@ BrimstoneApp.directive('myRepeatDirective', function() {
 BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $window, $document, appConfig, Upload) {
 
 	$scope.listing = {};
+	$scope.progress = {};
 	$scope.fileError = "";
 	$scope.fileErrorDetail = "";
 	var initialized = 0;
@@ -42,16 +43,19 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
     //console.log($scope.listing.id)
 
     //TO DO - Why is this not reading globals?
-    console.log(glb_username)
-    console.log(glb_title)
+    //console.log(glb_username)
+    //console.log(glb_title)
+    $("#image_progress_bar").hide();
 
     $scope.uploadQuery = restURLEndpoint + '/api/uploader';
     // set default directive values
     // Upload.setDefaults( {ngf-keep:false ngf-accept:'image/*', ...} );
     $scope.upload = function (files) {
-
+    	//console.log("!!!Called File Upload")
+    	$scope.listing.image_process = 0;
         if (files && files.length) {
-
+        	$("#image_progress_bar").show();
+        	console.log(initialized)
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
 
@@ -61,6 +65,8 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
                     file: file
                 }).progress(function (evt) {
                     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    $scope.progress = progressPercentage;
+                    console.log($scope.progress)
                     console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                 }).success(function (data, status, headers, config) {
                     console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
@@ -72,12 +78,15 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
         }
         else {
         	//Workaround because it always hits this when the page loads...so may it only happen for real attempts
-        	if (initialized > 0) {
+        	if (initialized > 1) {
+        		//console.log("!!!Showing error message" + initialized)
 	        	$scope.fileError = "Error Uploading File"
 	        	$scope.fileErrorDetail = "This means your image was larger than 6MB or your file type was not supported. Only PNG, GIF, JPG and JPEG  are supported"
         	}
         	else {
+        		//console.log("!!!Initial Load Else")
         		initialized = initialized + 1;  
+        		//console.log(initialized)
         	}        	
         }
     };

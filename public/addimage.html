@@ -13,6 +13,8 @@
     <!-- Load the Angular Javascript -->
     <script src="js/angular.min.js"></script>
 
+    <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
 
     <!-- shim is needed to support non-HTML5 FormData browsers (IE8-9)-->
     <script src="js/ng-file-upload-shim.min.js"></script> 
@@ -63,15 +65,22 @@
                 <div ng-cloak ng-show="fileError">
                   <div class="alert alert-danger"><b>{{fileError}}<br>{{fileErrorDetail}}</b>
                   </div>
-
                   <br>
                 </div>
 
-                  
-
-               <div class="btn btn-primary btn-lg btn-block" ngf-select ngf-change="upload($files)" ngf-multiple="true" ngf-max-size='6000000' ngf-accept="'image/*'" ngf-capture="'camera'">Add Image</div>
+               <div class="btn btn-primary btn-lg btn-block" ngf-select ngf-change="upload($files)" ngf-multiple="false" ngf-max-size='6000000' ngf-accept="'.jpg,.png,.gif'" ngf-capture="'camera'">Add Image
+               </div>
                <button type="submit" ng-click="skipImage()" class="btn btn-default btn-lg btn-block">Skip</button><br>
-            </center>
+               <br>
+               <div id="image_progress_bar" class="progress">
+                <div class="progress-bar progress-bar-success active" role="progressbar" aria-valuenow="{{progress}}"
+                aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+                {{progress}} Complete
+                </div>
+                </div>
+             </center>
+          </div>
+           
   
        
           </div>
@@ -95,12 +104,7 @@
      
         <div ng-include="'footer.html'"></div> 
       
-                
-      <!-- Bootstrap core JavaScript
-      ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
-      <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
-      <script src="bootstrap/js/bootstrap.min.js"></script>
+     
     </body>
 
 </html>
