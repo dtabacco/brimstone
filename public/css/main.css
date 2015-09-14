@@ -586,6 +586,9 @@ a:after {
    .rwd-tb {width: 360px;}
    .rwd-tb-l {padding-left: 15px; width: 345px;}
 
+   #headerwrap h1 { margin-top: 50px; font-size: 60px; } 
+    }
+
 }
 
 @media only screen and (device-width:768px){
