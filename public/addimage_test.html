@@ -1,0 +1,64 @@
+<html>
+<head>
+
+<script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>-->
+    <script src="js/angular.min.js"></script>
+<script src="https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js"></script>
+<script src="https://angular-file-upload.appspot.com/js/ng-file-upload.js"></script>
+
+   
+<script src="js/MyCtrl.js"></script>
+  <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+<style>
+.thumb {
+    width: 24px;
+    height: 24px;
+    float: none;
+    position: relative;
+    top: 7px;
+}
+
+form .progress {
+    line-height: 15px;
+}
+}
+
+.progress {
+    display: inline-block;
+    width: 100px;
+    border: 3px groove #CCC;
+}
+
+.progress div {
+    font-size: smaller;
+    background: orange;
+    width: 0;
+}
+</style>
+
+</head>  
+<body ng-app="fileUpload" ng-controller="MyCtrl">
+  <h4>Upload on file select</h4>
+  <button type="file" ngf-select="uploadFiles($file)"
+          accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
+      Select File</button>
+  <br><br>
+  File:
+  <div style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+      <span class="progress" ng-show="f.progress >= 0">
+          <div style="width:{{f.progress}}%"  
+               ng-bind="f.progress + '%'"></div>
+      </span>
+  </div>     
+  {{errorMsg}}
+
+  <div class="btn btn-primary btn-lg btn-block" ngf-select ngf-change="upload($files)" ngf-multiple="false" ngf-max-size='6000000' ngf-accept="'.jpg,.jpeg,.png,.gif'" ngf-capture="'camera'">Add Image
+               </div>
+      </body>
+
+      </html>
