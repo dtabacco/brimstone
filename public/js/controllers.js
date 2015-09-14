@@ -50,6 +50,8 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
     $scope.uploadQuery = restURLEndpoint + '/api/uploader';
     // set default directive values
     // Upload.setDefaults( {ngf-keep:false ngf-accept:'image/*', ...} );
+
+
     $scope.upload = function (files) {
     	//console.log("!!!Called File Upload")
     	$scope.listing.image_process = 0;
