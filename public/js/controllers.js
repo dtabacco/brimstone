@@ -104,7 +104,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
     $scope.uploadFiles = function(file) {
         $scope.f = file;
         if (file && !file.$error) {
-        	console.log("Starting upload")
+        	$("#image_progress_bar").show();
             file.upload = Upload.upload({
                
                 url: $scope.uploadQuery,
