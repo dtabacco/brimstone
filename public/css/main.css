@@ -583,8 +583,8 @@ a:after {
    /* styles for mobile browsers smaller than 480px; (iPhone) */
    /*.rwd-line { display: block; }*/
    .rwd-line { margin-top: 10px;  }
-   .rwd-tb {width: 300px;}
-   .rwd-tb-l {padding-left: 15px; width: 375px;}
+   .rwd-tb {width: 360px;}
+   .rwd-tb-l {padding-left: 15px; width: 345px;}
 
 }
 
