@@ -2,8 +2,8 @@ exports.userAdd = {
   name: "userAdd",
   description: "I register a new user",
   inputs: {
-    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode'],
-    optional: ['company_ind', 'company_name'],
+    required: ['username', 'password', 'firstname', 'lastname', 'email', 'zipcode', 'city'],
+    optional: ['company_ind', 'company_name', 'contact_phone'],
   },
   authenticated: false,
   outputExample: {},
@@ -93,8 +93,8 @@ exports.userEdit = {
   name: "userEdit",
   description: "I edit a user profile",
   inputs: {
-    required: ['username', 'firstname', 'lastname', 'email', 'zipcode'],
-    optional: ['company_ind', 'company_name'],
+    required: ['username', 'firstname', 'lastname', 'email', 'zipcode', 'city'],
+    optional: ['company_ind', 'company_name', 'contact_phone'],
   },
   authenticated: false,
   outputExample: {},

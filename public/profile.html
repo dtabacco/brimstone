@@ -91,11 +91,17 @@
                         </span>
                       </span>
 
-                      <span class="profile-attribute indenter">Account Created: 
-                        <span class="profile-value"> {{user.created_at}}
+                      <span class="profile-attribute indenter">Phone:
+                        <span class="profile-value">{{user.contact_phone}}  <br>
                         </span>
                       </span>
-                      <br> 
+
+                    
+
+                      <span class="profile-attribute indenter">City:
+                        <span class="profile-value">{{user.city}}  <br>
+                        </span>
+                      </span>
 
                        <span class="profile-attribute indenter">Zip Code: 
                         <span class="profile-value"> {{user.zipcode}}
@@ -103,6 +109,12 @@
                       </span>
                       <br> 
 
+                      <span class="profile-attribute indenter">Account Created: 
+                        <span class="profile-value"> {{user.created_at}}
+                        </span>
+                      </span>
+                      <br> 
+                      
                       <span class="profile-attribute indenter">Is this a Company: 
                         <span class="profile-value"> {{user.company_ind}}
                         </span>

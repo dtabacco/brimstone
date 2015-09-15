@@ -158,6 +158,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		//Populate Personalizations
 		$scope.listing.zipcode = personalization.zipcode;
 		$scope.listing.contact_email = personalization.email;
+		$scope.listing.contact_phone = personalization.contact_phone;
+		$scope.listing.location = personalization.city;
 	}
 
 
@@ -700,6 +702,17 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		}
 	}
 
+	$scope.checkPhoneFormatting = function(event) { 
+
+		//Only true for certain positions and if the key is not backspace
+		if ($scope.user.contact_phone.length === 3 && event.keyCode != 8) {
+			$scope.user.contact_phone += "-"
+		} 
+		else if ($scope.user.contact_phone.length === 7 && event.keyCode != 8) {
+			$scope.user.contact_phone += "-"
+		} 
+	}
+
 	
 	$scope.clearUserScope = function() {
 	console.log("Clearing User Scope")
@@ -717,6 +730,14 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	$scope.addUser = function() {
 	
 		console.log($scope.user.username)
+
+		if (!$scope.user.contact_phone) {
+  			$scope.user.contact_phone = "";
+  		}
+
+		if (!$scope.user.company_name) {
+  			$scope.user.company_name = "";
+  		}
 
 		if ($scope.user.humanoid != 5) {
 			console.log("Failed:" + $scope.user.humanoid)
@@ -742,6 +763,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		//Assign all the incoming scope parameters to the post data variable
 		postData = 'username=' + $scope.user.username + '&' + 'firstname=' + $scope.user.firstname + '&' + 'lastname=' + $scope.user.lastname + '&' + 
 				   'password=' + $scope.user.password + '&' + 'zipcode=' + $scope.user.zipcode + '&' + 'email=' + $scope.user.email + '&' + 
+				   'city=' + $scope.user.city + '&' + 'contact_phone=' + $scope.user.contact_phone + '&' + 
 				   'company_name=' + $scope.user.company_name; 
 					
 		console.log(postData)
@@ -771,11 +793,6 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 			return $scope.queryError;
   		}
 
-  		if (!$scope.user.lastname) {
-   			$scope.queryError = 'Lastname Required';
-			return $scope.queryError;
-  		}
-
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 
@@ -786,6 +803,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		//Assign all the incoming scope parameters to the post data variable
 		postData = 'firstname=' + $scope.user.firstname + '&' + 'lastname=' + $scope.user.lastname + '&' + 
 				   'zipcode=' + $scope.user.zipcode + '&' + 'email=' + $scope.user.email + '&' + 
+				   'city=' + $scope.user.city + '&' + 'contact_phone=' + $scope.user.contact_phone + '&' + 
 				   'company_name=' + $scope.user.company_name; 
 					
 		console.log(postData)
@@ -799,7 +817,6 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 						 	
 		})
 		.error(function(data, status, headers, config) {
-			//alert("Bad things happening with Forbin.\n\nHTTP Status: " + status + "\n\n" + data);
 			$scope.searched = false;
 			$scope.searching = false;
 			$scope.queryError = data;

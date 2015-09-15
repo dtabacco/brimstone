@@ -36,7 +36,8 @@ var mongo = function (api, next) {
 
     //Create JSON Entry to Add to MongoDB
     var entry = { username:connection.params.username, password:hashed_password, firstname:connection.params.firstname, lastname:connection.params.lastname, 
-                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, created_at:created_at, last_login:created_at};
+                email:connection.params.email, zipcode:connection.params.zipcode, company_ind:connection.params.company_ind, company_name:connection.params.company_name, 
+                city:connection.params.city, contact_phone:connection.params.contact_phone, created_at:created_at, last_login:created_at};
 
     console.log("Printing Entry as it will be registered")
     console.log(entry)
@@ -99,7 +100,7 @@ var mongo = function (api, next) {
   api.mongo.userProfileLite = function(api, connection, next) {
 
     var query = {username:connection.params.username}
-    var projection = {email:1, zipcode:1}
+    var projection = {email:1, zipcode:1, city:1, contact_phone:1}
 
     api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
       if (err) { 
@@ -116,7 +117,7 @@ var mongo = function (api, next) {
 
     var query = {username:connection.params.username}
 
-    var projection = {username:1, firstname:1, lastname:1, email:1, zipcode:1, company_ind:1, company_name:1, created_at:1, last_login:1}
+    var projection = {username:1, firstname:1, lastname:1, city:1, email:1, zipcode:1, contact_phone:1, company_ind:1, company_name:1, created_at:1, last_login:1}
 
     api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
       if (err) { 
@@ -172,6 +173,8 @@ var mongo = function (api, next) {
           lastname = results[i].lastname;
           email = results[i].email;
           zipcode = results[i].zipcode;
+          city = results[i].city;
+          contact_phone = results[i].contact_phone;
           company_ind = results[i].company_ind;
           company_name = results[i].company_name;
           created_at = results[i].created_at;
@@ -181,7 +184,7 @@ var mongo = function (api, next) {
 
         //Create JSON Entry to update in MongoDB
         entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
-                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+                email:email, zipcode:zipcode, contact_phone:contact_phone, city:city, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
   
         //Update MongoDB
         api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
@@ -222,6 +225,8 @@ var mongo = function (api, next) {
           lastname = connection.params.lastname;
           email = connection.params.email;
           zipcode = connection.params.zipcode;
+          contact_phone = connection.params.contact_phone;
+          city = connection.params.city;
           company_ind = connection.params.company_ind;
           company_name = connection.params.company_name;
           created_at = results[i].created_at;
@@ -231,7 +236,7 @@ var mongo = function (api, next) {
 
         //Create JSON Entry to update in MongoDB
         entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
-                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+                email:email, zipcode:zipcode, contact_phone:contact_phone, city:city, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
         console.log("Printing Update")
         console.log(entry)
 
@@ -277,6 +282,8 @@ var mongo = function (api, next) {
           firstname = results[i].firstname;
           lastname = results[i].lastname;
           email = results[i].email;
+          contact_phone = results[i].contact_phone;
+          city = results[i].city;
           zipcode = results[i].zipcode;
           created_at = results[i].created_at;
           last_login = lastLogin;
@@ -287,7 +294,7 @@ var mongo = function (api, next) {
 
         //Create JSON Entry to update in MongoDB
         entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
-                email:email, zipcode:zipcode, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
+                email:email, zipcode:zipcode, contact_phone:contact_phone, city:city, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
   
         //Update MongoDB
         api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {

@@ -106,7 +106,7 @@ var user = function (api, next) {
               console.log(user)
               //Create a response with a javascript object containing the personalization
               //user is an array with key/value pairs
-              connection.response.personalization = {email:user[0].email, zipcode:user[0].zipcode}
+              connection.response.personalization = {email:user[0].email, zipcode:user[0].zipcode, contact_phone:user[0].contact_phone, city:user[0].city}
                //Return the Token to the user
               next (false, token);
         });  

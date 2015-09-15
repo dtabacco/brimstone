@@ -53,13 +53,16 @@
         <div ng-controller="UserManager">
           <div ng-init="clearUserScope()"></div>
         
-          <div class="row centerpanelR">
-          
-            <div class="col-lg-2 col-lg-offset-5">
+          <div class="row">
+      
+             <div class="col-lg-4 col-lg-offset-4">
               <br>               
               <div class="alert alert-danger" ng-cloak ng-show="queryError">
                 <strong>Error! </strong>{{queryError}}
               </div>
+
+              <div class="panel">
+                <div class="panel-body">
             
               <form class="center auth_box"  ng-submit="authenticateUser()">
                 <label>Username</label> <input type="text" class="form-control" name="username" maxlength="50" ng-model="user.username" autofocus="autofocus" required><br />
@@ -71,8 +74,9 @@
               </form>   
               <br>  
               <p class="md_subtext"> <a target="_new" href="#">Forgot My Password</a></p>
-                         
-                         
+                      
+              </div>           
+              </div>      
 
               
               <!--<span>{{user}}</span>-->
