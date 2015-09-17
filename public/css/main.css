@@ -496,8 +496,7 @@ img{
 
 @media only screen and (min-width:960px){
         /* styles for browsers larger than 960px; */
-       
-
+  
 }
 @media only screen and (min-width:1440px){
     /* styles for browsers larger than 1440px; */
@@ -520,9 +519,8 @@ img{
 
     img{
     width:100%;
-    max-width:450px;
-    }
-
+    
+}
 }
 
 @media only screen and (device-width:768px){
