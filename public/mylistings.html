@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="brimstone">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+ 
+    <title>My Listings</title>
+
+    <!-- Load the Angular Javascript -->
+    <script src="js/angular.min.js"></script>
+
+    <!-- Load Angular File Upload Library -->
+    <script src="js/ng-file-upload.min.js"></script> 
+
+     <!-- Load your custom Javascript with the module defined -->
+    <script src="js/app.config.js"></script> 
+    <script src="js/controllers.js"></script>
+    
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+
+    <!-- Sweet Alert Library -->
+    <script src="js/sweetalert.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    
+
+  </head>
+
+  <body>
+    <div ng-controller="UserManager" ng-init="checkLoginStatus()">
+      <div ng-include="'header.html'">
+      </div>
+
+      <div ng-init="getUserProfile()">
+        <div id="blue">
+          <div class="container">
+            <div class="row centered">
+              <div class="col-lg-8 col-lg-offset-2">
+              <h1>My Profile</h1>
+              </div>
+            </div><!-- row -->
+          </div><!-- container -->
+        </div><!--  bluewrap --> 
+         
+        <div class="container w">
+          <div class="row">
+            <div>
+              <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
+              <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+            </div>
+          <div class="col-lg-2">
+            &nbsp;
+          </div><!-- col-lg-3 -->
+
+          <div class="col-lg-8">
+             <div class="row">
+                <div class="col-md-12">  
+                  
+                  <div ng-controller="listingManager">
+                    <h3 class="title_heading">Your Recent Listings:</h3><br>
+                      
+                        <div ng-init="getMyListings()">
+                        <table class="table table-hover">
+                          <tr ng-repeat="listing in listings| limitTo:50">
+                             
+                              <td><a ng-href="viewlisting.html?id={{listing.id}}">{{listing.title}}</a> </td>
+                              <td><b>{{listing.views}} Views </b></td>
+                              <td> <a href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning">edit</button></a> </td>
+                              <td><button class="btn btn-danger" ng-click="deleteListing(listing.id)" >delete</button></td>
+                               
+                          </tr>
+                        </table>
+                   
+                        </div>
+                     
+                    </br>
+                  </div>
+                </div>
+              </div>       
+       
+          </div><!-- col-lg-4 -->
+
+           <div class="col-lg-2">
+            &nbsp;
+          </div><!-- col-lg-2 -->
+
+
+        </div><!-- row -->
+        <br>
+      </div><!-- container -->
+    </div> <!-- End of GetUserProfile -->   
+            
+
+           
+
+     
+        <div ng-include="'footer.html'"></div> 
+      </div>  <!-- End of User Manager Controller -->
+            
+  
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+      <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+
+</html>
+
+

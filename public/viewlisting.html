@@ -27,6 +27,11 @@
     <!-- Custom styles for this template -->
     <link href="css/main.css" rel="stylesheet"> 
 
+    <!-- Sweet Alert Library -->
+    <script src="js/sweetalert.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    
+
   </head>
 
   <body>
@@ -56,13 +61,17 @@
                <div class="col-lg-6"> 
                 <a data-toggle="modal" data-target="#myModal" href="#myModal"><img class="img-thumbnail img-responsive med_bottom_margin med_top_margin" ng-src={{listing.image}}></a>
 
-                <span ng-if="listing.username === loggedin.username">
-                  
-                  <button type="submit" ng-click="updateImage()" class="btn btn-primary rwd-line">Change Image</button>&nbsp;
-                  <button type="submit" ng-click="removeImage()" class="btn btn-danger rwd-line">Remove Image</button>&nbsp;
+                 <span ng-if="listing.username === loggedin.username">
+                    <span ng-if="listing.image == '/assets/img/placeholder1.png'">
+                     <button type="submit" ng-click="updateImage()" class="btn btn-primary rwd-line">Add Image</button>&nbsp;
+                   </span>
+                   <span ng-if="listing.image != '/assets/img/placeholder1.png'">
+                     <button type="submit" ng-click="updateImage()" class="btn btn-primary rwd-line">Change Image</button>&nbsp;
+                    <button type="submit" ng-click="removeImage()" class="btn btn-danger rwd-line">Remove Image</button>&nbsp;
+                  </span
                   <a ng-href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning rwd-line">Edit Listing</button></a> 
                 
-                </span>        
+                </span>       
 
                </div>
               <div class="col-lg-6" >&nbsp;</div> 

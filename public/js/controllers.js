@@ -325,32 +325,44 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 
-		//Define REST Endpoint
-		$scope.editQuery = restURLEndpoint + '/api/listings/' + $scope.listing.id + "/imageRemove";
-		console.log('URL:' + $scope.editQuery)
-		
-		//Assign all the incoming scope parameters to the post data variable
-		postData = 'username=' + glb_username; 
-					
-		console.log(postData)
+		swal({   title: "Are you sure?",   
+			text: "You will not have an image on your listing!",   
+			type: "warning",   
+			showCancelButton: true,   
+			confirmButtonColor: "#DD6B55",   
+			confirmButtonText: "Yes, delete it!",   
+			closeOnConfirm: false }, 
 
-		$http.put($scope.editQuery, postData)
-		.success(function(response) {
-			
-			//Convert to .id for angular
-			response.listing.id = response.listing._id;
-			$scope.listing = response.listing;
-			glb_title = $scope.listing.title;
-			//toastr.options.closeButton = true;
-			//toastr.success('Your Post has been successfully Updated')
-			
-			location = "viewlisting.html?id=" + listingid;
-			
-						 	
-		})
-		.error(function(data, status, headers, config) {
-			$scope.queryError = data;
-		});
+			function(){   
+
+				//Define REST Endpoint
+				$scope.editQuery = restURLEndpoint + '/api/listings/' + $scope.listing.id + "/imageRemove";
+				console.log('URL:' + $scope.editQuery)
+				
+				//Assign all the incoming scope parameters to the post data variable
+				postData = 'username=' + glb_username; 
+							
+				console.log(postData)
+
+				$http.put($scope.editQuery, postData)
+				.success(function(response) {
+					
+					//Convert to .id for angular
+					response.listing.id = response.listing._id;
+					$scope.listing = response.listing;
+					glb_title = $scope.listing.title;
+					//toastr.options.closeButton = true;
+					//toastr.success('Your Post has been successfully Updated')
+					
+					location = "viewlisting.html?id=" + listingid;
+					swal("Deleted!", "Your Image has been deleted.", "success"); 
+					
+								 	
+				})
+				.error(function(data, status, headers, config) {
+					$scope.queryError = data;
+				});
+			});
 	};
 
 	$scope.getListing = function() {
@@ -514,22 +526,36 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	$scope.deleteListing = function(id) {
 		console.log("delete " + id )
 
-		//Define Rest Endpoint
-		$scope.deleteQuery = restURLEndpoint + '/api/listings/' + id ;
+		swal({   title: "Are you sure?",   
+			text: "You will not be able to recover this listing!",   
+			type: "warning",   
+			showCancelButton: true,   
+			confirmButtonColor: "#DD6B55",   
+			confirmButtonText: "Yes, delete it!",   
+			closeOnConfirm: false }, 
 
-		postData = "";
+			function(){   
+				//Define Rest Endpoint
+				$scope.deleteQuery = restURLEndpoint + '/api/listings/' + id ;
 
-		$http.delete($scope.deleteQuery, postData)
-		.success(function(response) {
+				postData = "";
+
+				$http.delete($scope.deleteQuery, postData)
+				.success(function(response) {
+					
+					console.log("Deleted")
+					location = "mylistings.html?username=" + $scope.listing.username;
+					swal("Deleted!", "Your listing has been deleted.", "success"); 
+								 	
+				})
+				.error(function(data, status, headers, config) {
+					$scope.queryError = data;
+				});
+				
 			
-			console.log("Deleted")
-			location = "mylistings.html?username=" + $scope.listing.username;
-
-						 	
-		})
-		.error(function(data, status, headers, config) {
-			$scope.queryError = data;
 		});
+
+		
 	}
 
 	$scope.updateImage = function () {
