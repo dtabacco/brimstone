@@ -485,6 +485,10 @@ a:after {
     border-color: #f2f2f2;
 }
 
+.modal-dialog { 
+max-width : 100% ;
+}
+
 @media only screen and (min-width:960px){
         /* styles for browsers larger than 960px; */
        
