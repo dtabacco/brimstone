@@ -312,8 +312,8 @@ var mongo = function (api, next) {
 /***************** Add a listing ****************************/
 api.mongo.listingAdd = function(api, connection, next) {
  
-  var now = new Date(); 
-  var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+  var created_at = new Date(); 
+  //var created_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
   //make', 'model', 'dimensions','condition
 
@@ -321,7 +321,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
               condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email, delivery:connection.params.delivery, unit:connection.params.unit, payment:connection.params.payment, 
-              created_at:created_at, updated_at:created_at,  status:"open", views:0, image:null, thumbnail:null};
+              created_at:created_at, updated_at:created_at,  status:"active", views:0, image:null, thumbnail:null};
 
   //Insert JSON Entry to Add to MongoDB
   api.mongo.db.listings.insert(entry, {safe : true}, function doneCreatingListingEntry(err, results) {
@@ -342,8 +342,8 @@ api.mongo.listingAdd = function(api, connection, next) {
 
       console.log("Searching for ", query)
 
-      var now = new Date(); 
-      var updated_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
+      var updated_at = new Date(); 
+      //var updated_at = now.toLocaleDateString() + " " + now.toLocaleTimeString();
 
       //Find the listing where we will add the image link
       api.mongo.db.listings.find(query, function doneSearching(err, results) {
@@ -552,8 +552,23 @@ api.mongo.getListing = function(api, connection, next) {
       if (err) { 
         next(err, false); 
       } 
-
-      //connection.response.content = results; 
+       var today = new Date(); 
+       for (var i = 0; i < results.length; i++) {
+        results[i].updated_at = new Date(results[i].updated_at)
+        
+        //Returns number of millseconds between dates
+        numofMillseconds = today - results[i].updated_at
+     
+        // 86400000 is the number of milleseconds in a day
+        numofDays = numofMillseconds / 86400000;
+        if (numofDays > 30) {
+          results[i].status = "expired"
+        }
+        else {
+          results[i].status = "active"
+        }
+      };
+      
       next(err, results);   
     });
   };
@@ -568,6 +583,24 @@ api.mongo.getListing = function(api, connection, next) {
       if (err) { 
         next(err, false); 
       } 
+      var today = new Date(); 
+
+      for (var i = 0; i < results.length; i++) {
+        results[i].updated_at = new Date(results[i].updated_at)
+
+        //Returns number of millseconds between dates
+        numofMillseconds = today - results[i].updated_at
+     
+        // 86400000 is the number of milleseconds in a day
+        numofDays = numofMillseconds / 86400000;
+        //.log(numofDays)
+        if (numofDays > 30) {
+          results[i].status = "expired"
+        }
+        else {
+          results[i].status = "active"
+        }
+      };
 
       next(err, results);   
     });
@@ -717,6 +750,7 @@ api.mongo.getListing = function(api, connection, next) {
         image = results[i].image;
         thumbnail = results[i].thumbnail;
         updated_at = updated_at;
+        console.log(updated_at)
       }         
 
       var now = new Date();
@@ -821,8 +855,8 @@ api.mongo.getListing = function(api, connection, next) {
         });
       }      
 
-      var now = new Date();
-      updated_at = now;
+      //var now = new Date();
+      //updated_at = now;
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,

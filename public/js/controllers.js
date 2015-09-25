@@ -475,7 +475,8 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 			//Reverse order so most recent shows up on top
 			//$scope.listings = sortByKey(response.listing, 'created_at').reverse()	
-			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();			 	
+			$scope.listings = sortByKeyDates(response.listing, 'updated_at').reverse();	
+			console.log	($scope.listings)	 	
 		})
 		.error(function(data, status, headers, config) {
 			console.log(data);
