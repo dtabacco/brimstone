@@ -951,14 +951,8 @@ api.mongo.getListing = function(api, connection, next) {
     var query = {};
 
     console.log("phrase " + connection.params.query)
-
     console.log("Zip " + connection.params.zip)
 
-    /*{ $text: { $search: "mermaid jackson" } },
-   { score: { $meta: "textScore" } }
-).sort( { score: { $meta: "textScore" } } )*/
-
- 
     if (connection.params.zip === "null") {
       console.log("Zip code is null")
        query =  { $text: { $search: connection.params.query } }
@@ -972,6 +966,24 @@ api.mongo.getListing = function(api, connection, next) {
       if (err) { 
         next(err, false); 
       } 
+      var today = new Date(); 
+
+      for (var i = 0; i < results.length; i++) {
+        results[i].updated_at = new Date(results[i].updated_at)
+
+        //Returns number of millseconds between dates
+        numofMillseconds = today - results[i].updated_at
+     
+        // 86400000 is the number of milleseconds in a day
+        numofDays = numofMillseconds / 86400000;
+        //.log(numofDays)
+        if (numofDays > 30) {
+          results[i].status = "expired"
+        }
+        else {
+          results[i].status = "active"
+        }
+      };
 
       next(err, results);   
     });
