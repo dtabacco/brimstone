@@ -87,7 +87,7 @@
                 <div ng-show="searching">
                   <center><img src="assets/images/loading.gif" alt="Loading" /></center>
                 </div>
-                <div ng-repeat="listing in listings | limitTo:15">
+                <div ng-repeat="listing in listings | limitTo:100 | filter: {status:'active'}">
                   <div class="row">
                     <div class="col-md-2" style="background:#FFFFFF;">
                       <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" ng-src="{{listing.thumbnail}}"></a>

@@ -524,6 +524,35 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	};
 
 	
+	$scope.renewListing = function(id) {
+
+		console.log("delete " + id )
+		//Define REST Endpoint
+		$scope.renewQuery = restURLEndpoint + '/api/listings/renew/' + id;
+		console.log('URL:' + $scope.renewQuery)
+		
+		//Assign all the incoming scope parameters to the post data variable
+		postData = 'username=' + glb_username; 		
+		console.log(postData)
+
+		$http.put($scope.renewQuery, postData)
+		.success(function(response) {
+			swal({   title: "Renewed!",   
+			text: "Your List has been successfully renewed for 30 days'",   
+			type: "success",   
+			showCancelButton: false,   
+			confirmButtonText: "Ok",   
+			closeOnConfirm: true }, 
+
+			function(){   
+				location.reload()
+			});			 	
+		})
+		.error(function(data, status, headers, config) {
+			$scope.queryError = data;
+		});
+	}
+	
 	$scope.deleteListing = function(id) {
 		console.log("delete " + id )
 
@@ -743,6 +772,10 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	
 	$scope.clearUserScope = function() {
 	console.log("Clearing User Scope")
+	}
+
+	$scope.show_terms = function() {
+			 	
 	}
 
 	$scope.accept_terms = function() {

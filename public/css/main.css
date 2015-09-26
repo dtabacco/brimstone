@@ -356,6 +356,10 @@ a:after {
 #f i:hover {
 	color: #ff7878;
 }
+#f h4 {
+    color: #FFFFFF;
+    font-size: 14px;
+}
 
 /****** SECTIONS *****/
 

@@ -705,6 +705,70 @@ api.mongo.getListing = function(api, connection, next) {
 
   };
 
+  /***************** listingRenew ****************************/
+  
+  api.mongo.listingRenew = function(api, connection, next) {
+
+    var BSON = mongodb.BSONPure;
+    var o_id = new BSON.ObjectID(connection.params.id);
+    var query = { "_id":o_id};
+
+    var updated_at = new Date(); 
+
+    //Find the Listing
+    api.mongo.db.listings.find(query, function doneSearchingForListing(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      //Load existing data so it is not lost in update, and new fields come from update
+      for (var i = 0; i < results.length; i++) {
+        o_id = results[i]._id;
+        username = results[i].username;
+        title = results[i].title;
+        description = results[i].description;
+        price = results[i].price;
+        location = results[i].location;
+        zipcode = results[i].zipcode;
+        make = results[i].make;
+        model = results[i].model;
+        dimensions = results[i].dimensions;
+        delivery = results[i].delivery;
+        unit = results[i].unit;
+        payment =  results[i].payment;
+        condition = results[i].condition;
+        created_at = results[i].created_at;
+        contact_email = results[i].contact_email;
+        contact_phone = results[i].contact_phone;
+        status = results[i].status;
+        views = results[i].views;
+        image = results[i].image;
+        thumbnail = results[i].thumbnail;
+        updated_at = updated_at;
+      }         
+
+      //Create JSON Entry to update in MongoDB
+      entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
+           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+           image:image, thumbnail:thumbnail}; 
+
+      //Update MongoDB
+      api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
+        if (err) { 
+         next(err, false); 
+        }  
+        console.log(results)
+        
+        console.log("Re-search for " + query )
+        api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
+        if (err) { 
+          next(err, false); 
+        }  
+        next(err, result);   
+        });  
+      });
+    });
+  };
 
   /***************** editListing ****************************/
   api.mongo.listingEdit = function(api, connection, next) {
