@@ -55,7 +55,7 @@
 				<div class="col-lg-6 col-lg-offset-3">
 				<!--<h1>It Doesn't Take a Rocket <b>Scientist</b></h1>
 				<h2>It Takes a Designer</h2>-->
-				<h1> Search for stuff </h1>
+				<h1> Search The Pallet</h1>
 				<form class="form-horizontal" role="form" action="search.html">
 					<div class="form-group rwd-tb-l">
 						 <h4>What are you looking for?</h4> <input type="text" class="form-control" name="query" maxlength="50" ng-model="search.term"><br />
@@ -86,32 +86,46 @@
 		</div><!-- container -->
 	</div><!-- headerwrap -->
 
-
+	<!-- 
 	<div class="container w centered">
 		<h4>RECENT LISTINGS</h4><hr>
-		<!-- Name the controller which manages this part of the page --> 
+
       	<div ng-controller="listingManager" ng-init="getRecentListings()">
       		<div class="row centered">
 	      		<div ng-repeat="listing in listings | limitTo:6">
 					
 						<div class="col-lg-2">
-							<a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" ng-src="{{listing.thumbnail}}"></a>
+							<a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:150px" ng-src="{{listing.thumbnail}}"></a>
 							<h4><a href="viewlisting.html?id={{listing.id}}">{{listing.title}} </h4>${{listing.price}}</h4></a></h4>
 							<p>{{listing.location}}</p>
-						</div><!-- col-lg-4 -->
+						</div>
 						
 					
-				</div> <!-- NG Repeat -->
-			</div><!-- row -->
+				</div> 
+			</div>
 		</div>
 
 		<br>
 		<br>
-	</div><!-- container -->
+	</div>
+	-->
 
 
+	<div class="container w centered">
+		<h4>RECENT LISTINGS</h4><hr>
+		<div ng-controller="listingManager" ng-init="getRecentListings()">
+			<div class="row centered" >
+		    	<div class="col-md-2" ng-repeat-start="listing in listings">
+			        <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:150px" ng-src="{{listing.thumbnail}}"></a>
+					<h4><a href="viewlisting.html?id={{listing.id}}">{{listing.title}} </h4>${{listing.price}}</h4></a></h4>
+					<p>{{listing.location}}</p>
+			    </div>
+			    <div class="clearfix" ng-if="$index%6==5"></div>
+			    <div ng-repeat-end=""></div>
+			</div>
+		</div>
+	</div>
 
-	
 	
 	<!-- FOOTER -->
 	<div ng-include="'footer.html'"></div> 

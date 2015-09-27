@@ -85,12 +85,12 @@
             <div class="row">
               <div class="col-lg-10 col-lg-offset-1">
                 <div ng-show="searching">
-                  <center><img src="assets/images/loading.gif" alt="Loading" /></center>
+                  <center><img height=300 width=300 src="assets/images/loading.gif" alt="Loading" /></center>
                 </div>
                 <div ng-repeat="listing in listings | limitTo:100 | filter: {status:'active'}">
                   <div class="row">
                     <div class="col-md-2" style="background:#FFFFFF;">
-                      <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" ng-src="{{listing.thumbnail}}"></a>
+                      <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:150px" ng-src="{{listing.thumbnail}}"></a>
                     </div>
                     <div class="col-md-10" style="background:#FFFFFF;">
                       <h3 class="no_top_margin min_bottom_margin"> <a href="viewlisting.html?id={{listing.id}}"> {{listing.title}}</a></h3>  
@@ -112,7 +112,8 @@
 
       
 
-      <!-- Close NG Controller Div-->  
+
+      <!-- Close NG Search Controller Div-->  
       </div>
 
        <div ng-include="'footer.html'"></div> 

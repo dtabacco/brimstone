@@ -20,7 +20,6 @@ BrimstoneApp.directive('myRepeatDirective', function() {
 	};
 });	
 
-
 //BrimstoneApp.controller('MyCtrl', ['$scope', 'Upload', 'appConfig', function ($scope, Upload, appConfig) {
 BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $window, $document, $timeout, appConfig, Upload) {
 
@@ -483,6 +482,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 		});	
 	};
 
+	
 	$scope.getRecentListings = function() {
 
   		console.log("--> Fetching Recent Listings")
