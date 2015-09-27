@@ -116,7 +116,7 @@
 		<div ng-controller="listingManager" ng-init="getRecentListings()">
 			<div class="row centered" >
 		    	<div class="col-md-2" ng-repeat-start="listing in listings">
-			        <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:250px" ng-src="{{listing.thumbnail}}"></a>
+			        <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:300px" ng-src="{{listing.thumbnail}}"></a>
 					<h4><a href="viewlisting.html?id={{listing.id}}">{{listing.title}} </h4>${{listing.price}}</h4></a></h4>
 					<p>{{listing.location}}</p>
 			    </div>
