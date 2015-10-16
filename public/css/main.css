@@ -498,6 +498,11 @@ img{
     max-width:1000px;
 }
 
+.logo-max-size {
+        max-height:50px; 
+        max-width:177px;
+} 
+
 @media only screen and (min-width:960px){
         /* styles for browsers larger than 960px; */
   
@@ -548,6 +553,10 @@ img{
     background-size: cover;
     }
 
+    .logo-max-size {
+        max-height:40px; 
+        max-width:141px;
+    } 
 
     img {
     width:100%;
