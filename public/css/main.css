@@ -125,6 +125,16 @@ a:after {
    color: #4B4B7B; /* Dark Blue */
 }
 
+/* Hamburger Menu Styling */
+.navbar-inverse .navbar-toggle {
+    border-color: #DDDDDD;
+}
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: #000050;  /* Darker Blue */
+}
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+    background-color: #FFF;
+}
 
 /* ==========================================================================
    Wrap Sections
