@@ -31,6 +31,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: "Raleway";
     font-weight: 300;
     color: #333;
+    margin-top: 5px;
 }
 
 
@@ -86,13 +87,14 @@ a:after {
 .navbar {
 	font-weight: 800;
 	font-size: 14px;
-	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 
 .navbar-inverse {
-	background: #2d2d2d;
-	border-color: #2d2d2d;
+    /* Color of Nav Background*/
+	background: #DDDDDD;  /* Light Grey/Silver */  
+	border-color: #DDDDDD;
 }
 
 .navbar-inverse .navbar-nav > .active > a {
@@ -117,6 +119,12 @@ a:after {
     padding-top: 15px;
     padding-bottom: 15px;
 }
+
+.navbar-inverse .navbar-nav > li > a {
+    /* Color of Nav Menu Links */
+   color: #4B4B7B; /* Dark Blue */
+}
+
 
 /* ==========================================================================
    Wrap Sections
@@ -300,9 +308,9 @@ a:after {
 }
 
 
-/* Red Wrap */
+/* Green Wrap */
 #r {
-	background: #ff7878;
+	background: #468847;
 	padding-top: 35px;
 	padding-bottom: 35px;
 }
@@ -319,7 +327,7 @@ a:after {
 /* Blue Wrap */
 
 #blue {
-	background: #3498db;
+	background: #48486B;
 	padding-top: 35px;
 	padding-bottom: 35px;
 }
@@ -342,22 +350,24 @@ a:after {
 
 /* Footer Wrap */
 #f {
-	background: #2d2d2d;
+	background: #DDDDDD;;
 	padding-top: 30px;
 	padding-bottom: 30px;
 }
 
 #f i {
-	color: #bdbdbd;
+	/*color: #bdbdbd;*/
+    color: #4B4B7B; /* Dark Blue */
 	font-size: 30px;
 	padding: 20px;
 }
 
 #f i:hover {
-	color: #ff7878;
+	color: #000051; /* Darker Blue */
+  
 }
 #f h4 {
-    color: #FFFFFF;
+    color: #000000; /* Dark Blue */
     font-size: 14px;
 }
 
