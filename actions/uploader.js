@@ -25,15 +25,36 @@ exports.action = {
     console.log("ID: " + connection.params.id)
     // - ID: 55ecffbcf06be814344010df - this is the listing ID
 
-    api.mongo.addImage(api, connection, modified_path, function(err, users) {
+    /***** This function requires Security *******/
+    console.log("Token: " + connection.rawConnection.req.headers.authorization)
+    //Assign Token from Header into Token Variable
+    var token = connection.rawConnection.req.headers.authorization
+     //Verify Token from the header
+    api.user.verifyHeaderToken(api, token, function(err, token) {
+      console.log("Returning: " + token);
       if (err) {
         connection.response.errors = err;
         next(connection, false);
       }
-      
-      console.log("Added Image to Listing in Mongo")
-      console.log("Calling Global Next(True)")
-      next(connection, true);
+      console.log(token.username + " is tryng to add an image to a listing")
+
+      api.mongo.addImage(api, connection, modified_path, token.username, function(err, listing) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (listing === "Unauthorized") {
+          console.log("Returning Unauthorized")
+          connection.response = "Unauthorized"
+          connection.rawConnection.responseHttpCode = 403;
+          next(connection, true);
+        }
+        else {
+          console.log("Added Image to Listing in Mongo")
+          console.log("Calling Global Next(True)")
+          next(connection, true);
+        }
+      });
     });
   }
 };

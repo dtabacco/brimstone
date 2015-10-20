@@ -100,16 +100,40 @@ exports.userEdit = {
   outputExample: {},
   version: 1.0,
   run: function(api, connection, next){
-      console.log(connection.parameters)
-      api.mongo.userEdit(api, connection, function(err, users) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      connection.response = users;
-      connection.rawConnection.responseHttpCode = 200;
-      next(connection, true);
-    });
+      //console.log(connection.parameters)
+
+      /***** This function requires Security *******/
+      console.log("Token: " + connection.rawConnection.req.headers.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.rawConnection.req.headers.authorization
+
+      //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to edit a profile")
+
+        api.mongo.userEdit(api, connection, token.username, function(err, users) {
+          if (err) {
+            connection.response.errors = err;
+            next(connection, false);
+          }
+          if (users === "Unauthorized") {
+              console.log("Returning Unauthorized")
+              connection.response = "Unauthorized"
+              connection.rawConnection.responseHttpCode = 403;
+              next(connection, true);
+            }
+          else {
+            connection.response = users;
+            connection.rawConnection.responseHttpCode = 200;
+            next(connection, true);
+          }
+        });
+      }); 
   }
 };
 
@@ -126,13 +150,37 @@ exports.userPasswordEdit = {
   version: 1.0,
   run: function(api, connection, next){
       console.log(connection.parameters)
-      api.mongo.userPasswordEdit(api, connection, function(err, users) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      connection.response = users;
-      next(connection, true);
+      /***** This function requires Security *******/
+      console.log("Token: " + connection.rawConnection.req.headers.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.rawConnection.req.headers.authorization
+
+       //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to update a password")
+        console.log("TEST")
+
+        api.mongo.userPasswordEdit(api, connection, token.username, function(err, users) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (users === "Unauthorized") {
+            console.log("Returning Unauthorized")
+            connection.response = "Unauthorized"
+            connection.rawConnection.responseHttpCode = 403;
+            next(connection, true);
+          }
+        else {
+          connection.response = users;
+          next(connection, true);
+        }
+      });
     });
   }
 };

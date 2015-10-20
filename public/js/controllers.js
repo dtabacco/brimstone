@@ -85,9 +85,7 @@ BrimstoneApp.controller('MyCtrl', function( $scope, $http, $filter, $location, $
 	        	$scope.fileErrorDetail = "This means your image was larger than 6MB or your file type was not supported. Only PNG, GIF, JPG and JPEG  are supported"
         	}
         	else {
-        		//console.log("!!!Initial Load Else")
         		initialized = initialized + 1;  
-        		//console.log(initialized)
         	}        	
         }
     };
@@ -148,7 +146,11 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	//This is required or it will send as JSON by default and fail
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
-	
+
+		//Add Authorization to calls
+	$http.defaults.headers.post["Authorization"] = localStorage.brimstone_token
+	$http.defaults.headers.put["Authorization"] = localStorage.brimstone_token
+
 	//console.log(localStorage.personalization)
 	
 	if (localStorage.personalization) {
@@ -298,15 +300,14 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			response.listing.id = response.listing._id;
 			$scope.listing = response.listing;
 			glb_title = $scope.listing.title;
-			//toastr.options.closeButton = true;
-			//toastr.success('Your Post has been successfully Updated')
-			
-			location = "viewlisting.html?id=" + listingid;
-			
-						 	
+			location = "viewlisting.html?id=" + listingid;	 	
 		})
 		.error(function(data, status, headers, config) {
-			$scope.queryError = data;
+			if (status === 403) {
+				message = "You do not have access to update this listing";
+				sweetAlert("Unauthorized", message, "error");
+				$scope.queryError = message;
+			}
 		});
 	};
 
@@ -359,7 +360,11 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 								 	
 				})
 				.error(function(data, status, headers, config) {
-					$scope.queryError = data;
+					if (status === 403) {
+						message = "You do not have access to remove this image";
+						sweetAlert("Unauthorized", message, "error");
+						$scope.queryError = message;
+					}
 				});
 			});
 	};
@@ -549,7 +554,11 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			});			 	
 		})
 		.error(function(data, status, headers, config) {
-			$scope.queryError = data;
+			if (status === 403) {
+				message = "You do not have access to renew this listing";
+				sweetAlert("Unauthorized", message, "error");
+				$scope.queryError = message;
+			}
 		});
 	}
 	
@@ -567,10 +576,10 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			function(){   
 				//Define Rest Endpoint
 				$scope.deleteQuery = restURLEndpoint + '/api/listings/' + id ;
-
-				postData = "";
-
-				$http.delete($scope.deleteQuery, postData)
+				token = localStorage.brimstone_token
+				
+				//Special Case for Delete...must use params key to send post data
+				$http.delete($scope.deleteQuery, {params: {'authorization': token}})
 				.success(function(response) {
 					
 					console.log("Deleted")
@@ -579,7 +588,11 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 								 	
 				})
 				.error(function(data, status, headers, config) {
-					$scope.queryError = data;
+					if (status === 403) {
+						message = "You do not have access to delete this listing";
+						sweetAlert("Unauthorized", message, "error");
+						$scope.queryError = message;
+					}
 				});
 				
 			
@@ -715,6 +728,10 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	//This is required or it will send as JSON by default and fail
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
+
+	//Add Authorization to calls
+	$http.defaults.headers.post["Authorization"] = localStorage.brimstone_token;
+	$http.defaults.headers.put["Authorization"] = localStorage.brimstone_token;
 
 	//array of all usernames - Will be populated by buildUserNameList()
 	usernames = [];
@@ -872,14 +889,17 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		.success(function(response) {
 			$scope.users = response;
 			console.log($scope.users)
-
-			window.location.href = "profile.html?username=" + $scope.users[0].username ;
-						 	
+			window.location.href = "profile.html?username=" + $scope.users[0].username ;			 	
 		})
 		.error(function(data, status, headers, config) {
 			$scope.searched = false;
 			$scope.searching = false;
-			$scope.queryError = data;
+			if (status === 403) {
+				message = "You do not have access to update this profile";
+				sweetAlert("Unauthorized", message, "error");
+				$scope.queryError = message;
+			}
+			//$scope.queryError = data;
 		});
 	};
 	$scope.editPassword = function() {
@@ -924,10 +944,14 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 						 	
 		})
 		.error(function(data, status, headers, config) {
-			//alert("Bad things happening with Forbin.\n\nHTTP Status: " + status + "\n\n" + data);
+			
 			$scope.searched = false;
 			$scope.searching = false;
-			$scope.queryError = data;
+			if (status === 403) {
+				message = "You do not have access to update this password";
+				sweetAlert("Unauthorized", message, "error");
+				$scope.queryError = message;
+			}
 		});
 	};	
 

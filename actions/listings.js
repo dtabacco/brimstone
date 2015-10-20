@@ -33,13 +33,35 @@ exports.listingRenew = {
   version: 1.0,
   run: function(api, connection, next){
 
-      api.mongo.listingRenew(api, connection, function(err, listing) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      connection.response.listing = listing;
-      next(connection, true);
+      /***** This function requires Security *******/
+      console.log("Token: " + connection.rawConnection.req.headers.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.rawConnection.req.headers.authorization
+       //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to renew a listing")
+
+        api.mongo.listingRenew(api, connection,token.username, function(err, listing) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (listing === "Unauthorized") {
+          console.log("Returning Unauthorized")
+          connection.response = "Unauthorized"
+          connection.rawConnection.responseHttpCode = 403;
+          next(connection, true);
+        }
+        else {
+          connection.response.listing = listing;
+          next(connection, true);
+        }
+      });
     });
   }
 };
@@ -56,13 +78,35 @@ exports.listingEdit = {
   version: 1.0,
   run: function(api, connection, next){
 
-      api.mongo.listingEdit(api, connection, function(err, listing) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
+      /***** This function requires Security *******/
+      console.log("Token: " + connection.rawConnection.req.headers.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.rawConnection.req.headers.authorization
+       //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to update a listing")
+      
+        api.mongo.listingEdit(api, connection, token.username, function(err, listing) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (listing === "Unauthorized") {
+            console.log("Returning Unauthorized")
+            connection.response = "Unauthorized"
+            connection.rawConnection.responseHttpCode = 403;
+            next(connection, true);
+          }
+        else {
+        connection.response.listing = listing;
+        next(connection, true);
       }
-      connection.response.listing = listing;
-      next(connection, true);
+      });
     });
   }
 };
@@ -80,13 +124,35 @@ exports.listingImageRemove = {
   version: 1.0,
   run: function(api, connection, next){
 
-      api.mongo.listingImageRemove(api, connection, function(err, listing) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      connection.response.listing = listing;
-      next(connection, true);
+     /***** This function requires Security *******/
+      console.log("Token: " + connection.rawConnection.req.headers.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.rawConnection.req.headers.authorization
+       //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to remove an image from a listing")
+
+        api.mongo.listingImageRemove(api, connection, token.username, function(err, listing) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (listing === "Unauthorized") {
+            console.log("Returning Unauthorized")
+            connection.response = "Unauthorized"
+            connection.rawConnection.responseHttpCode = 403;
+            next(connection, true);
+        }
+        else {
+          connection.response.listing = listing;
+          next(connection, true);
+        }
+      });
     });
   }
 };
@@ -192,18 +258,39 @@ exports.listingsDeleteID = {
   description: "I Delete a listing",
   inputs: {
     required: ['id'],
-    optional: [],
+    optional: ['authorization'],
   },
   authenticated: false,
   outputExample: {},
   version: 1.0,
   run: function(api, connection, next){
-      api.mongo.listingsDeleteID(api, connection, function(err, users) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      next(connection, true);
+      /***** This function requires Security *******/
+      console.log("Token: " + connection.params.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.params.authorization
+       //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to delete a listing") 
+        api.mongo.listingsDeleteID(api, connection,token.username, function(err, listing) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (listing === "Unauthorized") {
+          console.log("Returning Unauthorized")
+          connection.response = "Unauthorized"
+          connection.rawConnection.responseHttpCode = 403;
+          next(connection, true);
+          }
+        else {
+        next(connection, true);
+        }
+      });
     });
   }
 };

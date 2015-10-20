@@ -149,7 +149,7 @@ var mongo = function (api, next) {
 
   
   /***************** Edit User Password ****************************/
-  api.mongo.userPasswordEdit = function(api, connection, next) {
+  api.mongo.userPasswordEdit = function(api, connection, token_user, next) {
 
       var query = {username:connection.params.username}
 
@@ -186,25 +186,32 @@ var mongo = function (api, next) {
         entry = {username:username, password:password, firstname:firstname, lastname:lastname, 
                 email:email, zipcode:zipcode, contact_phone:contact_phone, city:city, company_ind:company_ind, company_name:company_name, created_at:created_at, last_login:last_login}; 
   
-        //Update MongoDB
-        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
+        if (token_user === username) {
+
+          //Update MongoDB
+          api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
             if (err) { 
               next(err, false); 
             } 
-
             api.mongo.db.users.find(query, function doneSearching(err, results) {
-            if (err) { 
-                next(err, false); 
-            } 
-            next(err, results); 
+              if (err) { 
+                  next(err, false); 
+              } 
+              next(err, results); 
             });
           });
-        //next(err, results);   
+        }
+
+        else {
+          console.log("Not Authorized")
+          next(err, "Unauthorized");
+        }
+       
       });
   } 
 
   /***************** Edit User Profile ****************************/
-  api.mongo.userEdit = function(api, connection, next) {
+  api.mongo.userEdit = function(api, connection, token_user, next) {
 
       var query = {username:connection.params.username}
 
@@ -240,8 +247,12 @@ var mongo = function (api, next) {
         console.log("Printing Update")
         console.log(entry)
 
-        //Update MongoDB
-        api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
+        //Check Security
+        console.log(token_user)
+        console.log(username)
+        if (token_user === username) {
+          //Update MongoDB
+          api.mongo.db.users.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingScore(err, results) {
             if (err) { 
               next(err, false); 
             } 
@@ -253,7 +264,12 @@ var mongo = function (api, next) {
             next(err, results); 
             });
           });
-        //next(err, results);   
+        }
+        else {
+          console.log("Not Authorized")
+          next(err, "Unauthorized");
+        }
+         
       });
   } 
 
@@ -333,8 +349,8 @@ api.mongo.listingAdd = function(api, connection, next) {
   });
 };
 
-/***************** Edit User Profile ****************************/
-  api.mongo.addImage = function(api, connection, image_path, next) {
+/***************** Add Image to Listing ****************************/
+  api.mongo.addImage = function(api, connection, image_path, token_user, next) {
 
       var BSON = mongodb.BSONPure;
       var o_id = new BSON.ObjectID(connection.params.id);
@@ -356,118 +372,123 @@ api.mongo.listingAdd = function(api, connection, next) {
         //Should never return more than 1 result
         for (var i = 0; i < results.length; i++) {
 
-          console.log('for i = ' + i)
-          // If Image exists already, delete the old image first
-          if (results[i].image) {
-            console.log("Image Already Exists")
-            var fs = require('fs');
+          if (token_user === results[i].username) {
+            // If Image exists already, delete the old image first
+            if (results[i].image) {
+              console.log("Image Already Exists")
+              var fs = require('fs');
 
-            //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
-            console.log("Image Location: " + results[i].image)
-            console.log(__dirname)
-            // --- /home/brimstoneuser/brimstone/initializers
-            // --- C:\Users\tabacco\Desktop\brimstone\initializers
+              //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
+              console.log("Image Location: " + results[i].image)
+              console.log(__dirname)
+              // --- /home/brimstoneuser/brimstone/initializers
+              // --- C:\Users\tabacco\Desktop\brimstone\initializers
+              
+              filepath1 = __dirname.replace("initializers", "")
+              console.log(filepath1)
+              // --- /home/brimstoneuser/brimstone/
+              // --- C:\Users\tabacco\Desktop\brimstone\
+              filepath2 = filepath1 +  results[i].image
+              console.log(filepath2)
+              // --- /home/brimstoneuser/brimstone//public/listing_images/upload_036c41fd741e0f38af8d22c3b561b7b5.jpg
+              // --- C:\Users\tabacco\Desktop\brimstone\public\listing_images\c40e1871fce1b3a5f29108b766c9db27.jpg
+              //filepath3 = filepath2.replace("/", "/")
+              //console.log(filepath3)
+
+              fs.unlink(filepath2, function (err) {
+                if (err) console.log("failed to delete image"); 
+                console.log('successfully deleted image ' + filepath2);
+              });
+            }
+
+            if (results[i].thumbnail) {
+              console.log("Thumbnail Image Already Exists")
+              var fs = require('fs');
+
+              //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
+              console.log("Image Location: " + results[i].thumbnail)
+              console.log(__dirname)
+              
+              filepath1 = __dirname.replace("initializers", "")
+              console.log(filepath1)
+              filepath2 = filepath1 + "/" + results[i].thumbnail
+              console.log(filepath2)
+              filepath3 = filepath2.replace("/", "/")
+              console.log(filepath3)
+
+              fs.unlink(filepath3, function (err) {
+                if (err) console.log("failed to delete thumbnail: " + err); 
+                console.log('successfully deleted thumbnail' + filepath3);
+              });
+            }
+
+            //Create Thumbnail
+            //image_path = public\listing_images\e71e02492637559fd656b464ec6dcbcb.jpg
             
-            filepath1 = __dirname.replace("initializers", "")
-            console.log(filepath1)
-            // --- /home/brimstoneuser/brimstone/
-            // --- C:\Users\tabacco\Desktop\brimstone\
-            filepath2 = filepath1 +  results[i].image
-            console.log(filepath2)
-            // --- /home/brimstoneuser/brimstone//public/listing_images/upload_036c41fd741e0f38af8d22c3b561b7b5.jpg
-            // --- C:\Users\tabacco\Desktop\brimstone\public\listing_images\c40e1871fce1b3a5f29108b766c9db27.jpg
-            //filepath3 = filepath2.replace("/", "/")
-            //console.log(filepath3)
+            //Change backslashes to forward slashes globally
+            console.log(image_path)
+            //If it's a windows machine, this will convert to normal notation
+            image_path_cleaned = image_path.replace(/\\/g,"/")
+            console.log(image_path_cleaned)
+            image_filename = image_path_cleaned.split('/');
+            console.log(image_filename)
 
-            fs.unlink(filepath2, function (err) {
-              if (err) console.log("failed to delete image"); 
-              console.log('successfully deleted image ' + filepath2);
-            });
+            var Thumbnail = require('thumbnail');
+            var thumbnail = new Thumbnail('public/listing_images', 'public/listing_images');
+            thumbnail.ensureThumbnail(image_filename[2], 150, null, function (err, filename) {
+              // "filename" is the name of the thumb in '/path/to/thumbnails'
+              if (err) console.log("error with thumbnail " + err)
+              console.log(filename)
+              thumbnail_path = image_filename[0] + '/' + image_filename[1] + '/' + filename
+              console.log(thumbnail_path)
+
+              //Reset to 0, because for loop variable gets lost in callback
+              var i = 0;
+
+              //Add the new image to the listing
+              o_id = results[i]._id;
+              username = results[i].username;
+              title = results[i].title;
+              description = results[i].description;
+              price = results[i].price;
+              location = results[i].location;
+              zipcode = results[i].zipcode;
+              make = results[i].make;
+              model = results[i].model;
+              dimensions = results[i].dimensions;
+              condition = results[i].condition;
+              delivery = results[i].delivery;
+              unit = results[i].unit;
+              payment =  results[i].payment;
+              created_at = results[i].created_at;
+              updated_at = updated_at;
+              status = results[i].status;
+              views = results[i].views;
+              contact_email = results[i].contact_email;
+              contact_phone = results[i].contact_phone; 
+              image = image_path;
+              thumbnail = thumbnail_path;
+
+               //Create JSON Entry to update in MongoDB
+              entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
+                       created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+                       image:image, thumbnail:thumbnail}; 
+        
+              //Update MongoDB
+              api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
+                  if (err) { 
+                    next(err, false); 
+                  } 
+                  console.log("Done Updating Mongo - initiating next()")
+                  next(err, results);    
+              }); //End Mongo Listing Update Callback
+
+            }); //End Thumbnail Creation Callback
           }
-
-          if (results[i].thumbnail) {
-            console.log("Thumbnail Image Already Exists")
-            var fs = require('fs');
-
-            //Notes - Windows and Unix will both accept / path notation, so no need to use os separator
-            console.log("Image Location: " + results[i].thumbnail)
-            console.log(__dirname)
-            
-            filepath1 = __dirname.replace("initializers", "")
-            console.log(filepath1)
-            filepath2 = filepath1 + "/" + results[i].thumbnail
-            console.log(filepath2)
-            filepath3 = filepath2.replace("/", "/")
-            console.log(filepath3)
-
-            fs.unlink(filepath3, function (err) {
-              if (err) console.log("failed to delete thumbnail: " + err); 
-              console.log('successfully deleted thumbnail' + filepath3);
-            });
+          else {
+            console.log("Not Authorized")
+            next(err, "Unauthorized");
           }
-
-          //Create Thumbnail
-          //image_path = public\listing_images\e71e02492637559fd656b464ec6dcbcb.jpg
-          
-          //Change backslashes to forward slashes globally
-          console.log(image_path)
-          //If it's a windows machine, this will convert to normal notation
-          image_path_cleaned = image_path.replace(/\\/g,"/")
-          console.log(image_path_cleaned)
-          image_filename = image_path_cleaned.split('/');
-          console.log(image_filename)
-
-          var Thumbnail = require('thumbnail');
-          var thumbnail = new Thumbnail('public/listing_images', 'public/listing_images');
-          thumbnail.ensureThumbnail(image_filename[2], 150, null, function (err, filename) {
-            // "filename" is the name of the thumb in '/path/to/thumbnails'
-            if (err) console.log("error with thumbnail " + err)
-            console.log(filename)
-            thumbnail_path = image_filename[0] + '/' + image_filename[1] + '/' + filename
-            console.log(thumbnail_path)
-
-            //Reset to 0, because for loop variable gets lost in callback
-            var i = 0;
-
-            //Add the new image to the listing
-            o_id = results[i]._id;
-            username = results[i].username;
-            title = results[i].title;
-            description = results[i].description;
-            price = results[i].price;
-            location = results[i].location;
-            zipcode = results[i].zipcode;
-            make = results[i].make;
-            model = results[i].model;
-            dimensions = results[i].dimensions;
-            condition = results[i].condition;
-            delivery = results[i].delivery;
-            unit = results[i].unit;
-            payment =  results[i].payment;
-            created_at = results[i].created_at;
-            updated_at = updated_at;
-            status = results[i].status;
-            views = results[i].views;
-            contact_email = results[i].contact_email;
-            contact_phone = results[i].contact_phone; 
-            image = image_path;
-            thumbnail = thumbnail_path;
-
-             //Create JSON Entry to update in MongoDB
-            entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
-                     created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-                     image:image, thumbnail:thumbnail}; 
-      
-            //Update MongoDB
-            api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
-                if (err) { 
-                  next(err, false); 
-                } 
-                console.log("Done Updating Mongo - initiating next()")
-                next(err, results);    
-            }); //End Mongo Listing Update Callback
-
-          }); //End Thumbnail Creation Callback
         } //End FOR Loop
       }); //End Listing Search callback
   } 
@@ -651,7 +672,7 @@ api.mongo.getListing = function(api, connection, next) {
 
 
   /***************** Delete Listing by ID ****************************/
-  api.mongo.listingsDeleteID = function(api, connection, next) {
+  api.mongo.listingsDeleteID = function(api, connection, token_user, next) {
 
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
@@ -669,37 +690,44 @@ api.mongo.getListing = function(api, connection, next) {
 
       for (var i = 0; i < results.length; i++) {
 
-        if (results[i].image) {
-          console.log("Image Exists")
-          var fs = require('fs');
+        if (token_user === results[i].username) {
 
-          console.log("Image Location: " + results[i].image)
-          console.log(__dirname)
-        
-          filepath1 = __dirname.replace("initializers", "")
-          filepath2 = filepath1 + "/" + results[i].image
-          filepath3 = filepath2.replace("/", "/")
+          if (results[i].image) {
+            console.log("Image Exists")
+            var fs = require('fs');
 
-          fs.unlink(filepath3, function (err) {
-            if (err) next(err, false); 
-            console.log('successfully deleted ' + filepath3);
+            console.log("Image Location: " + results[i].image)
+            console.log(__dirname)
+          
+            filepath1 = __dirname.replace("initializers", "")
+            filepath2 = filepath1 + "/" + results[i].image
+            filepath3 = filepath2.replace("/", "/")
 
+            fs.unlink(filepath3, function (err) {
+              if (err) next(err, false); 
+              console.log('successfully deleted ' + filepath3);
+
+              api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
+                if (err) { 
+                  next(err, false); 
+                } 
+                next(err, true);   
+              });
+            });
+          }
+          else {
             api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
               if (err) { 
                 next(err, false); 
               } 
               next(err, true);   
             });
-          });
+          }
         }
         else {
-          api.mongo.db.listings.remove(query, function doneDeleting(err, results) {
-            if (err) { 
-              next(err, false); 
-            } 
-            next(err, true);   
-          });
-        }
+          console.log("Not Authorized")
+          next(err, "Unauthorized");
+        }  
       }
     });
 
@@ -707,7 +735,7 @@ api.mongo.getListing = function(api, connection, next) {
 
   /***************** listingRenew ****************************/
   
-  api.mongo.listingRenew = function(api, connection, next) {
+  api.mongo.listingRenew = function(api, connection, token_user, next) {
 
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
@@ -752,26 +780,33 @@ api.mongo.getListing = function(api, connection, next) {
            created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
            image:image, thumbnail:thumbnail}; 
 
-      //Update MongoDB
-      api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
-        if (err) { 
-         next(err, false); 
-        }  
-        console.log(results)
-        
-        console.log("Re-search for " + query )
-        api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
-        if (err) { 
-          next(err, false); 
-        }  
-        next(err, result);   
-        });  
-      });
+      if (token_user === username) {
+
+        //Update MongoDB
+        api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
+          if (err) { 
+           next(err, false); 
+          }  
+          console.log(results)
+          
+          console.log("Re-search for " + query )
+          api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
+          if (err) { 
+            next(err, false); 
+          }  
+          next(err, result);   
+          });  
+        });
+      }
+      else {
+        console.log("Not Authorized")
+        next(err, "Unauthorized");
+      }
     });
   };
 
   /***************** editListing ****************************/
-  api.mongo.listingEdit = function(api, connection, next) {
+  api.mongo.listingEdit = function(api, connection, token_user, next) {
 
     if (connection.params.make == 'undefined' ) {
       connection.params.make = ""
@@ -825,26 +860,33 @@ api.mongo.getListing = function(api, connection, next) {
            created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
            image:image, thumbnail:thumbnail}; 
 
-      //Update MongoDB
-      api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
-        if (err) { 
-         next(err, false); 
-        }  
-        console.log(results)
-        
-        console.log("Re-search for " + query )
-        api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
-        if (err) { 
-          next(err, false); 
-        }  
-        next(err, result);   
-        });  
-      });
+      if (token_user === username) {
+        //Update MongoDB
+        api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
+          if (err) { 
+           next(err, false); 
+          }  
+          console.log(results)
+          
+          console.log("Re-search for " + query )
+          api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
+          if (err) { 
+            next(err, false); 
+          }  
+          next(err, result);   
+          });  
+        });
+      }
+      else {
+        console.log("Not Authorized")
+        next(err, "Unauthorized");
+      }
+
     });
   };
 
     /***************** ListingImageRemove ****************************/
-  api.mongo.listingImageRemove = function(api, connection, next) {
+  api.mongo.listingImageRemove = function(api, connection, token_user, next) {
 
     var BSON = mongodb.BSONPure;
     var o_id = new BSON.ObjectID(connection.params.id);
@@ -887,61 +929,65 @@ api.mongo.getListing = function(api, connection, next) {
         updated_at = updated_at;
       }
 
-      if (previous_image) {
-        var fs = require('fs');
+      if (token_user === username) {
 
-        console.log("Image Location: " + previous_image)
-        console.log(__dirname)
-        
-        filepath1 = __dirname.replace("initializers", "")
-        filepath2 = filepath1 + "/" + previous_image
-        filepath3 = filepath2.replace("/", "/")
+        if (previous_image) {
+          var fs = require('fs');
 
-        fs.unlink(filepath3, function (err) {
-          if (err) console.log("failed to delete image");  
-          console.log('successfully deleted image ' + filepath3);  
+          console.log("Image Location: " + previous_image)
+          console.log(__dirname)
+          
+          filepath1 = __dirname.replace("initializers", "")
+          filepath2 = filepath1 + "/" + previous_image
+          filepath3 = filepath2.replace("/", "/")
+
+          fs.unlink(filepath3, function (err) {
+            if (err) console.log("failed to delete image");  
+            console.log('successfully deleted image ' + filepath3);  
+          });
+        }    
+
+         if (previous_thumbnail) {
+          var fs = require('fs');
+
+          console.log("Image Location: " + previous_thumbnail)
+          console.log(__dirname)
+          
+          filepath1 = __dirname.replace("initializers", "")
+          filepath2 = filepath1 + "/" + previous_thumbnail;
+          filepath3 = filepath2.replace("/", "/")
+
+          fs.unlink(filepath3, function (err) {
+            if (err) console.log("failed to delete thumbnail"); 
+            console.log('successfully deleted thumbail ' + filepath3);  
+          });
+        }      
+
+        //Create JSON Entry to update in MongoDB
+        entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
+             created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
+             image:image, thumbnail:thumbnail}; 
+
+        //Update MongoDB
+        api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
+          if (err) { 
+           next(err, false); 
+          }  
+          console.log(results)
+          
+          console.log("Re-search for " + query )
+          api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
+          if (err) { 
+            next(err, false); 
+          }  
+          next(err, result);   
+          });  
         });
-      }    
-
-       if (previous_thumbnail) {
-        var fs = require('fs');
-
-        console.log("Image Location: " + previous_thumbnail)
-        console.log(__dirname)
-        
-        filepath1 = __dirname.replace("initializers", "")
-        filepath2 = filepath1 + "/" + previous_thumbnail;
-        filepath3 = filepath2.replace("/", "/")
-
-        fs.unlink(filepath3, function (err) {
-          if (err) console.log("failed to delete thumbnail"); 
-          console.log('successfully deleted thumbail ' + filepath3);  
-        });
-      }      
-
-      //var now = new Date();
-      //updated_at = now;
-
-      //Create JSON Entry to update in MongoDB
-      entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
-           created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-           image:image, thumbnail:thumbnail}; 
-
-      //Update MongoDB
-      api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
-        if (err) { 
-         next(err, false); 
-        }  
-        console.log(results)
-        
-        console.log("Re-search for " + query )
-        api.mongo.db.listings.find(query, function doneSearchingForListing(err, result) {
-        if (err) { 
-          next(err, false); 
-        }  
-        next(err, result);   
-        });  
-      });
+      }
+      else {
+        console.log("Not Authorized")
+        next(err, "Unauthorized");
+      }
     });
   };
 
@@ -990,554 +1036,6 @@ api.mongo.getListing = function(api, connection, next) {
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  /***************** editQuestion ****************************/
-  api.mongo.editQuestion = function(api, connection, next) {
-
-        var BSON = mongodb.BSONPure;
-        var o_id = new BSON.ObjectID(connection.params.id);
-        var query = { "_id":o_id};
-
-        var results = [];
-
-        //Find the Question
-        api.mongo.db.questions.find(query, function doneSearchingForQuestion(err, result) {
-            if (err) { 
-              next(err, false); 
-            } 
-
-            //Load existing data so it is not lost in update
-            for (var i = 0; i < result.length; i++) {
-              answer_record = result[i].answers;
-              questionTitle = result[i].questionTitle;
-              questionBody = result[i].questionBody;
-              username = result[i].username;
-              tags = result[i].tags;
-              question_id = result[i]._id;
-              notify_users = result[i].notify;
-              created_at = result[i].created_at;
-              status = result[i].status;
-              views = result[i].views;
-              numAnswers = result[i].numAnswers;
-            }         
-
-            //Do Updates Here....
-            questionTitle = connection.params.questionTitle;
-            questionBody = connection.params.questionBody;
-            tags = connection.params.tags;
-
-            //Create JSON Entry to update in MongoDB
-            entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify_users, created_at:created_at, status:status, views:views, answers:answer_record, numAnswers:numAnswers}
-
-            //Update MongoDB
-            api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneAddingAnswer(err, results) {
-              if (err) { 
-               next(err, false); 
-              }  
-              console.log(results)
-              
-              console.log("Re-search for " + query )
-              api.mongo.db.questions.find(query, function doneSearchingForQuestion(err, result) {
-              if (err) { 
-                next(err, false); 
-              } 
-
-              connection.response.content = result; 
-              next(err, result);   
-              });  
-            });
-
-        });
-  };
-
-  
-
-
-  /***************** Get Question by ID and Add Extra ****************************/
-  api.mongo.questionsGetFullExtra = function(api, connection, next) {
-
-        var BSON = mongodb.BSONPure;
-        var o_id = new BSON.ObjectID(connection.params.id);
-        var query = { "_id":o_id};
-
-        var results = [];
-
-        //Find the Question
-        api.mongo.db.questions.find(query, function doneSearchingForQuestion(err, results) {
-            if (err) { 
-              next(err, false); 
-            } 
-
-            var numRunningQueries = 0;
-            var i;
-
-            //Populate the score of the Question Asker
-            var question_user_query = {"username":results[0].username}
-            api.mongo.db.users.find(question_user_query, function doneSearchingForUser(err, q_id_results) {
-              if (err) { 
-                next(err, false); 
-              } 
-
-              if (q_id_results[0].acceptedAnswers)
-              {
-                results[0].userdata_acceptedAnswers = q_id_results[0].acceptedAnswers;
-              }
-              else {
-                results[0].userdata_acceptedAnswers = 0
-              }
-
-              results[0].userdata_answerCount = q_id_results[0].answerCount;
-   
-              //Only try to populate users score info if there are answers
-              if (results[0].answers) {
-
-                console.log("Answers were found")
-                for (i = 0; i < results[0].answers.length; i++) {
-                  ++numRunningQueries;
-                  var user_query = {"username":results[0].answers[i].username}
-                  console.log("Running " + JSON.stringify(user_query))
-                  console.log("Running " + user_query)
-
-                  api.mongo.db.users.find(user_query, function doneSearchingForUser(err, id_results) {
-                    if (err) { throw err;}
-                    --numRunningQueries;
-                    console.log('Found ' + JSON.stringify(id_results))
-
-                    for (var j = 0; j < results[0].answers.length; j++)
-                      {
-                        if (id_results[0].username === results[0].answers[j].username){
-                          //Copy all attributes from User Record to Answer Records
-                          results[0].answers[j].userdata_acceptedAnswers = id_results[0].acceptedAnswers;
-                          results[0].answers[j].userdata_answerCount = id_results[0].answerCount;
-                        }
-                      }
-                    if (numRunningQueries === 0) {
-                      console.log("Exit Condition Met")
-                      connection.response.content = results; 
-                      next(err, results);
-                    }
-                  });
-                };
-              } 
-              else {
-                console.log("No Answers Yet")
-                connection.response.content = results; 
-                next(err, results);
-              }
-            });
-        });
-  };
-
-
-
-
-  /******************  Add Vote  *** ***************/
-   api.mongo.addVote = function(api, connection, next) {
-
-    var BSON = mongodb.BSONPure;
-    var o_id = new BSON.ObjectID(connection.params.question_id);
-    var query = { "_id":o_id};
-
-    var answer_record = [];
-    var update = true;
-
-    //Find the Question
-    api.mongo.db.questions.find(query, function doneSearching(err, result) {
-      if (err) { 
-         next(err, false); 
-      } 
-
-      //Load existing data so it is not lost in update
-      for (var i = 0; i < result.length; i++) {
-
-        answer_record = result[i].answers;
-        questionTitle = result[i].questionTitle;
-        questionBody = result[i].questionBody;
-        username = result[i].username;
-        tags = result[i].tags;
-        notify = result[i].notify;
-        created_at = result[i].created_at;
-        status = result[i].status;
-        views = result[i].views;
-        numAnswers = result[i].numAnswers
-      }
-
-      console.log("Starting the Answer Loop: Looking for: " + connection.params.answer_id + connection.params.vote )
-      //Update the accepted status of the answer
-      for (var i = 0; i < answer_record.length; i++) {
-
-        if (connection.params.vote === "up" && i === parseInt(connection.params.answer_id)) {
-
-            //Check to see if Voter is NOt in the Existing voters array
-            // Position will be returned or -1 if not present
-            if (answer_record[i].voters.indexOf(connection.params.userName) === -1) {
-              console.log("Matched Up and Answer ID")
-              answer_record[i].upvote = answer_record[i].upvote + 1;
-              answer_record[i].voters.push(connection.params.userName);
-            }
-            else {
-              console.log("Used Already Voted");
-              update = false;
-              next(err, "duplicate")
-            }
-        }
-        if (connection.params.vote === "down" && i === parseInt(connection.params.answer_id)) {
-
-          if (answer_record[i].voters.indexOf(connection.params.userName) === -1) {
-          console.log("Matched Down and Answer ID")
-          answer_record[i].downvote = answer_record[i].downvote + 1;
-          answer_record[i].voters.push(connection.params.userName);
-          }
-          else {
-            console.log("Used Already Voted");
-            update = false;
-            next(err, "duplicate")
-          }
-        }
-      }
-
-      if (update) {
-      entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify, created_at:created_at, status:status, views:views, answers:answer_record, numAnswers:numAnswers}
-
-      //Create JSON Entry to update in MongoDB
-      api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneupdatingQuestions(err, results) {
-        if (err) { 
-          next(err, false); 
-        } 
-        console.log(results)
-        connection.response.content = results; 
-        next(err, true);     
-        });
-      }
-    });
-   };
-
-   
-   /****************** Delete Answer ************************/
-   api.mongo.deleteAnswer = function(api, connection, token_user, next) {
-
-    var BSON = mongodb.BSONPure;
-    var o_id = new BSON.ObjectID(connection.params.question_id);
-    var query = { "_id":o_id};
-
-    var answer_record = [];
-    var best_answer_username;
-
-    answerMessage = connection.params.message;
-
-    api.mongo.db.questions.find(query, function doneSearching(err, result) {
-      if (err) { 
-         next(err, false); 
-      } 
-
-      //Load existing data so it is not lost in update
-      for (var i = 0; i < result.length; i++) {
-
-        answer_record = result[i].answers;
-        questionTitle = result[i].questionTitle;
-        questionBody = result[i].questionBody;
-        username = result[i].username;
-        tags = result[i].tags;
-        notify = result[i].notify;
-        created_at = result[i].created_at;
-        status = result[i].status;
-        views = result[i].views;
-        numAnswers = result[i].numAnswers
-      }
-
-      console.log("answer_record length:" + answer_record.length)
-
-      //Go Through all the answers
-      for (var i = 0; i < answer_record.length; i++) {
-
-        console.log("i = " + i )
-        console.log("answer_id =" + answer_record[i].id)
-        console.log("delete answer_id = " + connection.params.answer_id  )
-
-        //This will return the answer we want to delete
-        if (answer_record[i].id === parseInt(connection.params.answer_id)) {
-          //answer_record[i].
-          
-          console.log("Will remove answer_id " + connection.params.answer_id )
-          console.log("deleting " + answer_record[i].username + ' ' + answer_record[i].answerBody )
-          
-          //Remove element at the index where the match occured and remove only 1 element
-          answer_record.splice(i, 1);
-
-          //Reduce the number of answers
-          numAnswers = numAnswers - 1;
-        }
-
-      }
-
-      //Otherwise answers will be an empty array and crash on load
-      if (numAnswers === 0) {
-        answer_record = null;
-        console.log("clearing answers array")
-      }
-
-      entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify, created_at:created_at, status:status, views:views, answerMessage:answerMessage, answers:answer_record, numAnswers:numAnswers}
-
-      console.log(entry)
-
-      //Security
-      if (token_user === username) {
-
-        api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneupdatingQuestions(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          console.log("updated results\n")
-          results.userScoreAdjust = username;
-          console.log(results)
-          connection.response.content = results; 
-          //next(err, best_answer_username); 
-          next (err, results)    
-        });
-      } 
-      else {
-        console.log("Not Authorized")
-        next(err, "Unauthorized");
-      }
-    });
-  };
-
-  /****************** Accept Answer ************************/
-   api.mongo.acceptAnswer = function(api, connection, token_user, next) {
-
-    var BSON = mongodb.BSONPure;
-    var o_id = new BSON.ObjectID(connection.params.question_id);
-    var query = { "_id":o_id};
-
-    var answer_record = [];
-    var best_answer_username;
-
-    answerMessage = connection.params.message;
-
-    api.mongo.db.questions.find(query, function doneSearching(err, result) {
-      if (err) { 
-         next(err, false); 
-      } 
-
-      //Load existing data so it is not lost in update
-      for (var i = 0; i < result.length; i++) {
-
-        answer_record = result[i].answers;
-        questionTitle = result[i].questionTitle;
-        questionBody = result[i].questionBody;
-        username = result[i].username;
-        tags = result[i].tags;
-        notify = result[i].notify;
-        created_at = result[i].created_at;
-        status = 'closed';
-        views = result[i].views;
-        numAnswers = result[i].numAnswers
-      }
-
-      console.log("answer_record length:" + answer_record.length)
-
-      //Update the accepted status of the answer
-      for (var i = 0; i < answer_record.length; i++) {
-
-        if (i === parseInt(connection.params.answer_id)) {
-          answer_record[i].accepted = "yes";
-          best_answer_username = answer_record[i].username;
-        }
-       
-      }
-
-      console.log(answerMessage)
-
-      entry = {questionTitle:questionTitle, questionBody:questionBody,  username:username, tags:tags, notify:notify, created_at:created_at, status:status, views:views, answerMessage:answerMessage, answers:answer_record, numAnswers:numAnswers}
-
-      console.log(entry)
-
-       //Create Array of information to push during the notification
-      notify_info = [];
-      notify_info.push({best:best_answer_username})
-      notify_info.push({question_id:connection.params.question_id})
-      notify_info.push({asker:username})
-      notify_info.push({questionTitle:questionTitle})
-      notify_info.push({answerMessage:answerMessage})
-
-      if (token_user === username) {
-
-        api.mongo.db.questions.update({ "_id": o_id }, entry, {safe : true}, function doneupdatingQuestions(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          console.log("updated results\n")
-          console.log(results)
-          connection.response.content = results; 
-          //next(err, best_answer_username); 
-          next (err, notify_info)    
-        });
-      } 
-      else {
-        console.log("Not Authorized")
-        next(err, "Unauthorized");
-      }
-    });
-  };
-
-  /***************** Get My Questions ****************************/
-  api.mongo.questionsGetMine = function(api, connection, next) {
-
-    // TO DO Need to search on user ID
-    var query = {username:connection.params.userName};
-
-    api.mongo.db.questions.find(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
-
-   /***************** Get My Answers ****************************/
-  api.mongo.answersGetMine = function(api, connection, next) {
-
-    var query = {"answers.username":connection.params.userName};
-
-    api.mongo.db.questions.find(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
-
-
-
-  
-
-
-
-  /***************** Search for User ****************************/
-  api.mongo.userGetEmail = function(api, search_username, next) {
-
-        console.log("search for: " + search_username)
-        var query = {username:search_username}
-
-        api.mongo.db.users.find(query, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          console.log("MongoDB result: " + results[0])
-          //connection.response.content = results; 
-          next(err, results);   
-        });
-  };
-
-
-
-  
-  /***************** Get Archive of questions ****************************/
-  api.mongo.questionArchive = function(api, connection, next) {
-
-        api.mongo.db.questionarchive.find({}, {_id:0}, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("Questions:" + results)
-          next(err, results);   
-        });
-  };
-
-
-  
-  /***************** Get Archive of Search ****************************/
-  api.mongo.searchArchive = function(api, connection, next) {
-
-        api.mongo.db.searcharchive.find({}, {_id:0}, function doneSearching(err, results) {
-          if (err) { 
-            next(err, false); 
-          } 
-          //connection.response.content = results; 
-          console.log("Searches:" + results)
-          next(err, results);   
-        });
-  };
-
-   /***************** Get Archive of Search ****************************/
-  api.mongo.AddsearchArchive = function(api, connection, next) {
-
-        console.log ("adding search to archive: " + connection.params.query)
-
-        //Create JSON Entry to update in MongoDB
-        
-        archentry = { searchquery:connection.params.query}
-          api.mongo.db.searcharchive.insert(archentry, {safe : true}, function doneCreatingQuestionEntry(err, results) {
-            if (err) { 
-               //next(err, false); 
-            } 
-            console.log("Added Search to Archive")
-          });
-  };
-
-   /***************** Delete All products ****************************/
-  api.mongo.questionsArchiveDelete = function(api, connection, next) {
-
-    var query = {}
-
-    api.mongo.db.questionarchive.remove(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-
-      console.log("Deleted the Question Archive")
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
-
-   /***************** Delete All products ****************************/
-  api.mongo.searchArchiveDelete = function(api, connection, next) {
-
-    var query = {}
-
-    api.mongo.db.searcharchive.remove(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-      console.log("Deleted the Search Archive")
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
-
-  /***************** Search for Most Recent ****************************/
-  api.mongo.searchRecent = function(api, connection, next) {
-
-    var query = {$natural:-1}
-    //_id contains a timestamp in it, which can be searched via $natural
-    //var query = {created_at:-1}
-
-    api.mongo.db.questions.find().limit(5).sort(query, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-      console.log("Found Most Recent")
-      connection.response.content = results; 
-      next(err, true);   
-    });
-  };
 
   
 
