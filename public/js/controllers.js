@@ -652,8 +652,6 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 	$scope.searchListings = function() {
 
 		if (!$scope.listing.query) {
-   			$scope.queryError = 'You Must provide a query';
-   			console.log("Error")
    			$scope.listing.query = "*"		
 		}
       		
