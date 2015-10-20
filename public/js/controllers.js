@@ -669,6 +669,7 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		
 		.success(function(response) {
 
+			listing_count = 0;
 			for (var i = 0; i < response.listing.length; i++) {
 				response.listing[i].id = response.listing[i]._id;
 
@@ -686,10 +687,14 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 				if (response.listing[i].thumbnail == null) {
 				response.listing[i].thumbnail = "/assets/img/placeholder1.png"
 				}
+				if (response.listing[i].status === "active") {
+					listing_count++;
+				}
 			}
 
+
 			$scope.listings = response.listing;
-			$scope.num_of_results = response.listing.length;
+			$scope.num_of_results = listing_count++;
 			$scope.original_query = $scope.listing.query;
 			$scope.searching = false;
 			$scope.complete.status = true;
