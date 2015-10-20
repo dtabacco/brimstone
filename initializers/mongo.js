@@ -1003,8 +1003,13 @@ api.mongo.getListing = function(api, connection, next) {
       console.log("Zip code is null")
        query =  { $text: { $search: connection.params.query } }
     }
-    else {
-      console.log("Zip code exists")
+    else if (connection.params.zip !== "null" && connection.params.query === "*" ) {
+      console.log("Zip code with * query")
+       query =  { zipcode:connection.params.zip }
+    }
+
+    else  {
+      console.log("Zip code with specific query")
       query = { $text: { $search: connection.params.query }, zipcode:connection.params.zip}
     }
 
