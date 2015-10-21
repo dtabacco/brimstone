@@ -692,6 +692,22 @@ api.mongo.getListing = function(api, connection, next) {
 
         if (token_user === results[i].username) {
 
+          if (results[i].thumbnail) {
+            var fs = require('fs');
+
+            console.log("Image Location: " + results[i].thumbnail)
+            console.log(__dirname)
+            
+            filepath1 = __dirname.replace("initializers", "")
+            filepath2 = filepath1 + "/" + results[i].thumbnail;
+            filepath3 = filepath2.replace("/", "/")
+
+            fs.unlink(filepath3, function (err) {
+              if (err) console.log("failed to delete thumbnail"); 
+              console.log('successfully deleted thumbail ' + filepath3);  
+            });
+          }      
+
           if (results[i].image) {
             console.log("Image Exists")
             var fs = require('fs');
