@@ -95,7 +95,22 @@ var mongo = function (api, next) {
     });
   };
 
-  
+  /***************** Search for Users and return usernames only ****************************/
+  api.mongo.usersListLite = function(api, connection, next) {
+
+    var query = {}
+    var projection = {username:1}
+
+    api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      console.log(results)
+      next(err, results);   
+    });
+  };
+
   /***************** Search for User and return lite profile ****************************/
   api.mongo.userProfileLite = function(api, connection, next) {
 
@@ -113,20 +128,24 @@ var mongo = function (api, next) {
   };
 
   /***************** Search for User ****************************/
-  api.mongo.userFind = function(api, connection, next) {
+  api.mongo.userFind = function(api, connection, token_user, next) {
 
     var query = {username:connection.params.username}
 
     var projection = {username:1, firstname:1, lastname:1, city:1, email:1, zipcode:1, contact_phone:1, company_ind:1, company_name:1, created_at:1, last_login:1}
 
-    api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-      //connection.response.content = results; 
-      //console.log(results)
-      next(err, results);   
-    });
+    if (token_user === connection.params.username) {
+      api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
+        if (err) { 
+          next(err, false); 
+        } 
+        next(err, results);   
+      });
+    }
+    else {
+      console.log("Not Authorized")
+      next(false, "Unauthorized");
+    }  
   };
 
     /***************** Search for User ****************************/

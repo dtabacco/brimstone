@@ -43,6 +43,28 @@ exports.usersList = {
   }
 };
 
+exports.userListLite = {
+  name: "userListLite",
+  description: "I list all the users in a lite fashion",
+  inputs: {
+    required: [],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.usersListLite(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.users = users;
+      next(connection, true);
+    });
+  }
+};
+
 
 exports.usersDelete = {
   name: "usersDelete",
@@ -196,13 +218,37 @@ exports.userProfileList = {
   outputExample: {},
   version: 1.0,
   run: function(api, connection, next){
-      api.mongo.userFind(api, connection, function(err, users) {
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      connection.response.users = users;
-      next(connection, true);
+
+       /***** This function requires Security *******/
+      console.log("Token: " + connection.rawConnection.req.headers.authorization)
+      //Assign Token from Header into Token Variable
+      var token = connection.rawConnection.req.headers.authorization
+
+      //Verify Token from the header
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Returning: " + token);
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        console.log(token.username + " is tryng to load the full profile")
+
+        api.mongo.userFind(api, connection, token.username, function(err, users) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (users === "Unauthorized") {
+            console.log("Returning Unauthorized")
+            connection.response = "Unauthorized"
+            connection.rawConnection.responseHttpCode = 403;
+            next(connection, true);
+          }
+        else {
+          connection.response.users = users;
+          next(connection, true);
+        }
+      });
     });
   }
 };

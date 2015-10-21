@@ -746,7 +746,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	$scope.buildUsernameList = function() { 
 		
 		//Define REST Endpoint
-		$scope.searchQuery = restURLEndpoint + '/api/users';
+		$scope.searchQuery = restURLEndpoint + '/api/users/lite/list';
 
 		//Execute GET Request
 		$http.get($scope.searchQuery)
@@ -972,12 +972,12 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		}
 	
 		console.log("--> Fetching User Profile")
-
+	
 		//Define REST Endpoint
 		$scope.searchQuery = restURLEndpoint + '/api/users/' + $scope.user.username ;
 
-		//Execute GET Request
-		$http.get($scope.searchQuery)
+		//Execute GET Request - Special case to include header for authorization
+		$http.get($scope.searchQuery, { headers: {'Authorization': localStorage.brimstone_token}})
 		.success(function(response) {
 		
 			console.log(response)
@@ -991,7 +991,11 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 				 	
 		})
 		.error(function(data, status, headers, config) {
-			console.log(data);
+			if (status === 403) {
+				message = "You do not have access to view this profile";
+				sweetAlert("Unauthorized", message, "error");
+				//$scope.queryError = message;
+			}
 		});	
 	};
 
