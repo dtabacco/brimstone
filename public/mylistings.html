@@ -39,88 +39,82 @@
       <div ng-include="'header.html'">
       </div>
 
-      <div ng-init="getUserProfile()">
-        <div id="blue">
-          <div class="container">
-            <div class="row centered">
-              <div class="col-lg-8 col-lg-offset-2">
-              <h1>My Profile</h1>
-              </div>
-            </div><!-- row -->
-          </div><!-- container -->
-        </div><!--  bluewrap --> 
-         
-        <div class="container w">
-          <div class="row">
-            <div>
-              <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
-              <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+      <div id="blue">
+        <div class="container">
+          <div class="row centered">
+            <div class="col-lg-8 col-lg-offset-2">
+            <h1>My Profile</h1>
             </div>
-          <div class="col-lg-2">
-            &nbsp;
-          </div><!-- col-lg-3 -->
-
-          <div class="col-lg-8">
-             <div class="row">
-                <div class="col-md-12">  
-                  <div ng-controller="listingManager">
-                    
-                      <div ng-init="getMyListings()">
-                        
-                        <h3 class="title_heading">Your Active Listings:</h3><br>
-                        <table class="table table-hover">
-                          <tr ng-repeat="listing in listings| limitTo:50 | filter: {status:'active'}">
-                              <td><a ng-href="viewlisting.html?id={{listing.id}}">{{listing.title}}</a> </td>
-                              <td><b>{{listing.views}} Views </b></td>
-                              <td> <a ng-href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning">edit</button></a> </td>
-                              <td><button class="btn btn-danger" ng-click="deleteListing(listing.id)" >delete</button></td>
-                          </tr>
-                        </table>
-                        <br>
-
-                        <h3 class="title_heading">Your Expired Listings:</h3><br>
-                        <table class="table table-hover">
-                          <tr ng-repeat="listing in listings| limitTo:50 | filter: {status:'expired'}">
-                              <td><a ng-href="viewlisting.html?id={{listing.id}}">{{listing.title}}</a> </td>
-                              <td><b>{{listing.views}} Views </b></td>
-                              <td> <a ng-href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning">edit</button></a> </td>
-                              <td><button class="btn btn-info" ng-click="renewListing(listing.id)">renew</button></td>
-                              <td><button class="btn btn-danger" ng-click="deleteListing(listing.id)">delete</button></td>
-                          </tr>
-                        </table>
-                      </div>
-                     
-                    </br>
-                  </div>
-                </div>
-              </div>       
+          </div><!-- row -->
+        </div><!-- container -->
+      </div><!--  bluewrap --> 
        
-          </div><!-- col-lg-4 -->
+      <div class="container w">
+        <div class="row">
+          <div>
+            <h5 ng-cloak ng-show="queryError"><p class="bg-danger">{{queryError}}</p></h5>
+            <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
+          </div>
+        <div class="col-lg-2">
+          &nbsp;
+        </div><!-- col-lg-3 -->
 
-           <div class="col-lg-2">
-            &nbsp;
-          </div><!-- col-lg-2 -->
+        <div class="col-lg-8">
+           <div class="row">
+              <div class="col-md-12">  
+                <div ng-controller="listingManager">
+                  
+                    <div ng-init="getMyListings()">
+                      
+                      <h3 class="title_heading">Your Active Listings:</h3><br>
+                      <table class="table table-hover">
+                        <tr ng-repeat="listing in listings| limitTo:50 | filter: {status:'active'}">
+                            <td><a ng-href="viewlisting.html?id={{listing.id}}">{{listing.title}}</a> </td>
+                            <td><b>{{listing.views}} Views </b></td>
+                            <td> <a ng-href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning">edit</button></a> </td>
+                            <td><button class="btn btn-danger" ng-click="deleteListing(listing.id)" >delete</button></td>
+                        </tr>
+                      </table>
+                      <br>
 
-
-        </div><!-- row -->
-        <br>
-      </div><!-- container -->
-    </div> <!-- End of GetUserProfile -->   
-            
-
-           
-
+                      <h3 class="title_heading">Your Expired Listings:</h3><br>
+                      <table class="table table-hover">
+                        <tr ng-repeat="listing in listings| limitTo:50 | filter: {status:'expired'}">
+                            <td><a ng-href="viewlisting.html?id={{listing.id}}">{{listing.title}}</a> </td>
+                            <td><b>{{listing.views}} Views </b></td>
+                            <td> <a ng-href="editlisting.html?id={{listing.id}}"><button class="btn btn-warning">edit</button></a> </td>
+                            <td><button class="btn btn-info" ng-click="renewListing(listing.id)">renew</button></td>
+                            <td><button class="btn btn-danger" ng-click="deleteListing(listing.id)">delete</button></td>
+                        </tr>
+                      </table>
+                    </div>
+                   
+                  </br>
+                </div>
+              </div>
+            </div>       
      
-        <div ng-include="'footer.html'"></div> 
-      </div>  <!-- End of User Manager Controller -->
-            
-  
-      <!-- Bootstrap core JavaScript
-      ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
-      <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
-      <script src="bootstrap/js/bootstrap.min.js"></script>
-    </body>
+        </div><!-- col-lg-4 -->
+
+         <div class="col-lg-2">
+          &nbsp;
+        </div><!-- col-lg-2 -->
+
+
+      </div><!-- row -->
+      <br>
+    </div><!-- container -->
+   
+      <div ng-include="'footer.html'"></div> 
+    </div>  <!-- End of User Manager Controller -->
+          
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+  </body>
 
 </html>
 
