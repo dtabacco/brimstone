@@ -651,8 +651,10 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 	$scope.searchListings = function() {
 
+		query = $scope.listing.query;
+
 		if (!$scope.listing.query) {
-   			$scope.listing.query = "*"		
+   			query = "*"		
 		}
       		
 		$scope.queryError = null;
@@ -661,7 +663,7 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		$scope.searching = true;
 		
 		//$scope.searchQuery = 'http://localhost:9010/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
-		$scope.searchQuery = restURLEndpoint + '/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
+		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip ;
 
 		console.log('URL:' + $scope.searchQuery)
 		
