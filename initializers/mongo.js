@@ -999,13 +999,17 @@ api.mongo.getListing = function(api, connection, next) {
     console.log("phrase " + connection.params.query)
     console.log("Zip " + connection.params.zip)
 
-    if (connection.params.zip === "null") {
+    if (connection.params.zip === "null" && connection.params.query === "*") {
+      console.log("Null Zip Code with * Query")
+       query =  {};
+    }
+    else if (connection.params.zip === "null") {
       console.log("Zip code is null")
-       query =  { $text: { $search: connection.params.query } }
+       query =  { $text: { $search: connection.params.query } };
     }
     else if (connection.params.zip !== "null" && connection.params.query === "*" ) {
       console.log("Zip code with * query")
-       query =  { zipcode:connection.params.zip }
+       query =  { zipcode:connection.params.zip };
     }
 
     else  {
