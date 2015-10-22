@@ -399,19 +399,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			
 			if (response.listing[0].unit == "") {
 				response.listing[0].unit = "N/A";
-			} /*
-			if (response.listing[0].condition == "") {
-				response.listing[0].condition = "Not Specified";
 			} 
-			if (response.listing[0].make == "") {
-				response.listing[0].make = "Not Specified";
-			} 
-			if (response.listing[0].model == "") {
-				response.listing[0].model = "Not Specified";
-			}
-			if (response.listing[0].dimensions == "") {
-				response.listing[0].dimensions = "Not Specified";
-			 }  */
 
 			if (response.listing[0].payment) {
 				console.log(response.listing[0].payment)
@@ -637,20 +625,89 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		$scope.listing.zip = QueryString.zipcode;
 	}
 	else {
-		//$scope.listing.zip = "00000";
-		console.log("Setting zip to null")
 		$scope.listing.zip = null;
 	}
 
-	console.log('scope.listing.query:' + $scope.listing.query )
-	console.log('scope.listing.zip:' + $scope.listing.zip )
+	//console.log('scope.listing.query:' + $scope.listing.query )
+	//console.log('scope.listing.zip:' + $scope.listing.zip )
 
 	//This is required or it will send as JSON by default and fail
 	$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 	$http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
 
+	
+	$scope.searchListingsFromIndexSearch = function() {
+
+		console.log("--> Running Search From Index")
+
+		//console.log(window.document.location.search)
+
+		// Do not run query if user did not come to search page from Index Search
+		// query parameter will not be present in URL
+		if (window.document.location.search.indexOf("query") == -1) {
+			return;
+		}
+
+		query = $scope.listing.query;
+		if (!$scope.listing.query) {
+   			query = "*"		
+		}
+      		
+		$scope.queryError = null;
+		$scope.statusmsg = null;
+		$scope.searched = true;
+		$scope.searching = true;
+		
+		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip ;
+
+		console.log('URL:' + $scope.searchQuery)
+		
+		$http.get($scope.searchQuery)
+		
+		.success(function(response) {
+
+			listing_count = 0;
+			for (var i = 0; i < response.listing.length; i++) {
+				response.listing[i].id = response.listing[i]._id;
+
+				if (response.listing[i].title.length > 100) {
+					response.listing[i].title = response.listing[i].title.substring(0, 100) + "...";
+				}
+
+				if (response.listing[i].description.length > 250) {
+					response.listing[i].description = response.listing[i].description.substring(0, 250) + "...";
+				}
+
+				if (response.listing[i].image == null) {
+				response.listing[i].image = "/assets/img/placeholder1.png"
+				}
+				if (response.listing[i].thumbnail == null) {
+				response.listing[i].thumbnail = "/assets/img/placeholder1.png"
+				}
+				if (response.listing[i].status === "active") {
+					listing_count++;
+				}
+			}
+
+
+			$scope.listings = response.listing;
+			$scope.num_of_results = listing_count++;
+			$scope.original_query = $scope.listing.query;
+			$scope.searching = false;
+			$scope.complete.status = true;
+			console.log(response)
+						 	
+		})
+		.error(function(data, status, headers, config) {
+			
+			$scope.searched = false;
+			$scope.searching = false;
+			$scope.queryError = data;
+		});	
+	};
 	$scope.searchListings = function() {
 
+		console.log("--> Running Search")
 		query = $scope.listing.query;
 
 		if (!$scope.listing.query) {
@@ -662,7 +719,6 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		$scope.searched = true;
 		$scope.searching = true;
 		
-		//$scope.searchQuery = 'http://localhost:9010/api/listings/' + $scope.listing.query + '/' + $scope.listing.zip ;
 		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip ;
 
 		console.log('URL:' + $scope.searchQuery)

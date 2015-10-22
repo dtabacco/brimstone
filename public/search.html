@@ -38,15 +38,15 @@
       </div>
 
       <!-- Name the controller which manages this part of the page --> 
-      <div ng-controller="SearchManager" data-ng-init="searchListings()">
+      <div ng-controller="SearchManager" data-ng-init="searchListingsFromIndexSearch()">
 
         <div id="searchwrap">
           <div class="container">
             <div class="row centered">
               <div class="col-lg-6 col-lg-offset-3">
              <br><br>
-              <!--<form class="form-horizontal" role="form" ng-submit="searchListings()">-->
-              <form class="form-horizontal" role="form" action="search.html">
+              <form class="form-horizontal" role="form" ng-submit="searchListings()">
+              <!--<form class="form-horizontal" role="form" action="search.html">-->
                 <div class="form-group rwd-tb-l">
                    <h4>What are you looking for?</h4> <input type="text" class="form-control" name="query" maxlength="50" ng-model="listing.query"><br />
                 </div>
