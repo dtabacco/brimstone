@@ -224,6 +224,14 @@ exports.userProfileList = {
       //Assign Token from Header into Token Variable
       var token = connection.rawConnection.req.headers.authorization
 
+      if (!token) {
+        console.log("No token")
+        connection.response = "Unauthorized"
+        connection.rawConnection.responseHttpCode = 403;
+        next(connection, true);
+        return;
+      }
+
       //Verify Token from the header
       api.user.verifyHeaderToken(api, token, function(err, token) {
         console.log("Returning: " + token);
@@ -231,7 +239,10 @@ exports.userProfileList = {
           connection.response.errors = err;
           next(connection, false);
         }
+        
         console.log(token.username + " is tryng to load the full profile")
+        
+        
 
         api.mongo.userFind(api, connection, token.username, function(err, users) {
         if (err) {
