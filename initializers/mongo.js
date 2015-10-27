@@ -2,6 +2,8 @@ var mongojs = require('mongojs');
 var mongodb = require('mongodb');
 var crypto = require('crypto');
 
+var expiration_limit = 60;
+
 var mongo = function (api, next) {
   api.mongo = {};
   api.mongo._start  = function(api, next){
@@ -601,7 +603,7 @@ api.mongo.getListing = function(api, connection, next) {
      
         // 86400000 is the number of milleseconds in a day
         numofDays = numofMillseconds / 86400000;
-        if (numofDays > 30) {
+        if (numofDays > expiration_limit) {
           results[i].status = "expired"
         }
         else {
@@ -634,7 +636,7 @@ api.mongo.getListing = function(api, connection, next) {
         // 86400000 is the number of milleseconds in a day
         numofDays = numofMillseconds / 86400000;
         //.log(numofDays)
-        if (numofDays > 30) {
+        if (numofDays > expiration_limit) {
           results[i].status = "expired"
         }
         else {
@@ -1067,7 +1069,7 @@ api.mongo.getListing = function(api, connection, next) {
         // 86400000 is the number of milleseconds in a day
         numofDays = numofMillseconds / 86400000;
         //.log(numofDays)
-        if (numofDays > 30) {
+        if (numofDays > expiration_limit) {
           results[i].status = "expired"
         }
         else {
