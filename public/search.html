@@ -94,10 +94,12 @@
                     </div>
                     <div class="col-md-10" style="background:#FFFFFF;">
                       <h3 class="no_top_margin min_bottom_margin"> <a href="viewlisting.html?id={{listing.id}}"> {{listing.title}}</a></h3>  
-                      <h5 class="no_top_margin min_bottom_margin description"><i>{{listing.description}}<i></h5>
+                      <h5 class="no_top_margin min_bottom_margin"><i>{{listing.description}}<i></h5>
                       <div class="row">
                         <div class="col-md-12" style="background:#FFFFFF;">
-                          <h5><b>${{listing.price}}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{listing.location}}</h5>
+                          <h5 class="bigger_bolder">${{listing.price}}&nbsp;&nbsp;
+                            <span ng-if="listing.unit">Per Unit: {{listing.unit}}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{listing.location}}</h5>
                         </div>
                       </div>
                     </div>

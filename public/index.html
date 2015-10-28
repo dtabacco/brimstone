@@ -86,38 +86,15 @@
 		</div><!-- container -->
 	</div><!-- headerwrap -->
 
-	<!-- 
-	<div class="container w centered">
-		<h4>RECENT LISTINGS</h4><hr>
-
-      	<div ng-controller="listingManager" ng-init="getRecentListings()">
-      		<div class="row centered">
-	      		<div ng-repeat="listing in listings | limitTo:6">
-					
-						<div class="col-lg-2">
-							<a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:150px" ng-src="{{listing.thumbnail}}"></a>
-							<h4><a href="viewlisting.html?id={{listing.id}}">{{listing.title}} </h4>${{listing.price}}</h4></a></h4>
-							<p>{{listing.location}}</p>
-						</div>
-						
-					
-				</div> 
-			</div>
-		</div>
-
-		<br>
-		<br>
-	</div>
-	-->
-
-
 	<div class="container w centered">
 		<h4>RECENT LISTINGS</h4><hr>
 		<div ng-controller="listingManager" ng-init="getRecentListings()">
 			<div class="row centered" >
 		    	<div class="col-md-2" ng-repeat-start="listing in listings">
 			        <a href="viewlisting.html?id={{listing.id}}"><img class="img-thumbnail img-responsive" style="max-height:300px" ng-src="{{listing.thumbnail}}"></a>
-					<h4><a href="viewlisting.html?id={{listing.id}}">{{listing.title}} </h4>${{listing.price}}</h4></a></h4>
+					<h4><a href="viewlisting.html?id={{listing.id}}">{{listing.title}}</a></h4>
+					<h5 class="bigger_bolder">${{listing.price}}&nbsp;&nbsp;
+					<span ng-if="listing.unit">Per Unit: {{listing.unit}}</span></h5>
 					<p>{{listing.location}}</p>
 			    </div>
 			    <div class="clearfix" ng-if="$index%6==5"></div>
