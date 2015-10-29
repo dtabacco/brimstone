@@ -47,6 +47,15 @@ h5 {
     font-weight: 800;
 }
 
+.white {
+    color: white;
+}
+
+.white a {
+    /*color: #f85c37;  Original Red  */
+    color: #FFFFFF;
+}
+
 /* Paragraph & Typographic */
 p {
     line-height: 28px;
