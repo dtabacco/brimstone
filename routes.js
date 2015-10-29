@@ -17,6 +17,8 @@ exports.routes = {
     { path: "/users/verifyToken", action: "userVerifyToken" },
     { path: "/listings", action: "listingAdd" },
     { path: "/uploader", action: "uploader" },
+    { path: "/users/forgotPassword", action: "forgotPassword" },
+    { path: "/users/resetPassword", action: "resetPassword" },
   ],
 
   put: [

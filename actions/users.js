@@ -351,3 +351,106 @@ exports.userVerifyToken = {
 
   }
 };
+
+
+
+exports.forgotPassword = {
+  name: "forgotPassword",
+  description: "I Reset Passwords",
+  inputs: {
+    required: ['email'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+
+      console.log("Resetting Password");
+      //console.log(connection);
+
+      api.mongo.forgotPassword(api, connection, function(err, mail) {
+        console.log("returning")
+        
+        if (err) {
+          connection.response.errors = err;
+          //You want to return if token is expired, so client can handle
+          next(connection, true);   
+        }
+        if (mail.error) {
+          console.log("Mail Error")
+          connection.response.error = mail.error;
+          next(connection, true);
+        }
+        else {
+          console.log(mail.email)
+          console.log(mail.session) 
+          //connection.response.token = mail;
+          connection.response.message = "Success"
+          next(connection, true);
+        }
+
+        //Send Email to User
+        api.notify.sendForgotPassword(api, connection, mail, function(err, result) {
+          console.log(result)
+        });
+
+    });
+
+  }
+};
+
+
+exports.resetPassword = {
+  name: "resetPassword",
+  description: "I reset a user password",
+  inputs: {
+    required: ['token', 'password'],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+
+    var token = connection.params.token;
+
+    console.log(token)
+
+   // Check that Token was provided and return immediately if not present
+    if (!token || token == 'undefined') {
+      console.log("No token")
+      connection.response = "no session id was provided"
+      connection.rawConnection.responseHttpCode = 403;
+      next(connection, true);
+      return;
+    }
+
+    //Verify Token (SessionID) to find out which username is invoking request
+    api.user.verifyHeaderToken(api, token, function(err, token) {
+      console.log("Returning: " + token);
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      console.log(token.username + " is tryng to reset a password")
+
+      api.mongo.userPasswordEdit(api, connection, token.username, function(err, users) {
+        if (err) {
+          connection.response.errors = err;
+          next(connection, false);
+        }
+        if (users === "Unauthorized") {
+          console.log("Returning Unauthorized")
+          connection.response = "Unauthorized"
+          connection.rawConnection.responseHttpCode = 403;
+          next(connection, true);
+        }
+        else {
+          connection.response = users;
+          next(connection, true);
+        }
+      });
+    });
+  }
+};

@@ -150,7 +150,54 @@ var mongo = function (api, next) {
     }  
   };
 
-    /***************** Search for User ****************************/
+    /***************** Forgot Password ****************************/
+  api.mongo.forgotPassword = function(api, connection, next) {
+
+    var query = {email:connection.params.email}
+    //var query = {}
+
+    console.log("running query for " + query)
+
+    var mailPackage = {};
+
+    api.mongo.db.users.find(query, function doneSearching(err, results) {
+
+      if (err) { 
+        next(err, false); 
+      } 
+      
+      if (results.length == 0) {
+        console.log("Email Address Not Found")
+        mailPackage.error = "No account is registered with that email address"
+        next(err, mailPackage); 
+        
+      }
+      else {
+        console.log("Found Email Address")
+        console.log("Username is " + results[0].username)
+  
+        api.user.createForgotPasswordSession(api, connection, results[0].username, function(err, token) {
+          if (err) { 
+            next(err, false); 
+          } 
+
+          mailPackage.email = connection.params.email;
+          mailPackage.session = token;
+
+          console.log(mailPackage)
+          console.log("\n\n\n\n\n")
+          
+          next(err, mailPackage);
+        });
+      }
+      
+    });
+    
+      
+     
+  };
+
+    /***************** Get Users Password ****************************/
   api.mongo.userGetPassword = function(api, connection, next) {
 
     var query = {username:connection.params.username}
@@ -172,7 +219,7 @@ var mongo = function (api, next) {
   /***************** Edit User Password ****************************/
   api.mongo.userPasswordEdit = function(api, connection, token_user, next) {
 
-      var query = {username:connection.params.username}
+      var query = {username:token_user}
 
       //Find User who's answer was accepted
       api.mongo.db.users.find(query, function doneSearching(err, results) {

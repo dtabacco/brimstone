@@ -1085,6 +1085,86 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		});	
 	};
 
+	$scope.forgotPassword = function(){
+		console.log("--> Starting Forgot Password");
+
+		//Define Rest Endpoint for Token Verification
+		$scope.FPQuery = restURLEndpoint + '/api/users/forgotPassword';
+		
+		//Define token variable for verification
+		postData = 'email=' + $scope.user.email; 			
+
+		console.log(postData)
+		//Execute Post request
+		$http.post($scope.FPQuery, postData)
+		.success(function(response) {
+			console.log(response)
+			swal({   title: "Successful!",   
+				text: "Please visit your email and click the link to change your password'",   
+				type: "success",   
+				showCancelButton: false,   
+				confirmButtonText: "Ok",   
+				closeOnConfirm: true })		 	
+		})
+		.error(function(data, status, headers, config) {
+			$scope.queryError = data.error
+		});
+	}
+
+	$scope.resetPassword = function(){
+		console.log("--> Starting Reset Password");
+
+		if (QueryString.sessionid) {
+			var sessionid = QueryString.sessionid;
+		}
+		else {
+			console.log("Session not found")
+			$scope.queryError = "no session id was provided"
+			return $scope.queryError;
+		}
+
+  		if (!$scope.user.newpassword) {
+   			$scope.queryError = 'Password Required';
+			return $scope.queryError;
+  		}
+  		if (!$scope.user.confirmpassword) {
+   			$scope.queryError = 'Confirm Password Required';
+			return $scope.queryError;
+  		}
+
+  		if  ($scope.user.confirmpassword != $scope.user.newpassword) {
+   			$scope.queryError = 'Passwords Do Not Match'
+			return $scope.queryError;
+		}
+
+		//Define Rest Endpoint for Token Verification
+		$scope.RPQuery = restURLEndpoint + '/api/users/resetPassword';
+		
+		//Define token variable for verification
+		postData = 'token=' + sessionid + '&password=' + $scope.user.newpassword;			
+
+		console.log(postData)
+		//Execute Post request
+		$http.post($scope.RPQuery, postData)
+		.success(function(response) {
+			console.log(response)
+			swal({   title: "Successful!",   
+				text: "Your Password Has been Updated'",   
+				type: "success",   
+				showCancelButton: false,   
+				confirmButtonText: "Ok",   
+				closeOnConfirm: true },
+
+				function(){   
+					location = "login.html";
+				});	
+
+		})
+		.error(function(data, status, headers, config) {
+			$scope.queryError = data
+		});
+	}
+
 	$scope.checkLoginStatus = function(){
 		console.log("--> Checking Login Status");
 

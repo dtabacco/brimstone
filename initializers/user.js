@@ -61,7 +61,24 @@ var user = function (api, next) {
     }
   };
 
-  /***************** Search for questions ****************************/
+
+   /***************** Create Forgot Password Session ****************************/
+  api.user.createForgotPasswordSession = function(api, connection, username, next) {
+
+    var token = null;
+    console.log("username:" + username)
+
+    var profile = {
+      username: username
+    }
+    //Create the Token
+    token = jwt.sign(profile, secret, { expiresInMinutes: 30*24*60*2 });
+    
+    next (false, token);
+
+  };   
+
+  /***************** Authenticate ****************************/
   api.user.authenticate = function(api, connection, next) {
 
     var token = null;
