@@ -56,6 +56,10 @@ h5 {
     color: #FFFFFF;
 }
 
+.tight-form {
+    margin-bottom: 5px;
+}
+
 /* Paragraph & Typographic */
 p {
     line-height: 28px;
@@ -578,6 +582,10 @@ img{
     margin-top: 0px;
     }
 
+    .form-horizontal .control-label, .form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline {
+        padding-top: 0px;
+    }
+
    #headerwrap {
     /*background: url(../assets/img/header-bg.jpg) no-repeat center top;*/
     background: url(../assets/img/header3m.jpg) no-repeat center top;
@@ -613,8 +621,7 @@ img{
     
     #headerwrap h1 { margin-top:50px; font-size: 30px; } 
     
-
-  
+    
 
 }
 
