@@ -2,7 +2,7 @@ exports.listingAdd = {
   name: "listingAdd",
   description: "I create a new listing",
   inputs: {
-    required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_email'],
+    required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_email', 'category'],
     optional: ['make', 'model', 'dimensions','condition', 'contact_phone', 'delivery', 'unit', 'payment'],
   },
   authenticated: false,
@@ -70,7 +70,7 @@ exports.listingEdit = {
   name: "listingEdit",
   description: "I edit a listing",
   inputs: {
-    required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_email'],
+    required: ['username', 'title', 'description', 'price', 'location', 'zipcode', 'contact_email', 'category'],
     optional: ['make', 'model', 'dimensions','condition', 'contact_phone', 'delivery', 'unit', 'payment'],
   },
   authenticated: false,
@@ -300,7 +300,7 @@ exports.listingSearch = {
   description: "I Search for relevant listings",
   inputs: {
     required: ['query', 'zip'],
-    optional: [],
+    optional: ['category'],
   },
   authenticated: false,
   outputExample: {},

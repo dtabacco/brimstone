@@ -199,6 +199,10 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
   		if (!$scope.listing.unit) {
   			$scope.listing.unit = "";
   		}
+  		if (!$scope.listing.category) {
+  			$scope.listing.category = "other";
+  		}
+  		console.log($scope.listing.category)
 
 
 		console.log("Delivery:" + $scope.listing.delivery)
@@ -231,7 +235,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
 				   'contact_email=' + $scope.listing.contact_email + '&' + 'payment=' + payment + '&' + 
-				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit ;
+				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit + '&' +  'category=' + $scope.listing.category ;
 					
 		console.log(postData)
 
@@ -289,7 +293,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
 				   'contact_email=' + $scope.listing.contact_email + '&' + 'payment=' + payment + '&' + 
-				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit ; 
+				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit + '&' +  'category=' + $scope.listing.category; 
 					
 		console.log(postData)
 
@@ -419,6 +423,12 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				
 				//Reformat for viewlisting display - Add space between Commas
 				response.listing[0].payment = response.listing[0].payment.replace(/,/g, ", " )
+			}
+
+			//To DO, check how handled if its empty
+			$scope.listing.category = response.listing[0].category;
+			if (!$scope.listing.category) {
+				$scope.listing.category = "Unspecified"
 			}
 
 			console.log($scope.listing)
@@ -617,8 +627,6 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 	if (QueryString.query) {
 		$scope.listing.query = QueryString.query.split('+').join(' ');
-
-
 	}
 
 	if (QueryString.zipcode) {
@@ -640,8 +648,6 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 		console.log("--> Running Search From Index")
 
-		//console.log(window.document.location.search)
-
 		// Do not run query if user did not come to search page from Index Search
 		// query parameter will not be present in URL
 		if (window.document.location.search.indexOf("query") == -1) {
@@ -652,13 +658,21 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		if (!$scope.listing.query) {
    			query = "*"		
 		}
+
+		if (QueryString.category) {
+			$scope.listing.category = QueryString.category;
+			console.log($scope.listing.category)
+		}
+		else {
+			$scope.listing.category = null;
+		}
       		
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 		$scope.searched = true;
 		$scope.searching = true;
 		
-		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip ;
+		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip + '/' + $scope.listing.category ;
 
 		console.log('URL:' + $scope.searchQuery)
 		
@@ -692,7 +706,14 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 			$scope.listings = response.listing;
 			$scope.num_of_results = listing_count++;
-			$scope.original_query = $scope.listing.query;
+
+			if ($scope.listing.category && $scope.listing.category != "null") {
+				$scope.original_query = $scope.listing.category;
+			}	
+			else {
+				$scope.original_query = $scope.listing.query;
+			}
+			
 			$scope.searching = false;
 			$scope.complete.status = true;
 			console.log(response)
@@ -713,13 +734,25 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 		if (!$scope.listing.query) {
    			query = "*"		
 		}
+
+		if (!$scope.listing.zip) {
+   			$scope.listing.zip = null;		
+		}
+
+		if (QueryString.category) {
+			//$scope.listing.category = QueryString.category;
+			console.log($scope.listing.category)
+		}
+		else {
+			//$scope.listing.category = null;
+		}
       		
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 		$scope.searched = true;
 		$scope.searching = true;
 		
-		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip ;
+		$scope.searchQuery = restURLEndpoint + '/api/listings/' + query + '/' + $scope.listing.zip + '/' + $scope.listing.category;
 
 		console.log('URL:' + $scope.searchQuery)
 		
@@ -753,7 +786,15 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 
 			$scope.listings = response.listing;
 			$scope.num_of_results = listing_count++;
-			$scope.original_query = $scope.listing.query;
+			
+
+			if ($scope.listing.category && $scope.listing.category != "null") {
+				$scope.original_query = $scope.listing.category;
+			}	
+			else {
+				$scope.original_query = $scope.listing.query;
+			}
+
 			$scope.searching = false;
 			$scope.complete.status = true;
 			console.log(response)

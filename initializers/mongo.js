@@ -405,7 +405,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
               condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email, delivery:connection.params.delivery, unit:connection.params.unit, payment:connection.params.payment, 
-              created_at:created_at, updated_at:created_at,  status:"active", views:0, image:null, thumbnail:null};
+              created_at:created_at, updated_at:created_at, category:connection.params.category,  status:"active", views:0, image:null, thumbnail:null};
 
   //Insert JSON Entry to Add to MongoDB
   api.mongo.db.listings.insert(entry, {safe : true}, function doneCreatingListingEntry(err, results) {
@@ -536,11 +536,12 @@ api.mongo.listingAdd = function(api, connection, next) {
               contact_phone = results[i].contact_phone; 
               image = image_path;
               thumbnail = thumbnail_path;
+              category = results[i].category;
 
                //Create JSON Entry to update in MongoDB
               entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
                        created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-                       image:image, thumbnail:thumbnail}; 
+                       image:image, thumbnail:thumbnail, category:category}; 
         
               //Update MongoDB
               api.mongo.db.listings.update({ "_id": o_id  }, entry, {safe : true}, function doneUpdatingListingWithImage(err, results) {
@@ -598,12 +599,13 @@ api.mongo.listingAdd = function(api, connection, next) {
       views = results[i].views + 1;
       image = results[i].image;
       thumbnail = results[i].thumbnail;
+      category = results[i].category;
     }
 
     //Create JSON Entry to update in MongoDB
     entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
                  created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-                 image:image, thumbnail:thumbnail}; 
+                 image:image, thumbnail:thumbnail, category:category}; 
 
     //Update MongoDB
     api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneAddingViewUpdate(err, results) {
@@ -857,12 +859,13 @@ api.mongo.getListing = function(api, connection, next) {
         image = results[i].image;
         thumbnail = results[i].thumbnail;
         updated_at = updated_at;
+        category = results[i].category;
       }         
 
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
            created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-           image:image, thumbnail:thumbnail}; 
+           image:image, thumbnail:thumbnail, category:category}; 
 
       if (token_user === username) {
 
@@ -934,6 +937,7 @@ api.mongo.getListing = function(api, connection, next) {
         thumbnail = results[i].thumbnail;
         updated_at = updated_at;
         console.log(updated_at)
+        category = connection.params.category;
       }         
 
       var now = new Date();
@@ -942,7 +946,7 @@ api.mongo.getListing = function(api, connection, next) {
       //Create JSON Entry to update in MongoDB
       entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, dimensions:dimensions, condition:condition,
            created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-           image:image, thumbnail:thumbnail}; 
+           image:image, thumbnail:thumbnail, category:category}; 
 
       if (token_user === username) {
         //Update MongoDB
@@ -1011,6 +1015,7 @@ api.mongo.getListing = function(api, connection, next) {
         image = null;
         thumbnail = null;
         updated_at = updated_at;
+        category = results[i].category;
       }
 
       if (token_user === username) {
@@ -1050,7 +1055,7 @@ api.mongo.getListing = function(api, connection, next) {
         //Create JSON Entry to update in MongoDB
         entry = {username:username, title:title, description:description, price:price, location:location, zipcode:zipcode, make:make, model:model, condition:condition,
              created_at:created_at, updated_at:updated_at, contact_email:contact_email, contact_phone:contact_phone, delivery:delivery, unit:unit, payment:payment, status:status, views:views, 
-             image:image, thumbnail:thumbnail}; 
+             image:image, thumbnail:thumbnail, category:category}; 
 
         //Update MongoDB
         api.mongo.db.listings.update({ "_id": o_id }, entry, {safe : true}, function doneWithUpdate(err, results) {
@@ -1082,8 +1087,17 @@ api.mongo.getListing = function(api, connection, next) {
 
     console.log("phrase " + connection.params.query)
     console.log("Zip " + connection.params.zip)
+    console.log("category " + connection.params.category)
 
-    if (connection.params.zip === "null" && connection.params.query === "*") {
+    //Double Check
+    if (connection.params.zip === "null" && connection.params.category !== "null") {
+       query =  { category:connection.params.category };
+    } 
+    //Double Check
+    else if (connection.params.zip !== "null" && connection.params.category !== "null") {
+        query = { $text: { $search: connection.params.category }, zipcode:connection.params.zip}
+    } 
+    else if (connection.params.zip === "null" && connection.params.query === "*") {
       console.log("Null Zip Code with * Query")
        query =  {};
     }
