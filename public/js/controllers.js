@@ -739,12 +739,8 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
    			$scope.listing.zip = null;		
 		}
 
-		if (QueryString.category) {
-			//$scope.listing.category = QueryString.category;
-			console.log($scope.listing.category)
-		}
-		else {
-			//$scope.listing.category = null;
+		if (!$scope.listing.category) {
+   			$scope.listing.category = null;		
 		}
       		
 		$scope.queryError = null;
