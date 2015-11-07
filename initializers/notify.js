@@ -7,14 +7,20 @@ var notify = function (api, next) {
       console.log("Notify API started");
   };
 
-    // Create a SMTP transporter object
-  var transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
+  
+// Create a SMTP transporter object
+var transporter = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  auth: {
           user: api.config.notify.email,
           pass: api.config.notify.password
-      }
-  });
+      },
+  secure: false,  //Must be off for TLS
+  tls: {
+      ciphers:'SSLv3'
+  }
+});
   
   api.notify.sendForgotPassword = function(api, connection, mail, next) {
   
@@ -24,7 +30,7 @@ var notify = function (api, next) {
     var message = {
 
     // sender info
-    from: '"Password Reset" <partialpallet@gmail.com>',
+    from: '"Password Reset" <help@partialpallet.com>',  //Must Match Auth Email
 
     // Comma separated list of recipients
     to: mail.email,

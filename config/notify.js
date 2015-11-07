@@ -2,10 +2,10 @@ exports.default = {
   notify: function(api) {
     return {
     	//Common Properties
-        email: "partialpallet@gmail.com",
+        email: "help@partialpallet.com",
         password: process.env.BRIM_EMAIL_PASSWORD,
 
-    	senderAddress: '"Password Reset" <partialpallet@gmail.com>',
+    	senderAddress: '"Password Reset" <help@partialpallet.com>',
     	baselink: "www.partialpallet.com/resetpassword.html?sessionid=",
     }
   }

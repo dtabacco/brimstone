@@ -72,7 +72,7 @@ var user = function (api, next) {
       username: username
     }
     //Create the Token
-    token = jwt.sign(profile, secret, { expiresInMinutes: 30*24*60*2 });
+    token = jwt.sign(profile, secret, { expiresInMinutes: 60*24 });
     
     next (false, token);
 
