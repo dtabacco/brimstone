@@ -414,7 +414,6 @@ exports.resetPassword = {
   run: function(api, connection, next){
 
     var token = connection.params.token;
-
     console.log(token)
 
    // Check that Token was provided and return immediately if not present
@@ -426,31 +425,82 @@ exports.resetPassword = {
       return;
     }
 
-    //Verify Token (SessionID) to find out which username is invoking request
-    api.user.verifyHeaderToken(api, token, function(err, token) {
-      console.log("Returning: " + token);
-      if (err) {
-        connection.response.errors = err;
-        next(connection, false);
-      }
-      console.log(token.username + " is tryng to reset a password")
+    try {
 
-      api.mongo.userPasswordEdit(api, connection, token.username, function(err, users) {
+      //Verify Token (SessionID) to find out which username is invoking request
+      api.user.verifyHeaderToken(api, token, function(err, token) {
+        console.log("Callback - verifyHeaderToken")
+        console.log("Returning: " + token);
         if (err) {
-          connection.response.errors = err;
-          next(connection, false);
+          console.log("verifyHeaderToken err" )
+          //connection.rawConnection.responseHttpCode = 405;
+          //connection.response.errors = err;
+          //next(connection, true);
+          throw err;
+         
         }
-        if (users === "Unauthorized") {
-          console.log("Returning Unauthorized")
-          connection.response = "Unauthorized"
+
+        else if (!token || token == 'undefined') {
+          console.log("Token Verification Failed")
+          connection.response = "Token Verification Failed"
           connection.rawConnection.responseHttpCode = 403;
           next(connection, true);
+          return;
         }
         else {
-          connection.response = users;
-          next(connection, true);
-        }
+
+          try {
+
+            //tokenError == "valid";
+            if (!token.username) {
+              console.log(token.username)
+              console.log("Invalid")
+              //tokenError = "Invalid"
+              throw "SESSIONID Invalid";
+            }
+
+            console.log(token.username + " is tryng to reset a password")
+            api.mongo.userPasswordEdit(api, connection, token.username, function(err, users) {
+              if (err) {
+                connection.response.errors = err;
+                next(connection, false);
+              }
+              console.log(users)
+              //console.log(tokenError)
+              if (users === "Unauthorized") {
+                console.log("Returning Unauthorized")
+                connection.response = "Unauthorized"
+                connection.rawConnection.responseHttpCode = 403;
+                next(connection, true);
+              }
+              else {
+                connection.response = users;
+                next(connection, true);
+              }
+            });
+           
+          }
+          catch (err) {
+            console.log("token username could not be found")
+            connection.response = "SessionID Invalid"
+            connection.rawConnection.responseHttpCode = 403;
+            next(connection, true);
+            console.log("Returned Catch 403 Next")
+          }
+        } // End ELSE
+        console.log("Done")
+
+
+      
       });
-    });
+
+    }
+
+    catch (err) {
+      console.log("Exception during verifyHeaderToken:" + err)
+    }
+
+
+     
   }
 };

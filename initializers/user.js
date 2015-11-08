@@ -18,6 +18,7 @@ var user = function (api, next) {
   
       jwt.verify(header_token, secret, function(err, decodedToken) {
         if (err) {
+          console.log("error Verify: " + err)
           next(err);
         }
         console.log(decodedToken)

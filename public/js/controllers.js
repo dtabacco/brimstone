@@ -1198,7 +1198,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 		})
 		.error(function(data, status, headers, config) {
-			$scope.queryError = data
+			$scope.queryError = data.error
 		});
 	}
 
