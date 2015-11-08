@@ -1198,7 +1198,12 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 		})
 		.error(function(data, status, headers, config) {
+			if (status == "401") {
+				$scope.queryError = "Invalid Session ID"
+			} 
+			else {
 			$scope.queryError = data.error
+			}
 		});
 	}
 
