@@ -32,7 +32,7 @@ exports.routes = {
 
   delete: [
     /*{ path: "/users", action: "usersDelete" },*/
-    { path: "/users/:id", action: "usersDeleteID" },
+    /*{ path: "/users/:id", action: "usersDeleteID" },*/
     /*{ path: "/listings", action: "listingsDelete" },*/
     { path: "/listings/:id", action: "listingsDeleteID" },
   ]
