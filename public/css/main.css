@@ -554,6 +554,17 @@ img{
     font-size: 40px;
 }
 
+.img-padding {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.about-title {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+
 @media only screen and (min-width:960px){
         /* styles for browsers larger than 960px; */
   
