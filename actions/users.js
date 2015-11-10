@@ -65,6 +65,27 @@ exports.userListLite = {
   }
 };
 
+exports.userEmailList = {
+  name: "userEmailList",
+  description: "I list all the emails of users",
+  inputs: {
+    required: [],
+    optional: [],
+  },
+  authenticated: false,
+  outputExample: {},
+  version: 1.0,
+  run: function(api, connection, next){
+      api.mongo.userEmailList(api, connection, function(err, users) {
+      if (err) {
+        connection.response.errors = err;
+        next(connection, false);
+      }
+      connection.response.users = users;
+      next(connection, true);
+    });
+  }
+};
 
 exports.usersDelete = {
   name: "usersDelete",

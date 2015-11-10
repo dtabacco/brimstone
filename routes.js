@@ -4,6 +4,7 @@ exports.routes = {
     /*{ path: "/users", action: "usersList" },*/
     { path: "/users/:username", action: "userProfileList" },  
     { path: "/users/lite/list", action: "userListLite" }, 
+    { path: "/users/email/list", action: "userEmailList" }, 
     { path: "/users/lite/:username", action: "userProfileLite" }, 
     { path: "/listings", action: "getAllListing" },
     { path: "/listings/:id", action: "getListing" }, 
@@ -31,7 +32,7 @@ exports.routes = {
 
   delete: [
     /*{ path: "/users", action: "usersDelete" },*/
-    /*{ path: "/users/:id", action: "usersDeleteID" },*/
+    { path: "/users/:id", action: "usersDeleteID" },
     /*{ path: "/listings", action: "listingsDelete" },*/
     { path: "/listings/:id", action: "listingsDeleteID" },
   ]

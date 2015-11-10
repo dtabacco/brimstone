@@ -812,7 +812,9 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 	$scope.user = {};
 	$scope.unique = {};
+	$scope.em_unique = {};
 	$scope.started = {};
+	$scope.em_started = {};
 	$scope.authuser = {};
 	$scope.loggedin = {};
 	$scope.user.terms = true;
@@ -833,6 +835,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 
 	//array of all usernames - Will be populated by buildUserNameList()
 	usernames = [];
+	emails = [];
 	$scope.started = false;
 
 	//call get all users, to populate array
@@ -855,7 +858,27 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 		});	
 	}
 
-	/// This function will fire every time the username checkbox has a key press event
+		//call get all users, to populate array
+	$scope.buildEmailList = function() { 
+		
+		//Define REST Endpoint
+		$scope.searchQuery = restURLEndpoint + '/api/users/email/list';
+
+		//Execute GET Request
+		$http.get($scope.searchQuery)
+		.success(function(response) {
+		
+			for (var i = 0; i < response.users.length; i++) {
+				emails.push(response.users[i].email);
+			}
+				 	
+		})
+		.error(function(data, status, headers, config) {
+			console.log(data);
+		});	
+	}
+
+	/// This function will fire every time the username text box has a key press event
 	$scope.checkUnique = function() { 
 		$scope.started = true;
 		//console.log("Checking Unique")
@@ -863,13 +886,32 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 			$scope.started = false;
 			return;
 		}
-		if (usernames.indexOf($scope.user.username) != -1) {
+		if (usernames.indexOf($scope.user.username.toLowerCase()) != -1) {
 			//console.log("Not Unique")
 			$scope.unique = false;
 		}
 		else {
 			//console.log("Unique")
 			$scope.unique = true;
+		}
+	}
+
+	/// This function will fire every time the email text box has a key press event
+	$scope.checkUniqueEmail = function() { 
+		$scope.em_started = true;
+		//console.log("Checking Unique Email")
+		
+		if ($scope.user.email == null) {
+			$scope.em_started = false;
+			return;
+		}
+		if (emails.indexOf($scope.user.email.toLowerCase()) != -1) {
+			//console.log("Not Unique")
+			$scope.em_unique = false;
+		}
+		else {
+			//console.log("Unique")
+			$scope.em_unique = true;
 		}
 	}
 
@@ -903,7 +945,9 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 	}
 
 	$scope.addUser = function() {
-	
+
+		$scope.user.username = $scope.user.username.toLowerCase();
+		$scope.user.email = $scope.user.email.toLowerCase();
 		console.log($scope.user.username)
 
 		if (!$scope.user.contact_phone) {
@@ -928,6 +972,13 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
   			return;
   		}
 
+  		if (!$scope.em_unique) {
+  			toastr.options.closeButton = true;
+			toastr.error('You Must Select a Unique Email')
+  			return;
+  		}
+  		
+
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 
@@ -942,6 +993,7 @@ BrimstoneApp.controller('UserManager', function( $scope, $http, $filter, $locati
 				   'company_name=' + $scope.user.company_name; 
 					
 		console.log(postData)
+
 
 		$http.post($scope.registerQuery, postData)
 		.success(function(response) {

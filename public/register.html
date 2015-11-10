@@ -69,8 +69,9 @@
               <h4 ng-cloak ng-show="queryError"><font color='red'>{{queryError}}</font></h4>
               <h4 ng-cloak ng-show="statusmsg"><font color='green'>{{statusmsg}}</font></h4>
 
-              <!-- This function will populate the list of usernames -->
+              <!-- This function will populate the list of usernames and emails for uniqueness checks below -->
               <div ng-init="buildUsernameList()"></div>
+              <div ng-init="buildEmailList()"></div>
 
                 <!-- FORM -->
                 <div class="panel blend_background">
@@ -91,6 +92,7 @@
                         </span>
 
                         </span>
+                        (Email Address preferred)
                         <input type="text" ng-change="checkUnique()" required class="form-control" name="username" maxlength="50" ng-model="user.username"><br />
                       </div>
                       <div class="form-group">
@@ -120,7 +122,21 @@
                         </div> <!-- End Form Group Row --> 
                       </div>  <!-- End Form Group  -->
                       <div class="form-group">
-                        <label>Email</label><label class="formrequired">&nbsp;*</label> <input type="email" required class="form-control" name="email" maxlength="50" ng-model="user.email"><br />
+                        <label>Email</label><label class="formrequired">&nbsp;*</label> 
+                         <span ng-if="em_unique == true && em_started == true">
+                           <span class="success">
+                          <b>Email Address is available</b>
+                        </span>
+                       
+                        </span>
+                        <span ng-if="em_unique != true && em_started == true">
+                          
+                          <span class="formrequired">
+                          <b>Email Address is already in use</b>
+                        </span>
+
+                        </span>
+                        <input type="text" ng-change="checkUniqueEmail()" required class="form-control" name="email" maxlength="50" ng-model="user.email"><br />
                       </div>
                       <div class="form-group">
                        <div class="form-group row">

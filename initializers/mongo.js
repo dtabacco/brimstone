@@ -113,6 +113,23 @@ var mongo = function (api, next) {
     });
   };
 
+  /***************** Search for Users and return email addresses only ****************************/
+  api.mongo.userEmailList = function(api, connection, next) {
+
+    var query = {}
+    var projection = {email:1}
+
+    api.mongo.db.users.find(query, projection, function doneSearching(err, results) {
+      if (err) { 
+        next(err, false); 
+      } 
+
+      console.log(results)
+      next(err, results);   
+    });
+  };
+  
+
   /***************** Search for User and return lite profile ****************************/
   api.mongo.userProfileLite = function(api, connection, next) {
 
