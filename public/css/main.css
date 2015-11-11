@@ -564,6 +564,12 @@ img{
     text-decoration: underline;
 }
 
+.expired-title {
+    color: red;
+    font-size: 26px;
+    font-weight: 700;
+}
+
 
 @media only screen and (min-width:960px){
         /* styles for browsers larger than 960px; */

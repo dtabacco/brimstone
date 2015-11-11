@@ -644,10 +644,31 @@ api.mongo.getListing = function(api, connection, next) {
   var results = [];
 
   api.mongo.db.listings.find(query, function doneSearchingForListing(err, results) {
-      if (err) { 
-        next(err, false); 
-      } 
-      next(err, results);
+    if (err) { 
+      next(err, false); 
+    } 
+
+    var today = new Date(); 
+    for (var i = 0; i < results.length; i++) {
+      if (results[i].status != "perpetual") {
+
+        results[i].updated_at = new Date(results[i].updated_at)
+        
+        //Returns number of millseconds between dates
+        numofMillseconds = today - results[i].updated_at
+     
+        // 86400000 is the number of milleseconds in a day
+        numofDays = numofMillseconds / 86400000;
+        
+        if (numofDays > expiration_limit) {
+          results[i].status = "expired";
+        }
+        else {
+          results[i].status = "active";
+        }
+      }
+    }
+    next(err, results);
   });
 };
 

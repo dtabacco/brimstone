@@ -453,6 +453,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			}
 
 			console.log("Status is - " + response.listing[0].status)
+			$scope.listing.original_status = response.listing[0].status
 			if (response.listing[0].status === 'active' || response.listing[0].status === 'expired' || response.listing[0].status === 'open') {
 	  			$scope.listing.status = "yes";
 	  		}
