@@ -139,6 +139,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 	//Defaults
 	$scope.listing.delivery = "no";
+	$scope.listing.status = "yes";
 	$scope.listing.cash = true;
 
 	var restURLEndpoint = appConfig.protocol + appConfig.servername + ':' + appConfig.port;
@@ -168,6 +169,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	$scope.addListing = function() {
 
 		username = glb_username;
+		var listing_status = null;
 	
 		console.log(username)
 		console.log($scope.listing.title)
@@ -202,10 +204,14 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
   		if (!$scope.listing.category) {
   			$scope.listing.category = "other";
   		}
-  		console.log($scope.listing.category)
+  		
+  		if ($scope.listing.status === 'yes') {
+  			listing_status = "active";
+  		}
+  		else {
+  			listing_status = "perpetual";
+  		}
 
-
-		console.log("Delivery:" + $scope.listing.delivery)
   		
   		var payment = [];
   		if ($scope.listing.cash)
@@ -235,9 +241,12 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
 				   'contact_email=' + $scope.listing.contact_email + '&' + 'payment=' + payment + '&' + 
-				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit + '&' +  'category=' + $scope.listing.category ;
+				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit + '&' +  'category=' + $scope.listing.category +
+				   '&' + 'status=' + listing_status;
 					
 		console.log(postData)
+
+		
 
 		$http.post($scope.registerQuery, postData)
 		.success(function(response) {
@@ -257,6 +266,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 	$scope.editListing = function() {
 
 		username = glb_username;
+		var listing_status = null;
 	
 		console.log(username)
 		console.log($scope.listing.title)
@@ -280,6 +290,13 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
   			payment.push("paypal");
   		}
 
+  		if ($scope.listing.status === 'yes') {
+  			listing_status = "active"
+  		}
+  		else {
+  			listing_status = "perpetual"
+  		}
+
 		$scope.queryError = null;
 		$scope.statusmsg = null;
 
@@ -293,9 +310,12 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 				   'make=' + $scope.listing.make + '&' + 'model=' + $scope.listing.model + '&' + 'dimensions=' + $scope.listing.dimensions  + '&' + 
 				   'condition=' + $scope.listing.condition + '&' + 'contact_phone=' + $scope.listing.contact_phone  + '&' + 
 				   'contact_email=' + $scope.listing.contact_email + '&' + 'payment=' + payment + '&' + 
-				   'delivery=' + $scope.listing.delivery + '&' +  'unit=' + $scope.listing.unit + '&' +  'category=' + $scope.listing.category; 
+				   'delivery=' + $scope.listing.delivery + '&' + 'unit=' + $scope.listing.unit + '&' + 'category=' + $scope.listing.category +
+				   '&' + 'status=' + listing_status; 
 					
 		console.log(postData)
+
+		
 
 		$http.put($scope.editQuery, postData)
 		.success(function(response) {
@@ -391,6 +411,7 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 
 			$scope.listing = response.listing[0]
 
+
 			//Convert to .id for angular
 			$scope.listing.id = response.listing[0]._id;
 
@@ -430,6 +451,15 @@ BrimstoneApp.controller('listingManager', function( $scope, $http, $filter, $loc
 			if (!$scope.listing.category) {
 				$scope.listing.category = "Unspecified"
 			}
+
+			console.log("Status is - " + response.listing[0].status)
+			if (response.listing[0].status === 'active' || response.listing[0].status === 'expired' || response.listing[0].status === 'open') {
+	  			$scope.listing.status = "yes";
+	  		}
+	  		else {
+	  			$scope.listing.status = "no";
+	  		}
+
 
 			console.log($scope.listing)
 

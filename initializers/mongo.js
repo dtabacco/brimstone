@@ -422,7 +422,7 @@ api.mongo.listingAdd = function(api, connection, next) {
   var entry = { title:connection.params.title, description:connection.params.description,  username:connection.params.username, price:connection.params.price, 
               location:connection.params.location, zipcode:connection.params.zipcode, make:connection.params.make, model:connection.params.model, dimensions:connection.params.dimensions,
               condition:connection.params.condition, contact_phone:connection.params.contact_phone, contact_email:connection.params.contact_email, delivery:connection.params.delivery, unit:connection.params.unit, payment:connection.params.payment, 
-              created_at:created_at, updated_at:created_at, category:connection.params.category,  status:"active", views:0, image:null, thumbnail:null};
+              created_at:created_at, updated_at:created_at, category:connection.params.category, status:connection.params.status, views:0, image:null, thumbnail:null};
 
   //Insert JSON Entry to Add to MongoDB
   api.mongo.db.listings.insert(entry, {safe : true}, function doneCreatingListingEntry(err, results) {
@@ -662,18 +662,22 @@ api.mongo.getListing = function(api, connection, next) {
       } 
        var today = new Date(); 
        for (var i = 0; i < results.length; i++) {
-        results[i].updated_at = new Date(results[i].updated_at)
-        
-        //Returns number of millseconds between dates
-        numofMillseconds = today - results[i].updated_at
-     
-        // 86400000 is the number of milleseconds in a day
-        numofDays = numofMillseconds / 86400000;
-        if (numofDays > expiration_limit) {
-          results[i].status = "expired"
-        }
-        else {
-          results[i].status = "active"
+
+        if (results[i].status != "perpetual") {
+
+          results[i].updated_at = new Date(results[i].updated_at)
+          
+          //Returns number of millseconds between dates
+          numofMillseconds = today - results[i].updated_at
+       
+          // 86400000 is the number of milleseconds in a day
+          numofDays = numofMillseconds / 86400000;
+          if (numofDays > expiration_limit) {
+            results[i].status = "expired";
+          }
+          else {
+            results[i].status = "active";
+          }
         }
       };
       
@@ -694,19 +698,21 @@ api.mongo.getListing = function(api, connection, next) {
       var today = new Date(); 
 
       for (var i = 0; i < results.length; i++) {
-        results[i].updated_at = new Date(results[i].updated_at)
+        if (results[i].status != "perpetual") {
+          results[i].updated_at = new Date(results[i].updated_at)
 
-        //Returns number of millseconds between dates
-        numofMillseconds = today - results[i].updated_at
-     
-        // 86400000 is the number of milleseconds in a day
-        numofDays = numofMillseconds / 86400000;
-        //.log(numofDays)
-        if (numofDays > expiration_limit) {
-          results[i].status = "expired"
-        }
-        else {
-          results[i].status = "active"
+          //Returns number of millseconds between dates
+          numofMillseconds = today - results[i].updated_at
+       
+          // 86400000 is the number of milleseconds in a day
+          numofDays = numofMillseconds / 86400000;
+          //.log(numofDays)
+          if (numofDays > expiration_limit) {
+            results[i].status = "expired"
+          }
+          else {
+            results[i].status = "active"
+          }
         }
       };
 
@@ -948,7 +954,7 @@ api.mongo.getListing = function(api, connection, next) {
         created_at = results[i].created_at;
         contact_email = connection.params.contact_email;
         contact_phone = connection.params.contact_phone;
-        status = results[i].status;
+        status = connection.params.status;
         views = results[i].views;
         image = results[i].image;
         thumbnail = results[i].thumbnail;
@@ -1139,19 +1145,23 @@ api.mongo.getListing = function(api, connection, next) {
       var today = new Date(); 
 
       for (var i = 0; i < results.length; i++) {
-        results[i].updated_at = new Date(results[i].updated_at)
 
-        //Returns number of millseconds between dates
-        numofMillseconds = today - results[i].updated_at
-     
-        // 86400000 is the number of milleseconds in a day
-        numofDays = numofMillseconds / 86400000;
-        //.log(numofDays)
-        if (numofDays > expiration_limit) {
-          results[i].status = "expired"
-        }
-        else {
-          results[i].status = "active"
+        if (results[i].status != "perpetual") {
+
+          results[i].updated_at = new Date(results[i].updated_at)
+
+          //Returns number of millseconds between dates
+          numofMillseconds = today - results[i].updated_at
+       
+          // 86400000 is the number of milleseconds in a day
+          numofDays = numofMillseconds / 86400000;
+          //console.log(numofDays)
+          if (numofDays > expiration_limit) {
+            results[i].status = "expired"
+          }
+          else {
+            results[i].status = "active"
+          }
         }
       };
 
