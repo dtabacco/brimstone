@@ -729,7 +729,7 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 				if (response.listing[i].thumbnail == null) {
 				response.listing[i].thumbnail = "/assets/img/placeholder1.png"
 				}
-				if (response.listing[i].status === "active") {
+				if (response.listing[i].status !== "expired") {
 					listing_count++;
 				}
 			}
@@ -805,7 +805,7 @@ BrimstoneApp.controller('SearchManager', function( $scope, $http, $filter, $loca
 				if (response.listing[i].thumbnail == null) {
 				response.listing[i].thumbnail = "/assets/img/placeholder1.png"
 				}
-				if (response.listing[i].status === "active") {
+				if (response.listing[i].status !== "expired") {
 					listing_count++;
 				}
 			}
